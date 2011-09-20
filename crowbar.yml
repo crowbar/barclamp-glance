@@ -1,0 +1,6 @@
+
+debs:
+  pkgs:
+    - glance
+  ppas:
+    - openstack-release/2011.2

@@ -2,5 +2,6 @@
 debs:
   pkgs:
     - glance
+    - python-glance
   ppas:
     - openstack-release/2011.2

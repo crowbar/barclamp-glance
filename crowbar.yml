@@ -32,6 +32,7 @@ locale_additions:
       glance:
         edit_attributes: 
           attributes: Attributes
+          backing_type: Backing Type
         edit_deployment: 
           deployment: Deployment
 

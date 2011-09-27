@@ -19,8 +19,8 @@ barclamp:
   name: glance
   display: Glance
   version: 0
-  requires:
-    - crowbar
+  member:
+    - openstack
 
 crowbar:
   layout: 1

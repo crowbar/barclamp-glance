@@ -24,23 +24,29 @@ default[:glance][:api][:verbose] = "True"
 default[:glance][:api][:debug] = "True"
 default[:glance][:api][:bind_host] = ipaddress
 default[:glance][:api][:bind_port] = "9292"
+default[:glance][:api][:log_file] = /var/log/glance/api.log
 
 default[:glance][:registry][:verbose] = "True"
 default[:glance][:registry][:debug] = "True"
 default[:glance][:registry][:bind_host] = ipaddress
 default[:glance][:registry][:bind_port] = "9191"
+default[:glance][:registry][:log_file] = /var/log/glance/registry.log
 
 default[:glance][:prefetcher][:verbose] = "True"
 default[:glance][:prefetcher][:debug] = "True"
+default[:glance][:prefetcher][:log_file] = /var/log/glance/prefetcher.log
 
 default[:glance][:pruner][:verbose] = "True"
 default[:glance][:pruner][:debug] = "True"
+default[:glance][:pruner][:log_file] = /var/log/glance/pruner.log
 
 default[:glance][:reaper][:verbose] = "True"
 default[:glance][:reaper][:debug] = "True"
+default[:glance][:reaper][:log_file] = /var/log/glance/reaper.log
 
 default[:glance][:scrubber][:verbose] = "True"
 default[:glance][:scrubber][:debug] = "True"
+default[:glance][:scrubber][:log_file] = /var/log/glance/scrubber.log
 
 default[:glance][:config_file]="/etc/glance/glance.conf"
 default[:glance][:working_directory]="/var/lib/glance"

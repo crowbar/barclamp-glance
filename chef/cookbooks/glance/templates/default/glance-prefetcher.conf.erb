@@ -5,7 +5,7 @@ verbose = <%= node[:glance][:prefetcher][:verbose] %>
 # Show debugging output in logs (sets DEBUG log level output)
 debug = <%= node[:glance][:prefetcher][:debug] %>
 
-log_file = /var/log/glance/prefetcher.log
+log_file = <%= node[:glance][:prefetcher][:log_file] %>
 
 # Send logs to syslog (/dev/log) instead of to file specified by `log_file`
 use_syslog = False

@@ -13,7 +13,7 @@ bind_port = <%= node[:glance][:registry][:bind_port] %>
 
 # Log to this file. Make sure you do not set the same log
 # file for both the API and registry servers!
-log_file = /var/log/glance/registry.log
+log_file = <%= node[:glance][:registry][:log_file] %>
 
 # Send logs to syslog (/dev/log) instead of to file specified by `log_file`
 use_syslog = False

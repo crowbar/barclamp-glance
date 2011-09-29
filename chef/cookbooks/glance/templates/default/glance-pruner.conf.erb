@@ -5,7 +5,7 @@ verbose = <%= node[:glance][:pruner][:verbose] %>
 # Show debugging output in logs (sets DEBUG log level output)
 debug = <%= node[:glance][:pruner][:debug] %>
 
-log_file = /var/log/glance/pruner.log
+log_file = <%= node[:glance][:pruner][:log_file] %>
 
 # Send logs to syslog (/dev/log) instead of to file specified by `log_file`
 use_syslog = False

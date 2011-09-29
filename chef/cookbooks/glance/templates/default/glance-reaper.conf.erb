@@ -5,7 +5,7 @@ verbose = <%= node[:glance][:reaper][:verbose] %>
 # Show debugging output in logs (sets DEBUG log level output)
 debug = <%= node[:glance][:reaper][:debug] %>
 
-log_file = /var/log/glance/reaper.log
+log_file = <%= node[:glance][:reaper][:log_file] %>
 
 # Send logs to syslog (/dev/log) instead of to file specified by `log_file`
 use_syslog = False

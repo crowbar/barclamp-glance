@@ -37,7 +37,7 @@ default[:glance][:registry][:config_file]="/etc/glance/glance-registry.conf"
 default[:glance][:prefetcher][:verbose] = "True"
 default[:glance][:prefetcher][:debug] = "True"
 default[:glance][:prefetcher][:log_file] = "/var/log/glance/prefetcher.log"
-default[:glance][:prefetcher][:config_file]="/etc/glance/glance-registry.conf"
+default[:glance][:prefetcher][:config_file]="/etc/glance/glance-prefetcher.conf"
 
 default[:glance][:pruner][:verbose] = "True"
 default[:glance][:pruner][:debug] = "True"

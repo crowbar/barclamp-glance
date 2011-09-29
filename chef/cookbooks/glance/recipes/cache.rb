@@ -45,3 +45,11 @@ template node[:glance][:scrubber][:config_file] do
   group "root"
   mode 0644
 end
+
+# ensure the image_cache_datadir gets created
+directory node[:glance][:image_cache_datadir] do
+  owner node[:glance][:user]
+  group "root"
+  mode 0755
+  action :create
+end

@@ -15,10 +15,10 @@ use_syslog = False
 image_cache_datadir = /var/lib/glance/image-cache/
 
 # Address to find the registry server
-registry_host = <%= node[:glance][:registry_bind_host] %>
+registry_host = <%= node[:glance][:registry][:bind_host] %>
 
 # Port the registry server is listening on
-registry_port = <%= node[:glance][:registry_bind_port] %>
+registry_port = <%= node[:glance][:registry][:bind_port] %>
 
 [app:glance-prefetcher]
 paste.app_factory = glance.image_cache.prefetcher:app_factory

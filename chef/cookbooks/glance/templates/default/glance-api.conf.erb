@@ -11,16 +11,16 @@ debug = <%= node[:glance][:api][:debug] %>
 default_store = <%= node[:glance][:default_store] %>
 
 # Address to bind the API server
-bind_host = <%= node[:glance][:api_bind_host] %>
+bind_host = <%= node[:glance][:api][:bind_host] %>
 
 # Port the bind the API server to
-bind_port = <%= node[:glance][:api_bind_port] %>
+bind_port = <%= node[:glance][:api][:bind_port] %>
 
 # Address to find the registry server
-registry_host = <%= node[:glance][:registry_bind_host] %>
+registry_host = <%= node[:glance][:registry][:bind_host] %>
 
 # Port the registry server is listening on
-registry_port = <%= node[:glance][:registry_bind_port] %>
+registry_port = <%= node[:glance][:registry][:bind_port] %>
 
 # Log to this file. Make sure you do not set the same log
 # file for both the API and registry servers!

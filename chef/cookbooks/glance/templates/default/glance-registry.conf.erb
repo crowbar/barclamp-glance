@@ -6,10 +6,10 @@ verbose = <%= node[:glance][:registry][:verbose] %>
 debug = <%= node[:glance][:registry][:debug] %>
 
 # Address to bind the registry server
-bind_host = node[:glance][:registry_bind_host] %>
+bind_host = node[:glance][:registry][:bind_host] %>
 
 # Port the bind the registry server to
-bind_port = <%= node[:glance][:registry_bind_port] %>
+bind_port = <%= node[:glance][:registry][:bind_port] %>
 
 # Log to this file. Make sure you do not set the same log
 # file for both the API and registry servers!

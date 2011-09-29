@@ -58,6 +58,7 @@ default[:glance][:sql_idle_timeout] = "3600"
 #default_store choices are: file, http, https, swift, s3
 default[:glance][:default_store] = "file"
 default[:glance][:filesystem_store_datadir] = "/var/lib/glance/images"
+default[:glance][:image_cache_datadir] = "/var/lib/glance/image-cache/"
 
 default[:glance][:swift_store_auth_address] = "127.0.0.1:8080/v1.0/"
 default[:glance][:swift_store_user] = "swiftuser"

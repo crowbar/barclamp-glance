@@ -25,7 +25,7 @@ image_cache_percent_extra_to_free = 0.20
 
 # Directory that the Image Cache writes data to
 # Make sure this is also set in glance-api.conf
-image_cache_datadir = /var/lib/glance/image-cache/
+image_cache_datadir = node[:glance][:image_cache_datadir]
 
 [app:glance-pruner]
 paste.app_factory = glance.image_cache.pruner:app_factory

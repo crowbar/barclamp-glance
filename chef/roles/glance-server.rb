@@ -1,7 +1,8 @@
-name "glance-api"
-description "Glance API Role - Image Registry and Delivery Service for the cloud"
+name "glance-server"
+description "Glance Server Role - Image Registry and Delivery Service for the cloud"
 run_list(
          "recipe[glance::api]",
+         "recipe[glance::registry]",
          "recipe[glance::cache]",
          "recipe[glance::monitor]"
 )

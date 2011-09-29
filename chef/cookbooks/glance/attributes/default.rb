@@ -24,8 +24,30 @@ default[:glance][:config_file]="/etc/glance/glance.conf"
 default[:glance][:working_directory]="/var/lib/glance"
 default[:glance][:pid_directory]="/var/run/glance/"
 
-default[:glance][:verbose] = "True"
-default[:glance][:debug] = "True"
+# glance-api
+default[:glance][:api][:verbose] = "True"
+default[:glance][:api][:debug] = "True"
+
+# glance-registry
+default[:glance][:registry][:verbose] = "True"
+default[:glance][:registry][:debug] = "True"
+
+# glance-prefetcher
+default[:glance][:prefetcher][:verbose] = "True"
+default[:glance][:prefetcher][:debug] = "True"
+
+# glance-pruner
+default[:glance][:pruner][:verbose] = "True"
+default[:glance][:pruner][:debug] = "True"
+
+# glance-reaper
+default[:glance][:reaper][:verbose] = "True"
+default[:glance][:reaper][:debug] = "True"
+
+# glance-scrubber
+default[:glance][:scrubber][:verbose] = "True"
+default[:glance][:scrubber][:debug] = "True"
+
 default[:glance][:api_bind_host] = ipaddress
 default[:glance][:api_bind_port] = "9292"
 default[:glance][:registry_bind_host] = ipaddress

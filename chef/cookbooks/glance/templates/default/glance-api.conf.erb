@@ -1,9 +1,9 @@
 [DEFAULT]
 # Show more verbose log output (sets INFO log level output)
-verbose = <%= node[:glance][:verbose] %>
+verbose = <%= node[:glance][:api][:verbose] %>
 
 # Show debugging output in logs (sets DEBUG log level output)
-debug = <%= node[:glance][:debug] %>
+debug = <%= node[:glance][:api][:debug] %>
 
 # Which backend store should Glance use by default is not specified
 # in a request to add a new image to Glance? Default: 'file'

@@ -18,28 +18,28 @@
 # limitations under the License.
 #
 
-template node[:glance][:prefetcher_config_file] do
+template node[:glance][:prefetcher][:config_file] do
   source "glance-prefetcher.conf.erb"
   owner node[:glance][:user]
   group "root"
   mode 0644
 end
 
-template node[:glance][:pruner_config_file] do
+template node[:glance][:pruner][:config_file] do
   source "glance-pruner.conf.erb"
   owner node[:glance][:user]
   group "root"
   mode 0644
 end
 
-template node[:glance][:reaper_config_file] do
+template node[:glance][:reaper][:config_file] do
   source "glance-reaper.conf.erb"
   owner node[:glance][:user]
   group "root"
   mode 0644
 end
 
-template node[:glance][:scrubber_config_file] do
+template node[:glance][:scrubber][:config_file] do
   source "glance-scrubber.conf.erb"
   owner node[:glance][:user]
   group "root"

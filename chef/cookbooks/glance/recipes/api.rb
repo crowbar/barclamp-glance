@@ -6,7 +6,7 @@
 
 include_recipe "#{@cookbook_name}::common"
 
-template "/etc/glance/glance-api.conf" do
+template node[:glance][:api][:config_file] do
   source "glance-api.conf.erb"
   owner node[:glance][:user]
   group "root"

@@ -25,32 +25,38 @@ default[:glance][:api][:debug] = "True"
 default[:glance][:api][:bind_host] = ipaddress
 default[:glance][:api][:bind_port] = "9292"
 default[:glance][:api][:log_file] = "/var/log/glance/api.log"
+default[:glance][:api][:config_file]="/etc/glance/glance-api.conf"
 
 default[:glance][:registry][:verbose] = "True"
 default[:glance][:registry][:debug] = "True"
 default[:glance][:registry][:bind_host] = ipaddress
 default[:glance][:registry][:bind_port] = "9191"
 default[:glance][:registry][:log_file] = "/var/log/glance/registry.log"
+default[:glance][:registry][:config_file]="/etc/glance/glance-registry.conf"
 
 default[:glance][:prefetcher][:verbose] = "True"
 default[:glance][:prefetcher][:debug] = "True"
 default[:glance][:prefetcher][:log_file] = "/var/log/glance/prefetcher.log"
+default[:glance][:prefetcher][:config_file]="/etc/glance/glance-registry.conf"
 
 default[:glance][:pruner][:verbose] = "True"
 default[:glance][:pruner][:debug] = "True"
 default[:glance][:pruner][:log_file] = "/var/log/glance/pruner.log"
+default[:glance][:pruner][:config_file]="/etc/glance/glance-pruner.conf"
 
 default[:glance][:reaper][:verbose] = "True"
 default[:glance][:reaper][:debug] = "True"
 default[:glance][:reaper][:log_file] = "/var/log/glance/reaper.log"
+default[:glance][:reaper][:config_file]="/etc/glance/glance-reaper.conf"
 
 default[:glance][:scrubber][:verbose] = "True"
 default[:glance][:scrubber][:debug] = "True"
 default[:glance][:scrubber][:log_file] = "/var/log/glance/scrubber.log"
+default[:glance][:scrubber][:config_file]="/etc/glance/glance-scrubber.conf"
 
-default[:glance][:config_file]="/etc/glance/glance.conf"
 default[:glance][:working_directory]="/var/lib/glance"
 default[:glance][:pid_directory]="/var/run/glance/"
+default[:glance][:image_cache_datadir] = "/var/lib/glance/image-cache/"
 
 default[:glance][:sql_connection] = "sqlite:////var/lib/glance/glance.sqlite"
 default[:glance][:sql_idle_timeout] = "3600"
@@ -58,7 +64,6 @@ default[:glance][:sql_idle_timeout] = "3600"
 #default_store choices are: file, http, https, swift, s3
 default[:glance][:default_store] = "file"
 default[:glance][:filesystem_store_datadir] = "/var/lib/glance/images"
-default[:glance][:image_cache_datadir] = "/var/lib/glance/image-cache/"
 
 default[:glance][:swift_store_auth_address] = "127.0.0.1:8080/v1.0/"
 default[:glance][:swift_store_user] = "swiftuser"

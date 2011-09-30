@@ -30,12 +30,12 @@ package "glance" do
   action :install
 end
 
-template node[:glance][:config_file] do
-  source "glance.conf.erb"
-  owner node[:glance][:user]
-  group "root"
-  mode 0644
-end
+# template node[:glance][:config_file] do
+#  source "glance.conf.erb"
+#  owner node[:glance][:user]
+#  group "root"
+#  mode 0644
+# end
 
 # (node[:nova][:images] or []).each do |image|
 #   #get the filename of the image

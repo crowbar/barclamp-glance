@@ -12,6 +12,12 @@ log_file = <%= node[:glance][:scrubber][:log_file] %>
 # Send logs to syslog (/dev/log) instead of to file specified by `log_file`
 use_syslog = False
 
+# ============ Filesystem Store Options ========================
+
+# Directory that the Filesystem backend store
+# writes image data to
+filesystem_store_datadir = <%= node[:glance][:filesystem_store_datadir] %>
+
 # Delayed delete time in seconds
 scrub_time = 43200
 

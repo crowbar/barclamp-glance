@@ -18,11 +18,33 @@
 # limitations under the License.
 #
 
+# ensure the image_cache_datadir gets created
+directory node[:glance][:image_cache_datadir] do
+  owner node[:glance][:user]
+  group "root"
+  mode 0755
+  action :create
+end
+
 template node[:glance][:prefetcher][:config_file] do
   source "glance-prefetcher.conf.erb"
   owner node[:glance][:user]
   group "root"
   mode 0644
+end
+
+directory "#{node[:glance][:image_cache_datadir]}/prefetching" do
+  owner node[:glance][:user]
+  group "root"
+  mode 0755
+  action :create
+end
+
+directory "#{node[:glance][:image_cache_datadir]}/prefetch" do
+  owner node[:glance][:user]
+  group "root"
+  mode 0755
+  action :create
 end
 
 template node[:glance][:pruner][:config_file] do
@@ -39,17 +61,16 @@ template node[:glance][:reaper][:config_file] do
   mode 0644
 end
 
+directory "#{node[:glance][:image_cache_datadir]}/invalid" do
+  owner node[:glance][:user]
+  group "root"
+  mode 0755
+  action :create
+end
+
 template node[:glance][:scrubber][:config_file] do
   source "glance-scrubber.conf.erb"
   owner node[:glance][:user]
   group "root"
   mode 0644
-end
-
-# ensure the image_cache_datadir gets created
-directory node[:glance][:image_cache_datadir] do
-  owner node[:glance][:user]
-  group "root"
-  mode 0755
-  action :create
 end

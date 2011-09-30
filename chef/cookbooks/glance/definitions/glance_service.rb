@@ -1,6 +1,7 @@
 define :glance_service do
 
   glance_name="glance-#{params[:name]}"
+  short_name="#{params[:name]}"
 
   service glance_name do
     if (platform?("ubuntu") && node.platform_version.to_f >= 10.04)
@@ -11,7 +12,7 @@ define :glance_service do
     end
     supports :status => true, :restart => true
     action [:enable, :start]
-    subscribes :restart, resources(:template => node[:glance][:config_file])
+    subscribes :restart, resources(:template => node[:glance][short_name][:config_file])
   end
 
 end

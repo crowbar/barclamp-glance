@@ -11,7 +11,7 @@
       "crowbar-revision": 0,
       "elements": {},
       "element_order": [
-        [ "glance-server"" ]
+        [ "glance-server" ]
       ],
       "config": {
         "environment": "glance-base-config",

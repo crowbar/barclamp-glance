@@ -30,6 +30,12 @@ package "glance" do
   action :install
 end
 
+# Make sure we use the admin node for now.
+my_ipaddress = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
+node[:glance][:api][:bind_host] = my_ipaddress
+node[:glance][:registry][:bind_host] = my_ipaddress
+node.save
+
 # template node[:glance][:config_file] do
 #  source "glance.conf.erb"
 #  owner node[:glance][:user]

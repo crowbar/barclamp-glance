@@ -20,8 +20,8 @@
 # if monitored by nagios, install the nrpe commands
 
 # Node addresses are dynamic and can't be set from attributes only.
-node[:glance][:monitor][:ports]["glance-registry"] = [node[:glance][:registry_bind_host], node[:glance][:registry_bind_port]]
-node[:glance][:monitor][:ports]["glance-api"] = [node[:glance][:api_bind_host], node[:glance][:api_bind_port]]
+node[:glance][:monitor][:ports]["glance-registry"] = [node[:glance][:registry][:bind_host], node[:glance][:registry][:bind_port]]
+node[:glance][:monitor][:ports]["glance-api"] = [node[:glance][:api][:bind_host], node[:glance][:api][:bind_port]]
 
 svcs = node[:glance][:monitor][:svcs]
 ports = node[:glance][:monitor][:ports]

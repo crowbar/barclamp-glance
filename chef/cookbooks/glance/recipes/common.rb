@@ -59,7 +59,7 @@ if node[:glance][:database] == "mysql"
   mysql_address = Chef::Recipe::Barclamp::Inventory.get_network_by_type(mysql, "admin").address if mysql_address.nil?
   Chef::Log.info("Mysql server found at #{mysql_address}")
 
-  # Create the Dashboard Database
+  # Create the Glance Database
   mysql_database "create #{node[:glance][:db][:database]} database" do
     host    mysql_address
     username "db_maker"
@@ -68,13 +68,13 @@ if node[:glance][:database] == "mysql"
     action :create_db
   end
 
-  mysql_database "create dashboard database user" do
+  mysql_database "create glance database user" do
     host    mysql_address
     username "db_maker"
     password mysql[:mysql][:db_maker_password]
-    database node[:dashboard][:db][:database]
+    database node[:glance][:db][:database]
     action :query
-    sql "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER on #{node[:dashboard][:db][:database]}.* to '#{node[:dashboard][:db][:user]}'@'%' IDENTIFIED BY '#{node[:dashboard][:db][:password]}';"
+    sql "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER on #{node[:glance][:db][:database]}.* to '#{node[:glance][:db][:user]}'@'%' IDENTIFIED BY '#{node[:glance][:db][:password]}';"
   end
 
   node[:glance][:sql_connection] = "mysql://#{node[:glance][:db][:user]}:#{node[:glance][:db][:password]}@#{mysql_address}/#{node[:glance][:db][:database]}"

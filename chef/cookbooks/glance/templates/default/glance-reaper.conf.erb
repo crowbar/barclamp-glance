@@ -8,7 +8,7 @@ debug = <%= node[:glance][:reaper][:debug] %>
 log_file = <%= node[:glance][:reaper][:log_file] %>
 
 # Send logs to syslog (/dev/log) instead of to file specified by `log_file`
-use_syslog = False
+use_syslog = <%= node[:glance][:use_syslog] ? "True" : "False" %>
 
 # Directory that the Image Cache writes data to
 # Make sure this is also set in glance-api.conf
@@ -22,11 +22,11 @@ image_cache_datadir = node[:glance][:image_cache_datadir]
 #
 # This is number of seconds to leave these invalid images around before they
 # are elibible to be reaped.
-image_cache_invalid_entry_grace_period = 3600
+image_cache_invalid_entry_grace_period = <%= node[:glance][:image_cache_grace_period] %>
 
 # Number of seconds after which we should consider an incomplete image to be
 # stalled and eligible for reaping
-image_cache_stall_timeout = 86400
+image_cache_stall_timeout = <%= node[:glance][:image_cache_stall_timeout] %>
 
 [app:glance-reaper]
 paste.app_factory = glance.image_cache.reaper:app_factory

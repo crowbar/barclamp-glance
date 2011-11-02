@@ -10,7 +10,7 @@ debug = <%= node[:glance][:scrubber][:debug] %>
 log_file = <%= node[:glance][:scrubber][:log_file] %>
 
 # Send logs to syslog (/dev/log) instead of to file specified by `log_file`
-use_syslog = False
+use_syslog = <%= node[:glance][:use_syslog] ? "True" : "False" %>
 
 # ============ Filesystem Store Options ========================
 
@@ -39,7 +39,7 @@ sql_connection = <%= node[:glance][:sql_connection] %>
 # idle connections. This can result in 'MySQL Gone Away' exceptions. If you
 # notice this, you can lower this value to ensure that SQLAlchemy reconnects
 # before MySQL can drop the connection.
-sql_idle_timeout = 3600
+sql_idle_timeout = <%= node[:glance][:sql_idle_timeout] %>
 
 [app:glance-scrubber]
 paste.app_factory = glance.store.scrubber:app_factory

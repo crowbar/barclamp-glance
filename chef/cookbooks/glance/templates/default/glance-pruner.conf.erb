@@ -8,7 +8,7 @@ debug = <%= node[:glance][:pruner][:debug] %>
 log_file = <%= node[:glance][:pruner][:log_file] %>
 
 # Send logs to syslog (/dev/log) instead of to file specified by `log_file`
-use_syslog = False
+use_syslog = <%= node[:glance][:use_syslog] ? "True" : "False" %>
 
 image_cache_max_size_bytes = 1073741824
 

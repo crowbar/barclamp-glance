@@ -1,9 +1,9 @@
 [DEFAULT]
 # Show more verbose log output (sets INFO log level output)
-verbose = <%= node[:glance][:api][:verbose] %>
+verbose = <%= node[:glance][:api][:verbose] ? "True" : "False" %>
 
 # Show debugging output in logs (sets DEBUG log level output)
-debug = <%= node[:glance][:api][:debug] %>
+debug = <%= node[:glance][:api][:debug] ? "True" : "False" %>
 
 # Which backend store should Glance use by default is not specified
 # in a request to add a new image to Glance? Default: 'file'
@@ -11,7 +11,7 @@ debug = <%= node[:glance][:api][:debug] %>
 default_store = <%= node[:glance][:default_store] %>
 
 # Address to bind the API server
-bind_host = <%= node[:glance][:api][:bind_host] %>
+bind_host = <%= node[:glance][:api][:bind_open_address] ? "0.0.0.0" : node[:glance][:api][:bind_host] %>
 
 # Port the bind the API server to
 bind_port = <%= node[:glance][:api][:bind_port] %>
@@ -27,7 +27,7 @@ registry_port = <%= node[:glance][:registry][:bind_port] %>
 log_file = <%= node[:glance][:api][:log_file] %>
 
 # Send logs to syslog (/dev/log) instead of to file specified by `log_file`
-use_syslog = False
+use_syslog = <%= node[:glance][:use_syslog] ? "True" : "False" %>
 
 # ============ Notification System Options =====================
 
@@ -35,7 +35,7 @@ use_syslog = False
 # There are three methods of sending notifications, logging (via the
 # log_file directive), rabbit (via a rabbitmq queue) or noop (no
 # notifications sent, the default)
-notifier_strategy = noop
+notifier_strategy = <%= node[:glance][:notifier_strategy] %>
 
 # Configuration options if sending notifications via rabbitmq (these are
 # the defaults)
@@ -116,15 +116,15 @@ s3_store_create_bucket_on_put = False
 
 # ============ Image Cache Options ========================
 
-image_cache_enabled = False
+image_cache_enabled = <%= node[:glance][:enable_caching] ? "True" : "False" %>
 
 # Directory that the Image Cache writes data to
 # Make sure this is also set in glance-pruner.conf
-image_cache_datadir = node[:glance][:image_cache_datadir]
+image_cache_datadir = <%= node[:glance][:image_cache_datadir] %>
 
 # Number of seconds after which we should consider an incomplete image to be
 # stalled and eligible for reaping
-image_cache_stall_timeout = 86400
+image_cache_stall_timeout = <%= node[:glance][:image_cache_stall_timeout] %>
 
 # ============ Delayed Delete Options =============================
 
@@ -132,7 +132,11 @@ image_cache_stall_timeout = 86400
 delayed_delete = False
 
 [pipeline:glance-api]
-pipeline = versionnegotiation context apiv1app
+<% if node[:glance][:enable_caching] -%>
+pipeline = versionnegotiation authtoken keystone_shim imagecache apiv1app
+<% else -%>
+pipeline = versionnegotiation authoken keystone_shim apiv1app
+<% end -%>
 # NOTE: use the following pipeline for keystone
 # pipeline = versionnegotiation authtoken context apiv1app
 
@@ -162,10 +166,15 @@ paste.filter_factory = glance.common.context:filter_factory
 [filter:authtoken]
 paste.filter_factory = keystone.middleware.auth_token:filter_factory
 service_protocol = http
-service_host = 127.0.0.1
+service_host = <%= keystone_address %>
 service_port = 5000
-auth_host = 127.0.0.1
+auth_host = <%= keystone_address %>
 auth_port = 5001
 auth_protocol = http
-auth_uri = http://127.0.0.1:5000/
-admin_token = 999888777666
+auth_uri = http://<%= keystone_address %>:5000/
+admin_token = <%= keystone_auth_token %>
+
+[filter:keystone_shim]
+context_class = glance.registry.context.RequestContext
+paste.filter_factory = keystone.middleware.glance_auth_token:filter_factory
+

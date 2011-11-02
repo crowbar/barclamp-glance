@@ -3,7 +3,65 @@
   "description": "Glance service (image registry and delivery service) for the cloud",
   "attributes": {
     "glance": {
-      "backing_type": "file"
+      "api": {
+        "verbose": true,
+        "debug": false,
+        "bind_open_address": false,
+        "bind_port": 9292,
+        "log_file": "/var/log/glance/api.log",
+        "config_file": "/etc/glance/glance-api.conf"
+      },
+      "registry": {
+        "verbose": true,
+        "debug": false,
+        "bind_open_address": false,
+        "bind_port": 9191,
+        "log_file": "/var/log/glance/registry.log",
+        "config_file": "/etc/glance/glance-registry.conf"
+      },
+      "prefetcher": {
+        "verbose": true,
+        "debug": false,
+        "log_file": "/var/log/glance/prefetcher.log",
+        "config_file": "/etc/glance/glance-prefetcher.conf"
+      },
+      "pruner": {
+        "verbose": true,
+        "debug": false,
+        "log_file": "/var/log/glance/pruner.log",
+        "config_file": "/etc/glance/glance-pruner.conf"
+      },
+      "reaper": {
+        "verbose": true,
+        "debug": false,
+        "log_file": "/var/log/glance/reaper.log",
+        "config_file": "/etc/glance/glance-reaper.conf"
+      },
+      "scrubber": {
+        "verbose": true,
+        "debug": false,
+        "log_file": "/var/log/glance/scrubber.log",
+        "config_file": "/etc/glance/glance-scrubber.conf"
+      },
+      "enable_caching": false,
+      "image_cache_datadir": "/var/lib/glance/image-cache",
+      "image_cache_stall_timeout": 86400,
+      "image_cache_grace_period": 3600,
+      "use_syslog": false,
+      "notifier_strategy": "noop",
+      "default_store": "file",
+      "filesystem_store_datadir": "/var/lib/glance/images",
+      "swift_store_auth_address": "127.0.0.1:8080/v1.0",
+      "swift_store_user": "glance_user",
+      "swift_store_key": "glance_key",
+      "swift_store_container": "glance",
+      "swift_store_create_container_on_put": false,
+      "pid_directory": "/var/run/glance",
+      "working_directory": "/var/lib/glance",
+      "sql_idle_timeout": 3600
+      "database": "mysql",
+      "mysql_instance": "none",
+      "sqlite_connection": "sqlite:////var/lib/glance/glance.sqlite"
     }
   },
   "deployment": {

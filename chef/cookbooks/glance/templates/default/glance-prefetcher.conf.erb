@@ -8,7 +8,7 @@ debug = <%= node[:glance][:prefetcher][:debug] %>
 log_file = <%= node[:glance][:prefetcher][:log_file] %>
 
 # Send logs to syslog (/dev/log) instead of to file specified by `log_file`
-use_syslog = False
+use_syslog = <%= node[:glance][:use_syslog] ? "True" : "False" %>
 
 # Directory that the Image Cache writes data to
 # Make sure this is also set in glance-api.conf

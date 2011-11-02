@@ -18,12 +18,13 @@
 # limitations under the License.
 #
 
-#apt_repository "NovaCoreReleasePPA" do
-#  uri "http://ppa.launchpad.net/nova-core/release/ubuntu"
-#  distribution node["lsb"]["codename"]
-#  components ["main"]
-#  action :add
-#end
+package "curl" do
+  action :install
+end
+
+package "python-keystone" do
+  action :install
+end
 
 package "glance" do
   options "--force-yes"
@@ -34,104 +35,56 @@ end
 my_ipaddress = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
 node[:glance][:api][:bind_host] = my_ipaddress
 node[:glance][:registry][:bind_host] = my_ipaddress
+
+if node[:glance][:database] == "mysql"
+
+  node.set_unless['glance']['db']['password'] = secure_password
+  node.set_unless['glance']['db']['user'] = "glance"
+  node.set_unless['glance']['db']['database'] = "glancedb"
+
+  Chef::Log.info("Configuring Glance to use MySQL backend")
+  include_recipe "mysql::client"
+
+  package "python-mysqldb" do
+      action :install
+  end
+
+  mysqls = search(:node, "recipes:mysql\\:\\:server") || []
+  if mysqls.length > 0
+    mysql = mysqls[0]
+  else
+    mysql = node
+  end
+
+  mysql_address = Chef::Recipe::Barclamp::Inventory.get_network_by_type(mysql, "admin").address if mysql_address.nil?
+  Chef::Log.info("Mysql server found at #{mysql_address}")
+
+  # Create the Dashboard Database
+  mysql_database "create #{node[:glance][:db][:database]} database" do
+    host    mysql_address
+    username "db_maker"
+    password mysql[:mysql][:db_maker_password]
+    database node[:glance][:db][:database]
+    action :create_db
+  end
+
+  mysql_database "create dashboard database user" do
+    host    mysql_address
+    username "db_maker"
+    password mysql[:mysql][:db_maker_password]
+    database node[:dashboard][:db][:database]
+    action :query
+    sql "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER on #{node[:dashboard][:db][:database]}.* to '#{node[:dashboard][:db][:user]}'@'%' IDENTIFIED BY '#{node[:dashboard][:db][:password]}';"
+  end
+
+  node[:glance][:sql_connection] = "mysql://#{node[:glance][:db][:user]}:#{node[:glance][:db][:password]}@#{mysql_address}/#{node[:glance][:db][:database]}"
+
+  file "/var/lib/glance/glance.sqlite" do
+    action :delete
+  end
+else
+  node[:glance][:sql_connection] = node[:glance][:sqlite_connection]
+end
+
 node.save
 
-# template node[:glance][:config_file] do
-#  source "glance.conf.erb"
-#  owner node[:glance][:user]
-#  group "root"
-#  mode 0644
-# end
-
-# (node[:nova][:images] or []).each do |image|
-#   #get the filename of the image
-#   filename = image.split('/').last
-#   execute "uec-publish-tarball #{filename} nova_amis x86_64" do
-#     cwd "#{node[:nova][:user_dir]}/images/"
-#     #need EC2_URL, EC2_ACCESS_KEY, EC2_SECRET_KEY, EC2_CERT, EC2_PRIVATE_KEY, S3_URL, EUCALYPTUS_CERT for environment
-#     environment ({
-#                    'EC2_URL' => "http://#{node[:nova][:api]}:8773/services/Cloud",
-#                    'EC2_ACCESS_KEY' => node[:nova][:access_key],
-#                    'EC2_SECRET_KEY' => node[:nova][:secret_key],
-#                    'EC2_CERT_' => "#{node[:nova][:user_dir]}/cert.pem",
-#                    'EC2_PRIVATE_KEY_' => "#{node[:nova][:user_dir]}/pk.pem",
-#                    'S3_URL' => "http://#{node[:nova][:api]}:3333", #TODO need to put S3 into attributes instead of assuming API
-#                    'EUCALYPTUS_CERT' => "#{node[:nova][:user_dir]}/cacert.pem"
-#                  })
-#     user node[:nova][:user]
-#     action :nothing
-#   end
-#   remote_file image do
-#     source image
-#     path "#{node[:nova][:user_dir]}/images/#{filename}"
-#     owner node[:nova][:user]
-#     action :create_if_missing
-#     notifies :run, resources(:execute => "uec-publish-tarball #{filename} nova_amis x86_64"), :immediately
-#   end
-# end
-
-
-# bash "tty linux setup" do
-#   cwd "/tmp"
-#   user "root"
-#   code <<-EOH
-# 	mkdir -p /var/lib/glance/
-# 	curl #{node[:glance][:tty_linux_image]} | tar xvz -C /tmp/
-# 	glance add name="ari-tty" type="ramdisk" disk_format="ari" container_format="ari" is_public=true < /tmp/tty_linux/ramdisk
-# 	glance add name="aki-tty" type="kernel" disk_format="aki" container_format="aki" is_public=true < /tmp/tty_linux/kernel
-# 	glance add name="ami-tty" type="kernel" disk_format="ami" container_format="ami" ramdisk_id="1" kernel_id="2" is_public=true < /tmp/tty_linux/image
-# 	touch /var/lib/glance/tty_setup
-#   EOH
-#   not_if do File.exists?("/var/lib/glance/tty_setup") end
-# end
-
-
-#download and install AMIs
-# (node[:nova][:images] or []).each do |image|
-#   #get the filename of the image
-#   filename = image.split('/').last
-#   execute "uec-publish-tarball #{filename} nova_amis x86_64" do
-#     cwd "#{node[:nova][:user_dir]}/images/"
-#     #need EC2_URL, EC2_ACCESS_KEY, EC2_SECRET_KEY, EC2_CERT, EC2_PRIVATE_KEY, S3_URL, EUCALYPTUS_CERT for environment
-#     environment ({
-#                    'EC2_URL' => "http://#{node[:nova][:api]}:8773/services/Cloud",
-#                    'EC2_ACCESS_KEY' => node[:nova][:access_key],
-#                    'EC2_SECRET_KEY' => node[:nova][:secret_key],
-#                    'EC2_CERT_' => "#{node[:nova][:user_dir]}/cert.pem",
-#                    'EC2_PRIVATE_KEY_' => "#{node[:nova][:user_dir]}/pk.pem",
-#                    'S3_URL' => "http://#{node[:nova][:api]}:3333", #TODO need to put S3 into attributes instead of assuming API
-#                    'EUCALYPTUS_CERT' => "#{node[:nova][:user_dir]}/cacert.pem"
-#                  })
-#     user node[:nova][:user]
-#     action :nothing
-#   end
-#   remote_file image do
-#     source image
-#     path "#{node[:nova][:user_dir]}/images/#{filename}"
-#     owner node[:nova][:user]
-#     action :create_if_missing
-#     notifies :run, resources(:execute => "uec-publish-tarball #{filename} nova_amis x86_64"), :immediately
-#   end
-# end
-
-# #debug output
-# execute "euca-describe-images" do
-#   user node[:nova][:user]
-# end
-
-#if not glance
-
-# in /images/
-
-# mkdir kernel image "mykernel_image"
-# json file from one with "aki"
-# make up id as "mykernel_id"
-
-# mkdir ami image "myami_image"
-# json file from one with "ami"
-# kernel_id "mykernel_id"
-# id "random"
-
-# execute "nova-manage image convert /var/lib/nova/images" do
-#   user 'nova'
-# end

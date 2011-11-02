@@ -88,7 +88,7 @@
             "swift_store_user": { "type": "str", "required": true },
             "swift_store_key": { "type": "str", "required": true },
             "swift_store_container": { "type": "str", "required": true },
-            "swift_store_create_container_on_put": { "type": "str", "required": true },
+            "swift_store_create_container_on_put": { "type": "bool", "required": true },
             "pid_directory": { "type": "str", "required": true },
             "working_directory": { "type": "str", "required": true },
             "sql_idle_timeout": { "type": "int", "required": true },

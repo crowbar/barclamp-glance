@@ -24,7 +24,7 @@ template node[:glance][:api][:config_file] do
   group "root"
   mode 0644
   variables(
-    :keystone_address = keystone_address,
+    :keystone_address => keystone_address,
     :keystone_admin_token => keystone[:keystone][:dashboard]['long-lived-token']
   )
 end

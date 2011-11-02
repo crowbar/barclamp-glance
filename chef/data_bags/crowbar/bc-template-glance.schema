@@ -12,7 +12,89 @@
           "type": "map",
           "required": true,
           "mapping": {
-            "backing_type": { "type": "str", "required": true }
+            "api": {
+              "type": "map",
+              "required": true,
+              "mapping": {
+                "verbose": { "type": "bool", "required": true },
+                "debug": { "type": "bool", "required": true },
+                "bind_open_address": { "type": "bool", "required": true },
+                "bind_port": { "type": "int", "required": true },
+                "log_file": { "type": "str", "required": true },
+                "config_file": { "type": "str", "required": true }
+              }
+            },
+            "registry": {
+              "type": "map",
+              "required": true,
+              "mapping": {
+                "verbose": { "type": "bool", "required": true },
+                "debug": { "type": "bool", "required": true },
+                "bind_open_address": { "type": "bool", "required": true },
+                "bind_port": { "type": "int", "required": true },
+                "log_file": { "type": "str", "required": true },
+                "config_file": { "type": "str", "required": true }
+              }
+            },
+            "prefetcher": {
+              "type": "map",
+              "required": true,
+              "mapping": {
+                "verbose": { "type": "bool", "required": true },
+                "debug": { "type": "bool", "required": true },
+                "log_file": { "type": "str", "required": true },
+                "config_file": { "type": "str", "required": true }
+              }
+            },
+            "pruner": {
+              "type": "map",
+              "required": true,
+              "mapping": {
+                "verbose": { "type": "bool", "required": true },
+                "debug": { "type": "bool", "required": true },
+                "log_file": { "type": "str", "required": true },
+                "config_file": { "type": "str", "required": true }
+              }
+            },
+            "reaper": {
+              "type": "map",
+              "required": true,
+              "mapping": {
+                "verbose": { "type": "bool", "required": true },
+                "debug": { "type": "bool", "required": true },
+                "log_file": { "type": "str", "required": true },
+                "config_file": { "type": "str", "required": true }
+              }
+            },
+            "scrubber": {
+              "type": "map",
+              "required": true,
+              "mapping": {
+                "verbose": { "type": "bool", "required": true },
+                "debug": { "type": "bool", "required": true },
+                "log_file": { "type": "str", "required": true },
+                "config_file": { "type": "str", "required": true }
+              }
+            },
+            "enable_caching": { "type": "bool", "required": true },
+            "image_cache_datadir": { "type": "str", "required": true },
+            "image_cache_stall_timeout": { "type": "int", "required": true },
+            "image_cache_grace_period": { "type": "int", "required": true },
+            "use_syslog": { "type": "bool", "required": true },
+            "notifier_strategy": { "type": "str", "required": true },
+            "default_store": { "type": "str", "required": true },
+            "filesystem_store_datadir": { "type": "str", "required": true },
+            "swift_store_auth_address": { "type": "str", "required": true },
+            "swift_store_user": { "type": "str", "required": true },
+            "swift_store_key": { "type": "str", "required": true },
+            "swift_store_container": { "type": "str", "required": true },
+            "swift_store_create_container_on_put": { "type": "str", "required": true },
+            "pid_directory": { "type": "str", "required": true },
+            "working_directory": { "type": "str", "required": true },
+            "sql_idle_timeout": { "type": "int", "required": true },
+            "database": { "type": "str", "required": true },
+            "mysql_instance": { "type": "str", "required": true },
+            "sqlite_connection": { "type": "str", "required": true }
           }
         }
       }

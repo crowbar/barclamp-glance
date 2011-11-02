@@ -58,7 +58,7 @@
       "swift_store_create_container_on_put": false,
       "pid_directory": "/var/run/glance",
       "working_directory": "/var/lib/glance",
-      "sql_idle_timeout": 3600
+      "sql_idle_timeout": 3600,
       "database": "mysql",
       "mysql_instance": "none",
       "sqlite_connection": "sqlite:////var/lib/glance/glance.sqlite"

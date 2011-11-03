@@ -49,7 +49,7 @@ if node[:glance][:database] == "mysql"
       action :install
   end
 
-  env_filter = " AND mysql_config_environment:#{node[:glance][:mysql_instance]}"
+  env_filter = " AND mysql_config_environment:mysql-config-#{node[:glance][:mysql_instance]}"
   mysqls = search(:node, "recipes:mysql\\:\\:server#{env_filter}") || []
   if mysqls.length > 0
     mysql = mysqls[0]

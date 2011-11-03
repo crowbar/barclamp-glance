@@ -8,7 +8,7 @@ include_recipe "#{@cookbook_name}::common"
 
 
 if node[:glance][:use_keystone]
-  env_filter = " AND keystone_config_environment:#{node[:glance][:keystone_instance]}"
+  env_filter = " AND keystone_config_environment:keystone-config-#{node[:glance][:keystone_instance]}"
   keystones = search(:node, "recipes:keystone\\:\\:server#{env_filter}") || []
   if keystones.length > 0
     keystone = keystones[0]

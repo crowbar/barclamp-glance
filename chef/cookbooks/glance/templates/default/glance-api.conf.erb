@@ -132,18 +132,9 @@ image_cache_stall_timeout = <%= node[:glance][:image_cache_stall_timeout] %>
 delayed_delete = False
 
 [pipeline:glance-api]
-<% if node[:glance][:enable_caching] -%>
-pipeline = versionnegotiation authtoken keystone_shim imagecache apiv1app
-<% else -%>
-pipeline = versionnegotiation authoken keystone_shim apiv1app
-<% end -%>
-# NOTE: use the following pipeline for keystone
-# pipeline = versionnegotiation authtoken context apiv1app
-
-# To enable Image Cache Management API replace pipeline with below:
-# pipeline = versionnegotiation context imagecache apiv1app
-# NOTE: use the following pipeline for keystone auth (with caching)
-# pipeline = versionnegotiation authtoken context imagecache apiv1app
+<% cont = node[:glance][:use_keystone] ? "authtoken keystone_shim" : "context" -%>
+<% cache = node[:glance][:enable_caching] ? "imagecache" : "" -%>
+pipeline = versionnegotiation <%= cont %> <%= cache %> apiv1app
 
 [pipeline:versions]
 pipeline = versionsapp

@@ -41,9 +41,11 @@ api_limit_max = 1000
 limit_param_default = 25
 
 [pipeline:glance-registry]
+<% if node[:glance][:use_keystone] -%>
 pipeline = authtoken keystone_shim registryapp
-# NOTE: use the following pipeline for keystone
-# pipeline = authtoken keystone_shim context registryapp
+<% else -%>
+pipeline = context registryapp
+<% end -%>
 
 [app:registryapp]
 paste.app_factory = glance.registry.server:app_factory

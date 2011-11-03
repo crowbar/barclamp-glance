@@ -59,6 +59,8 @@
       "pid_directory": "/var/run/glance",
       "working_directory": "/var/lib/glance",
       "sql_idle_timeout": 3600,
+      "use_keystone": true,
+      "keystone_instance": "none",
       "database": "mysql",
       "mysql_instance": "none",
       "sqlite_connection": "sqlite:////var/lib/glance/glance.sqlite"

@@ -92,6 +92,8 @@
             "pid_directory": { "type": "str", "required": true },
             "working_directory": { "type": "str", "required": true },
             "sql_idle_timeout": { "type": "int", "required": true },
+            "use_keystone": { "type": "bool", "required": true },
+            "keystone_instance": { "type": "str", "required": true },
             "database": { "type": "str", "required": true },
             "mysql_instance": { "type": "str", "required": true },
             "sqlite_connection": { "type": "str", "required": true }

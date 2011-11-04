@@ -45,7 +45,7 @@ class GlanceService < ServiceObject
     begin
       keystoneService = KeystoneService.new(@logger)
       keystones = keystoneService.list_active
-      base["attributes"]["glance"]["keystone_instance"] = keystones[0] unless keystone.empty?
+      base["attributes"]["glance"]["keystone_instance"] = keystones[0] unless keystones.empty?
     rescue
       @logger.info("Glance create_proposal: no keystone found")
     end

@@ -16,7 +16,7 @@ if node[:glance][:use_keystone]
   end
 
   keystone_address = Chef::Recipe::Barclamp::Inventory.get_network_by_type(keystone, "admin").address if keystone_address.nil?
-  keystone_token = keystone[:keystone][:dashboard]['long-lived-token']
+  keystone_token = keystone[:keystone][:admin]['token']
   Chef::Log.info("Keystone server found at #{keystone_address}")
 else
   keystone_address = ""
@@ -30,7 +30,7 @@ template node[:glance][:registry][:config_file] do
   mode 0644
   variables(
     :keystone_address => keystone_address,
-    :keystone_admin_token => keystone[:keystone][:dashboard]['long-lived-token']
+    :keystone_admin_token => keystone[:keystone][:admin]['token']
   )
 end
 

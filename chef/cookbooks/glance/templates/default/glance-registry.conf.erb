@@ -62,7 +62,7 @@ service_port = 5000
 auth_host = <%= @keystone_address %>
 auth_port = 5001
 auth_protocol = http
-auth_uri = http://<%= @keystone_address %>:5000/
+auth_uri = http://<%= @keystone_address %>:5000/v2.0
 admin_token = <%= @keystone_auth_token %>
 
 [filter:keystone_shim]

@@ -31,7 +31,7 @@ template node[:glance][:api][:config_file] do
   mode 0644
   variables(
     :keystone_address => keystone_address,
-    :keystone_admin_token => keystone_token
+    :keystone_auth_token => keystone_token
   )
 end
 

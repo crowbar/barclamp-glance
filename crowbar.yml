@@ -61,12 +61,12 @@ locale_additions:
           api_log_file: Log File
           api_config_file: Config File
           api_bind_open_address: Bind to All Addresses
-          api_bind_pot: Access Port
+          api_bind_port: Access Port
           registry_header: API
           registry_log_file: Log File
           registry_config_file: Config File
           registry_bind_open_address: Bind to All Addresses
-          registry_bind_pot: Access Port
+          registry_bind_port: Access Port
           cache_header: Caching
           enable_caching: Enable Caching
           image_cache_datadir: Directory

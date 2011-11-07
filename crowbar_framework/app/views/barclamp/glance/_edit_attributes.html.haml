@@ -107,7 +107,7 @@
         %label{ :for => :api_verbose }= t('.verbose')
         = select_tag :api_verbose, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["verbose"].to_s), :onchange => "update_value('api/verbose', 'verbose', 'boolean')"
       %p
-        %label{ :for => :api_bind_open_address }= t('.bind_open_address')
+        %label{ :for => :api_bind_open_address }= t('.api_bind_open_address')
         = select_tag :api_bind_open_address, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["bind_open_address"].to_s), :onchange => "update_value('api/bind_open_address', 'bind_open_address', 'boolean')"
       %p
         %label{ :for => :api_bind_port }= t('.api_bind_port')
@@ -127,7 +127,7 @@
         %label{ :for => :registry_verbose }= t('.verbose')
         = select_tag :registry_verbose, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["registry"]["verbose"].to_s), :onchange => "update_value('registry/verbose', 'verbose', 'boolean')"
       %p
-        %label{ :for => :registry_bind_open_address }= t('.bind_open_address')
+        %label{ :for => :registry_bind_open_address }= t('.registry_bind_open_address')
         = select_tag :registry_bind_open_address, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["registry"]["bind_open_address"].to_s), :onchange => "update_value('registry/bind_open_address', 'bind_open_address', 'boolean')"
       %p
         %label{ :for => :registry_bind_port }= t('.registry_bind_port')

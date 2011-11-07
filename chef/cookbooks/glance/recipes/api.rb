@@ -37,5 +37,29 @@ end
 
 glance_service "api"
 
+my_ipaddress = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
+port = node["glance"]["api"]["bind_port"]
+
+keystone_register "register glance service" do
+  host keystone_address
+  token node[:keystone][:admin][:token]
+  service_name "glance"
+  service_description "Openstack Glance Service"
+  action :add_service
+end
+
+keystone_register "register glance service" do
+  host keystone_address
+  token node[:keystone][:admin][:token]
+  endpoint_service "glance"
+  endpoint_region "RegionOne"
+  endpoint_adminURL "http://#{my_ipaddress}:#{port}/v1.1/%tenant_id%"
+  endpoint_internalURL "http://#{my_ipaddress}:#{port}/v1.1/%tenant_id%"
+  endpoint_publicURL "http://#{my_ipaddress}:#{port}/v1.1/%tenant_id%"
+#  endpoint_global true
+#  endpoint_enabled true
+  action :add_endpoint_template
+end
+
 node[:glance][:monitor][:svcs] <<["glance-api"]
 

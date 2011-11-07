@@ -48,7 +48,7 @@ keystone_register "register glance service" do
   action :add_service
 end
 
-keystone_register "register glance service" do
+keystone_register "register glance endpoint" do
   host keystone_address
   token node[:keystone][:admin][:token]
   endpoint_service "glance"

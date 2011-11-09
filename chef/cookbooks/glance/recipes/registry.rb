@@ -11,6 +11,7 @@ if node[:glance][:use_keystone]
   keystones = search(:node, "recipes:keystone\\:\\:server#{env_filter}") || []
   if keystones.length > 0
     keystone = keystones[0]
+    keystone = node if keystone.name == node.name
   else
     keystone = node
   end

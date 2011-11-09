@@ -53,6 +53,7 @@ if node[:glance][:database] == "mysql"
   mysqls = search(:node, "recipes:mysql\\:\\:server#{env_filter}") || []
   if mysqls.length > 0
     mysql = mysqls[0]
+    mysql = node if mysql.name == node.name
   else
     mysql = node
   end

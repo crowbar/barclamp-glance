@@ -12,6 +12,11 @@
           "type": "map",
           "required": true,
           "mapping": {
+            "images": {
+              "type": "seq",
+              "required": true,
+              "sequence": [ { "type": "str" } ]
+            },
             "api": {
               "type": "map",
               "required": true,

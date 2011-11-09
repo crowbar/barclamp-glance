@@ -4,6 +4,7 @@ run_list(
          "recipe[glance::api]",
          "recipe[glance::registry]",
          "recipe[glance::cache]",
+         "recipe[glance::setup]",
          "recipe[glance::monitor]"
 )
 default_attributes()

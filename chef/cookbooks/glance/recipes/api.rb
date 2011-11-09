@@ -54,9 +54,9 @@ keystone_register "register glance endpoint" do
   token node[:keystone][:admin][:token]
   endpoint_service "glance"
   endpoint_region "RegionOne"
-  endpoint_adminURL "http://#{my_ipaddress}:#{port}/v1.1/%tenant_id%"
-  endpoint_internalURL "http://#{my_ipaddress}:#{port}/v1.1/%tenant_id%"
-  endpoint_publicURL "http://#{my_ipaddress}:#{port}/v1.1/%tenant_id%"
+  endpoint_adminURL "http://#{my_ipaddress}:#{port}/v1.1"
+  endpoint_internalURL "http://#{my_ipaddress}:#{port}/v1.1"
+  endpoint_publicURL "http://#{my_ipaddress}:#{port}/v1.1"
 #  endpoint_global true
 #  endpoint_enabled true
   action :add_endpoint_template

@@ -12,7 +12,7 @@ use_syslog = <%= node[:glance][:use_syslog] ? "True" : "False" %>
 
 # Directory that the Image Cache writes data to
 # Make sure this is also set in glance-api.conf
-image_cache_datadir = node[:glance][:image_cache_datadir]
+image_cache_datadir = <%= node[:glance][:image_cache_datadir] %>
 
 # Address to find the registry server
 registry_host = <%= node[:glance][:registry][:bind_host] %>

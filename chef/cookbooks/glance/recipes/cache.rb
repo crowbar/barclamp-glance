@@ -68,32 +68,39 @@ directory "#{node[:glance][:image_cache_datadir]}/invalid" do
   action :create
 end
 
-
-if node[:glance][:use_keystone]
-  env_filter = " AND keystone_config_environment:keystone-config-#{node[:glance][:keystone_instance]}"
-  keystones = search(:node, "recipes:keystone\\:\\:server#{env_filter}") || []
-  if keystones.length > 0
-    keystone = keystones[0]
-    keystone = node if keystone.name == node.name
-  else
-    keystone = node
+if node[:glance][:enable_caching]
+  template "/etc/cron.d/glance-reaper" do
+    source "glance.cron.erb"
+    owner "root"
+    group "root"
+    mode 0644
+    variables(
+      :glance_min => "5",
+      :glance_hour => "*",
+      :glance_command => "/usr/bin/glance-cache-reaper")
   end
 
-  keystone_address = Chef::Recipe::Barclamp::Inventory.get_network_by_type(keystone, "admin").address if keystone_address.nil?
-  keystone_token = keystone[:keystone][:admin]['token']
-  Chef::Log.info("Keystone server found at #{keystone_address}")
-else
-  keystone_address = ""
-  keystone_token = ""
+  template "/etc/cron.d/glance-pruner" do
+    source "glance.cron.erb"
+    owner "root"
+    group "root"
+    mode 0644
+    variables(
+      :glance_min => "45",
+      :glance_hour => "*",
+      :glance_command => "/usr/bin/glance-cache-pruner")
+  end
+
+  template "/etc/cron.d/glance-prefetcher" do
+    source "glance.cron.erb"
+    owner "root"
+    group "root"
+    mode 0644
+    variables(
+      :glance_min => "25",
+      :glance_hour => "*",
+      :glance_command => "/usr/bin/glance-cache-prefetcher")
+  end
+
 end
 
-template node[:glance][:scrubber][:config_file] do
-  source "glance-scrubber.conf.erb"
-  owner node[:glance][:user]
-  group "root"
-  mode 0644
-  variables(
-    :keystone_address => keystone_address,
-    :keystone_admin_token => keystone_token
-  )
-end

@@ -25,8 +25,6 @@ else
   keystone_token = ""
 end
 
-glance_service "api"
-
 template node[:glance][:api][:config_file] do
   source "glance-api.conf.erb"
   owner node[:glance][:user]
@@ -37,6 +35,8 @@ template node[:glance][:api][:config_file] do
     :keystone_auth_token => keystone_token
   )
 end
+
+glance_service "api"
 
 my_ipaddress = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
 port = node["glance"]["api"]["bind_port"]

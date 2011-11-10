@@ -11,7 +11,7 @@ define :glance_service do
       status_command "status #{glance_name} | cut -d' ' -f2 | cut -d'/' -f1 | grep start"
     end
     supports :status => true, :restart => true
-    action :enable
+    action [:enable, :start]
     subscribes :restart, resources(:template => node[:glance][short_name][:config_file]), :immediately
   end
 

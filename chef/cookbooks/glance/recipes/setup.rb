@@ -27,7 +27,7 @@ end
 my_ipaddress = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
 port = node["glance"]["api"]["bind_port"]
 
-glance_args = "-H #{my_ipaddress} -P #{port} #{admin_token}"
+glance_args = "-H #{my_ipaddress} -p #{port} #{admin_token}"
 
 #
 # Download and install AMIs
@@ -41,9 +41,10 @@ glance_args = "-H #{my_ipaddress} -P #{port} #{admin_token}"
     code <<-EOH
 mkdir -p tmp_dir
 tar -zxf #{filename} -C tmp_dir/
-glance #{glance_args} add name="ubuntu-11.04-kernel" disk_format=aki container_format=aki < tmp_dir/natty-server-uec-amd64-vmlinuz-virtual
-glance #{glance_args} add name="ubuntu-11.04-initrd" disk_format=ari container_format=ari < tmp_dir/natty-server-uec-amd64-loader
-glance #{glance_args} add name="ubuntu-11.04-server" disk_format=ami container_format=ami kernel_id=1 ramdisk_id=2 < tmp_dir/natty-server-uec-amd64.img
+glance #{glance_args} index # Make sure database is running
+glance #{glance_args} add name="ubuntu-11.04-kernel" disk_format=aki container_format=aki < tmp_dir/natty-server-cloudimg-amd64-vmlinuz-virtual
+glance #{glance_args} add name="ubuntu-11.04-initrd" disk_format=ari container_format=ari < tmp_dir/natty-server-cloudimg-amd64-loader
+glance #{glance_args} add name="ubuntu-11.04-server" disk_format=ami container_format=ami kernel_id=1 ramdisk_id=2 < tmp_dir/natty-server-cloudimg-amd64.img
 rm -rf tmp_dir
 EOH
     cwd "#{node[:glance][:working_directory]}/raw_images"

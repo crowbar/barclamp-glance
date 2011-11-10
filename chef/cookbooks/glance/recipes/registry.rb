@@ -24,6 +24,8 @@ else
   keystone_token = ""
 end
 
+glance_service "registry"
+
 template node[:glance][:registry][:config_file] do
   source "glance-registry.conf.erb"
   owner node[:glance][:user]
@@ -34,7 +36,5 @@ template node[:glance][:registry][:config_file] do
     :keystone_auth_token => keystone[:keystone][:admin]['token']
   )
 end
-
-glance_service "registry"
 
 node[:glance][:monitor][:svcs] << ["glance-registry"]

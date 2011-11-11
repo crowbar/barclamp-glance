@@ -102,5 +102,19 @@ if node[:glance][:enable_caching]
       :glance_command => "/usr/bin/glance-cache-prefetcher")
   end
 
+else
+
+  file "/etc/cron.d/glance-reaper" do
+    action :delete
+  end
+
+  file "/etc/cron.d/glance-pruner" do
+    action :delete
+  end
+
+  file "/etc/cron.d/glance-prefetcher" do
+    action :delete
+  end
+
 end
 

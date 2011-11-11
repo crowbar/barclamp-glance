@@ -32,7 +32,8 @@ glance_args = "-H #{my_ipaddress} -p #{port} #{admin_token}"
 #
 # Download and install AMIs
 #
-# GREG: This is not generic and only works with this one image.
+# XXX: This is not generic and only works with this one image.
+# If the json file changes, we need to update this procedure.
 #
 (node[:glance][:images] or []).each do |image|
   #get the filename of the image

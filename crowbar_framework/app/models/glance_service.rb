@@ -40,8 +40,12 @@ class GlanceService < ServiceObject
     begin
       mysqlService = MysqlService.new(@logger)
       mysqls = mysqlService.list_active[1]
-      base["attributes"]["glance"]["mysql_instance"] = mysqls[0] unless mysqls.empty?
-      base["attributes"]["glance"]["database"] = "mysql"
+      if mysqls.empty?
+        base["attributes"]["glance"]["database"] = "sqlite"
+      else
+        base["attributes"]["glance"]["mysql_instance"] = mysqls[0]
+        base["attributes"]["glance"]["database"] = "mysql"
+      end
     rescue
       base["attributes"]["glance"]["database"] = "sqlite"
       @logger.info("Glance create_proposal: no mysql found")
@@ -51,8 +55,12 @@ class GlanceService < ServiceObject
     begin
       keystoneService = KeystoneService.new(@logger)
       keystones = keystoneService.list_active[1]
-      base["attributes"]["glance"]["keystone_instance"] = keystones[0] unless keystones.empty?
-      base["attributes"]["glance"]["use_keystone"] = true
+      if keystones.empty?
+        base["attributes"]["glance"]["use_keystone"] = false
+      else
+        base["attributes"]["glance"]["keystone_instance"] = keystones[0]
+        base["attributes"]["glance"]["use_keystone"] = true
+      end
     rescue
       @logger.info("Glance create_proposal: no keystone found")
       base["attributes"]["glance"]["use_keystone"] = false

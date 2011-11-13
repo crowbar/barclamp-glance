@@ -20,6 +20,10 @@ class GlanceService < ServiceObject
     @logger = thelogger
   end
 
+  def self.allow_multiple_proposals?
+    true
+  end
+
   def create_proposal
     @logger.debug("Glance create_proposal: entering")
     base = super

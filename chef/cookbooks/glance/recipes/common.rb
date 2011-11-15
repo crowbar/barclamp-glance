@@ -37,6 +37,7 @@ node[:glance][:api][:bind_host] = my_ipaddress
 node[:glance][:registry][:bind_host] = my_ipaddress
 
 if node[:glance][:database] == "mysql"
+  ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
 
   node.set_unless['glance']['db']['password'] = secure_password
   node.set_unless['glance']['db']['user'] = "glance"

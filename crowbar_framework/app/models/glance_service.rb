@@ -24,6 +24,17 @@ class GlanceService < ServiceObject
     true
   end
 
+  def proposal_dependencies(role)
+    answer = []
+    if role.default_attributes["glance"]["database"] == "mysql"
+      answer << { "barclamp" => "mysql", "inst" => role.default_attributes["glance"]["mysql_instance"] }
+    end
+    if role.default_attributes["glance"]["use_keystone"]
+      answer << { "barclamp" => "keystone", "inst" => role.default_attributes["glance"]["keystone_instance"] }
+    end
+    answer
+  end
+
   def create_proposal
     @logger.debug("Glance create_proposal: entering")
     base = super
@@ -41,6 +52,10 @@ class GlanceService < ServiceObject
       mysqlService = MysqlService.new(@logger)
       mysqls = mysqlService.list_active[1]
       if mysqls.empty?
+        # No actives, look for proposals
+        mysqls = mysqlService.proposals[1]
+      end
+      if mysqls.empty?
         base["attributes"]["glance"]["database"] = "sqlite"
       else
         base["attributes"]["glance"]["mysql_instance"] = mysqls[0]
@@ -55,6 +70,10 @@ class GlanceService < ServiceObject
     begin
       keystoneService = KeystoneService.new(@logger)
       keystones = keystoneService.list_active[1]
+      if keystones.empty?
+        # No actives, look for proposals
+        keystones = keystoneService.proposals[1]
+      end
       if keystones.empty?
         base["attributes"]["glance"]["use_keystone"] = false
       else

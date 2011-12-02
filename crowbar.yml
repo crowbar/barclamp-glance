@@ -66,7 +66,7 @@ locale_additions:
           api_config_file: Config File
           api_bind_open_address: Bind to All Addresses
           api_bind_port: Access Port
-          registry_header: API
+          registry_header: Registry
           registry_log_file: Log File
           registry_config_file: Config File
           registry_bind_open_address: Bind to All Addresses

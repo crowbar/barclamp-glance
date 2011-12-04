@@ -46,6 +46,7 @@ if node[:glance][:use_keystone]
     host keystone_address
     token keystone_token
     service_name "glance"
+    service_type "image"
     service_description "Openstack Glance Service"
     action :add_service
   end

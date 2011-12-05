@@ -6,7 +6,7 @@ glance_port=${glance_port%%,*}
 glance_nodes=$(knife_node_find 'roles:glance-server' FQDN)
 
 for node in $glance_nodes; do
-    if run_on $node -- glance -H $(name_to_ip $node) \
+    if run_on $node glance -H $(name_to_ip $node) \
        -p "$glance_port" -A "$auth_token" details |grep -q 'Status: active'; then
        echo "Glance running on $node"
     else

@@ -19,6 +19,7 @@ if node[:glance][:use_keystone]
 
   keystone_address = Chef::Recipe::Barclamp::Inventory.get_network_by_type(keystone, "admin").address if keystone_address.nil?
   keystone_token = keystone["keystone"]["admin"]["token"]
+  keystone_admin_port = keystone["keystone"]["api"]["admin_port"]
   Chef::Log.info("Keystone server found at #{keystone_address}")
 else
   keystone_address = ""
@@ -44,6 +45,7 @@ if node[:glance][:use_keystone]
 
   keystone_register "register glance service" do
     host keystone_address
+    port keystone_admin_port
     token keystone_token
     service_name "glance"
     service_type "image"
@@ -53,6 +55,7 @@ if node[:glance][:use_keystone]
 
   keystone_register "register glance endpoint" do
     host keystone_address
+    port keystone_admin_port
     token keystone_token
     endpoint_service "glance"
     endpoint_region "RegionOne"

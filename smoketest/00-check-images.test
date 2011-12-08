@@ -1,13 +1,12 @@
 #!/bin/bash
-auth_token=$(awk '/"token":/ {print $2}' <$LOGDIR/keystone-deployed.json |\
-		 sed -e 's/"//g' -e 's/,//g')
-glance_port=$(awk '/"bind_port":/ {print $2}' <$LOGDIR/glance-deployed.json)
-glance_port=${glance_port%%,*}
+eval $(parse_yml_or_json "$LOGDIR/keystone-token.json" access.token.id)
+eval $(parse_yml_or_json "$LOGDIR/glance-deployed.json" attributes.glance.api.bind_port) 
+glance_port=$attributes_glance_api_bind_port
 glance_nodes=$(knife_node_find 'roles:glance-server' FQDN)
 
 for node in $glance_nodes; do
     if run_on $node glance -H $(name_to_ip $node) \
-       -p "$glance_port" -A "$auth_token" details |grep -q 'Status: active'; then
+       -p "$glance_port" -A "$access_token_id" details |grep -q 'Status: active'; then
        echo "Glance running on $node"
     else
        echo "Glance not running on $node!"

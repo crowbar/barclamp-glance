@@ -7,4 +7,5 @@ version          "0.2"
 depends          "keystone"
 depends          "mysql"
 depends          "openssl"
+depends          "nagios"
 

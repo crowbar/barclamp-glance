@@ -27,6 +27,8 @@ svcs = node[:glance][:monitor][:svcs]
 ports = node[:glance][:monitor][:ports]
 log ("will monitor glance svcs: #{svcs.join(',')} and ports #{ports.values.join(',')}")
 
+include_recipe "nagios::common" if node["roles"].include?("nagios-client")
+
 template "/etc/nagios/nrpe.d/glance_nrpe.cfg" do
   source "glance_nrpe.cfg.erb"
   mode "0644"

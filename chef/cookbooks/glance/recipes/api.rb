@@ -43,8 +43,9 @@ end
 glance_service "api"
 
 if node[:glance][:use_keystone]
-  my_ipaddress = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
-  port = node["glance"]["api"]["bind_port"]
+  my_admin_ip = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
+  my_public_ip = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "public").address
+  api_port = node["glance"]["api"]["bind_port"]
 
   keystone_register "register glance service" do
     host keystone_address
@@ -62,9 +63,9 @@ if node[:glance][:use_keystone]
     token keystone_token
     endpoint_service "glance"
     endpoint_region "RegionOne"
-    endpoint_adminURL "http://#{my_ipaddress}:#{port}/v1"
-    endpoint_internalURL "http://#{my_ipaddress}:#{port}/v1"
-    endpoint_publicURL "http://#{my_ipaddress}:#{port}/v1"
+    endpoint_adminURL "http://#{my_admin_ip}:#{api_port}/v1"
+    endpoint_internalURL "http://#{my_admin_ip}:#{api_port}/v1"
+    endpoint_publicURL "http://#{my_public_ip}:#{api_port}/v1"
 #  endpoint_global true
 #  endpoint_enabled true
     action :add_endpoint_template

@@ -19,7 +19,7 @@ if node[:glance][:use_keystone]
     keystone = node
   end
 
-  admin_token = "-A #{keystone["keystone"]["admin"]["token"]}"
+  admin_token = "-A #{keystone["keystone"]["service"]["token"]}"
 else
   admin_token = ""
 end

@@ -75,7 +75,7 @@ if node[:glance][:use_keystone]
     user_name keystone_service_user
     tenant_name keystone_service_tenant
     role_name "admin"
-    action :add_user
+    action :add_access
   end
 
   keystone_register "register glance service" do

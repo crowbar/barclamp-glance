@@ -131,41 +131,17 @@ image_cache_stall_timeout = <%= node[:glance][:image_cache_stall_timeout] %>
 # Turn on/off delayed delete
 delayed_delete = False
 
-[pipeline:glance-api]
-<% cont = node[:glance][:use_keystone] ? "authtoken keystone_shim" : "context" -%>
-<% cache = node[:glance][:enable_caching] ? "imagecache" : "" -%>
-pipeline = versionnegotiation <%= cont %> <%= cache %> apiv1app
-
-[pipeline:versions]
-pipeline = versionsapp
-
-[app:versionsapp]
-paste.app_factory = glance.api.versions:app_factory
-
-[app:apiv1app]
-paste.app_factory = glance.api.v1:app_factory
-
-[filter:versionnegotiation]
-paste.filter_factory = glance.api.middleware.version_negotiation:filter_factory
-
-[filter:imagecache]
-paste.filter_factory = glance.api.middleware.image_cache:filter_factory
-
-[filter:context]
-paste.filter_factory = glance.common.context:filter_factory
-
-[filter:authtoken]
-paste.filter_factory = keystone.middleware.auth_token:filter_factory
-service_protocol = http
-service_host = <%= @keystone_address %>
-service_port = <%= @keystone_service_port %>
-auth_host = <%= @keystone_address %>
-auth_port = <%= @keystone_admin_port %>
-auth_protocol = http
-auth_uri = http://<%= @keystone_address %>:<%= @keystone_service_port %>/v2.0
-admin_token = <%= @keystone_auth_token %>
-
-[filter:keystone_shim]
-context_class = glance.registry.context.RequestContext
-paste.filter_factory = keystone.middleware.glance_auth_token:filter_factory
+<% if node[:glance][:use_keystone] and node[:glance][:enable_caching] and node[:glance][:use_cachemanagement] -%>
+[paste_deploy]
+flavor = keystone+cachemanagement
+<% elsif node[:glance][:use_keystone] and node[:glance][:enable_caching] -%>
+[paste_deploy]
+flavor = keystone+caching
+<% elsif node[:glance][:use_keystone] -%>
+[paste_deploy]
+flavor = keystone
+<% elsif node[:glance][:enable_caching] and node[:glance][:use_cachemanagement] -%>
+[paste_deploy]
+flavor = cachemanagement
+<% end -%>
 

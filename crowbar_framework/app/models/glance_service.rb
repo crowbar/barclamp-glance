@@ -84,6 +84,7 @@ class GlanceService < ServiceObject
       @logger.info("Glance create_proposal: no keystone found")
       base["attributes"]["glance"]["use_keystone"] = false
     end
+    base["attributes"]["glance"]["service_password"] = '%012d' % rand(1e12)
 
     @logger.debug("Glance create_proposal: exiting")
     base

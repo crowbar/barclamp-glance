@@ -12,7 +12,8 @@
         "bind_open_address": false,
         "bind_port": 9292,
         "log_file": "/var/log/glance/api.log",
-        "config_file": "/etc/glance/glance-api.conf"
+        "config_file": "/etc/glance/glance-api.conf",
+        "paste_ini": "/etc/glance/glance-api-paste.ini"
       },
       "registry": {
         "verbose": true,
@@ -20,7 +21,8 @@
         "bind_open_address": false,
         "bind_port": 9191,
         "log_file": "/var/log/glance/registry.log",
-        "config_file": "/etc/glance/glance-registry.conf"
+        "config_file": "/etc/glance/glance-registry.conf",
+        "paste_ini": "/etc/glance/glance-registry-paste.ini"
       },
       "prefetcher": {
         "verbose": true,
@@ -47,6 +49,7 @@
         "config_file": "/etc/glance/glance-scrubber.conf"
       },
       "enable_caching": false,
+      "use_cachemanagement": false,
       "image_cache_datadir": "/var/lib/glance/image-cache",
       "image_cache_stall_timeout": 86400,
       "image_cache_grace_period": 3600,
@@ -64,6 +67,7 @@
       "sql_idle_timeout": 3600,
       "use_keystone": true,
       "keystone_instance": "none",
+      "service_user": "glance",
       "database": "mysql",
       "mysql_instance": "none",
       "sqlite_connection": "sqlite:////var/lib/glance/glance.sqlite"

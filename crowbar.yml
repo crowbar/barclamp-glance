@@ -64,15 +64,18 @@ locale_additions:
           api_header: API
           api_log_file: Log File
           api_config_file: Config File
+          api_paste_ini: Paste INI File
           api_bind_open_address: Bind to All Addresses
           api_bind_port: Access Port
           registry_header: Registry
           registry_log_file: Log File
           registry_config_file: Config File
+          registry_paste_ini: Paste INI File
           registry_bind_open_address: Bind to All Addresses
           registry_bind_port: Access Port
           cache_header: Caching
           enable_caching: Enable Caching
+          use_cachemanagement: Turn On Cache Management
           image_cache_datadir: Directory
           image_cache_grace_period: Grace Period
           image_cache_stall_timeout: Stall Timeout
@@ -83,6 +86,8 @@ locale_additions:
           mysql_instance: MySQL Instance
           use_keystone: Use Keystone
           keystone_instance: Keystone Instance
+          service_user: Service User
+          service_password: Service Password
           use_syslog: Use Syslog
         edit_deployment: 
           deployment: Deployment

@@ -107,6 +107,9 @@
         %label{ :for => :api_config_file }= t('.api_config_file')
         %input#api_config_file{:type => "text", :name => "api_config_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["config_file"], :onchange => "update_value('api/config_file','api_config_file', 'string')"}
       %p
+        %label{ :for => :api_paste_ini }= t('.api_paste_ini')
+        %input#api_paste_ini{:type => "text", :name => "api_paste_ini", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["paste_ini"], :onchange => "update_value('api/paste_ini','api_paste_ini', 'string')"}
+      %p
         %label{ :for => :api_debug }= t('.debug')
         = select_tag :api_debug, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["debug"].to_s), :onchange => "update_value('api/debug', 'debug', 'boolean')"
       %p
@@ -128,6 +131,9 @@
         %label{ :for => :registry_config_file }= t('.registry_config_file')
         %input#registry_config_file{:type => "text", :name => "registry_config_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["registry"]["config_file"], :onchange => "update_value('registry/config_file','registry_config_file', 'string')"}
       %p
+        %label{ :for => :registry_paste_ini }= t('.registry_paste_ini')
+        %input#registry_paste_ini{:type => "text", :name => "registry_paste_ini", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["registry"]["paste_ini"], :onchange => "update_value('registry/paste_ini','registry_paste_ini', 'string')"}
+      %p
         %label{ :for => :registry_debug }= t('.debug')
         = select_tag :registry_debug, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["registry"]["debug"].to_s), :onchange => "update_value('registry/debug', 'debug', 'boolean')"
       %p
@@ -145,6 +151,9 @@
       %p
         %label{ :for => :enable_caching }= t('.enable_caching')
         = select_tag :enable_caching, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["enable_caching"].to_s), :onchange => "update_value('enable_caching', 'enable_caching', 'boolean')"
+      %p
+        %label{ :for => :use_cachemanagement }= t('.use_cachemanagement')
+        = select_tag :use_cachemanagement, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["use_cachemanagement"].to_s), :onchange => "update_value('use_cachemanagement', 'use_cachemanagement', 'boolean')"
       %p
         %label{ :for => :image_cache_datadir }= t('.image_cache_datadir')
         %input#image_cache_datadir{:type => "text", :name => "image_cache_datadir", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["image_cache_datadir"], :onchange => "update_value('image_cache_datadir','image_cache_datadir', 'string')"}
@@ -175,6 +184,12 @@
     %p
       %label{ :for => :keystone_instance }= t('.keystone_instance')
       = instance_selector("keystone", :keystone_instance, "keystone_instance", @proposal)
+    %p
+      %label{ :for => :service_user }= t('.service_user')
+      %input#service_user{:type => "text", :name => "service_user", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["service_user"], :onchange => "update_value('service_user','service_user', 'string')"}
+    %p
+      %label{ :for => :service_password }= t('.service_password')
+      %input#service_password{:type => "text", :name => "service_password", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["service_password"], :onchange => "update_value('service_password','service_password', 'string')"}
     %p
       %label{ :for => :use_syslog }= t('.use_syslog')
       = select_tag :use_syslog, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["use_syslog"].to_s), :onchange => "update_value('use_syslog', 'use_syslog', 'boolean')"

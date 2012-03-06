@@ -58,6 +58,13 @@ if node[:glance][:use_keystone]
   my_public_ip = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "public").address
   api_port = node["glance"]["api"]["bind_port"]
 
+  keystone_register "glance api wakeup keystone" do
+    host keystone_address
+    port keystone_admin_port
+    token keystone_token
+    action :wakeup
+  end
+
   keystone_register "register glance user" do
     host keystone_address
     port keystone_admin_port

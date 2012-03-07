@@ -83,11 +83,22 @@
                 "config_file": { "type": "str", "required": true }
               }
             },
+            "cache": {
+              "type": "map",
+              "required": true,
+              "mapping": {
+                "verbose": { "type": "bool", "required": true },
+                "debug": { "type": "bool", "required": true },
+                "log_file": { "type": "str", "required": true },
+                "config_file": { "type": "str", "required": true }
+              }
+            },
             "enable_caching": { "type": "bool", "required": true },
             "use_cachemanagement": { "type": "bool", "required": true },
             "image_cache_datadir": { "type": "str", "required": true },
             "image_cache_stall_timeout": { "type": "int", "required": true },
             "image_cache_grace_period": { "type": "int", "required": true },
+            "image_cache_max_size": { "type": "int", "required": true },
             "use_syslog": { "type": "bool", "required": true },
             "notifier_strategy": { "type": "str", "required": true },
             "default_store": { "type": "str", "required": true },

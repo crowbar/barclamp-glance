@@ -48,11 +48,18 @@
         "log_file": "/var/log/glance/scrubber.log",
         "config_file": "/etc/glance/glance-scrubber.conf"
       },
+      "cache": {
+        "verbose": true,
+        "debug": false,
+        "log_file": "/var/log/glance/scrubber.log",
+        "config_file": "/etc/glance/glance-scrubber.conf"
+      },
       "enable_caching": false,
       "use_cachemanagement": false,
       "image_cache_datadir": "/var/lib/glance/image-cache",
       "image_cache_stall_timeout": 86400,
       "image_cache_grace_period": 3600,
+      "image_cache_max_size": 10737418240,
       "use_syslog": false,
       "notifier_strategy": "noop",
       "default_store": "file",

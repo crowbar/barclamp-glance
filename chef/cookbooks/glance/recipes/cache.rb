@@ -26,7 +26,7 @@ directory node[:glance][:image_cache_datadir] do
   action :create
 end
 
-template node[:glance][:cache_config_file] do
+template node[:glance][:cache][:config_file] do
   source "glance-cache.conf.erb"
   owner node[:glance][:user]
   group "root"

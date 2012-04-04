@@ -44,7 +44,7 @@ privs = nil
 
 Chef::Log.info("Configuring Glance to use #{database} backend")
 
-if database  == "mysql"
+if database == "mysql"
   package "python-mysqldb" do
       package_name "python-mysql" if node.platform == "suse"
       action :install
@@ -53,6 +53,13 @@ if database  == "mysql"
   db_user_provider = Chef::Provider::Database::MysqlUser
   privs = [ "SELECT", "INSERT", "UPDATE", "DELETE", "CREATE",
             "DROP", "INDEX", "ALTER" ]
+elsif database == "postgresql"
+  package "python-psycopg2" do
+    action :install
+  end
+  db_provider = Chef::Provider::Database::Postgresql
+  db_user_provider = Chef::Provider::Database::PostgresqlUser
+  privs = [ "CREATE", "CONNECT", "TEMP" ]
 end
 
 if database == "sqlite"

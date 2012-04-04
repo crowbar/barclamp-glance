@@ -1,6 +1,7 @@
 define :glance_service do
 
   glance_name="glance-#{params[:name]}"
+  glance_name="openstack-glance-#{params[:name]}" if node.platform == "suse"
   short_name="#{params[:name]}"
 
   service glance_name do

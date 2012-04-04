@@ -27,7 +27,8 @@ package "python-keystone" do
 end
 
 package "glance" do
-  options "--force-yes"
+  package_name "openstack-glance" if node.platform == "suse"
+  options "--force-yes" if node.platform != "suse"
   action :install
 end
 
@@ -47,6 +48,7 @@ if node[:glance][:database] == "mysql"
   include_recipe "mysql::client"
 
   package "python-mysqldb" do
+      package_name "python-mysql" if node.platform == "suse"
       action :install
   end
 

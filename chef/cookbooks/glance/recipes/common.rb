@@ -37,58 +37,82 @@ my_ipaddress = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admi
 node[:glance][:api][:bind_host] = my_ipaddress
 node[:glance][:registry][:bind_host] = my_ipaddress
 
-if node[:glance][:database] == "mysql"
+database = node[:glance][:database]
+db_provider = nil
+db_user_provider = nil
+privs = nil
+
+Chef::Log.info("Configuring Glance to use #{database} backend")
+
+if database  == "mysql"
+  package "python-mysqldb" do
+      package_name "python-mysql" if node.platform == "suse"
+      action :install
+  end
+  db_provider = Chef::Provider::Database::Mysql
+  db_user_provider = Chef::Provider::Database::MysqlUser
+  privs = [ "SELECT", "INSERT", "UPDATE", "DELETE", "CREATE",
+            "DROP", "INDEX", "ALTER" ]
+end
+
+if database == "sqlite"
+  node[:glance][:sql_connection] = node[:glance][:sqlite_connection]
+else
+  include_recipe "#{database}::client"
   ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
 
   node.set_unless['glance']['db']['password'] = secure_password
   node.set_unless['glance']['db']['user'] = "glance"
   node.set_unless['glance']['db']['database'] = "glancedb"
 
-  Chef::Log.info("Configuring Glance to use MySQL backend")
-  include_recipe "mysql::client"
-
-  package "python-mysqldb" do
-      package_name "python-mysql" if node.platform == "suse"
-      action :install
-  end
-
-  env_filter = " AND mysql_config_environment:mysql-config-#{node[:glance][:sql_instance]}"
-  mysqls = search(:node, "recipes:mysql\\:\\:server#{env_filter}") || []
-  if mysqls.length > 0
-    mysql = mysqls[0]
-    mysql = node if mysql.name == node.name
+  env_filter = " AND #{database}_config_environment:#{database}-config-#{node[:glance][:sql_instance]}"
+  sqls = search(:node, "recipes:#{database}\\:\\:server#{env_filter}") || []
+  if sqls.length > 0
+    sql = sqls[0]
+    sql = node if sql.name == node.name
   else
-    mysql = node
+    sql = node
   end
 
-  mysql_address = Chef::Recipe::Barclamp::Inventory.get_network_by_type(mysql, "admin").address if mysql_address.nil?
-  Chef::Log.info("Mysql server found at #{mysql_address}")
+  sql_address = Chef::Recipe::Barclamp::Inventory.get_network_by_type(sql, "admin").address if sql_address.nil?
+  Chef::Log.info("#{database} server found at #{sql_address}")
+
+  db_conn = { :host => sql_address,
+              :username => "db_maker",
+              :password => sql[database][:db_maker_password] }
 
   # Create the Glance Database
-  mysql_database "create #{node[:glance][:db][:database]} database" do
-    host    mysql_address
-    username "db_maker"
-    password mysql[:mysql][:db_maker_password]
-    database node[:glance][:db][:database]
-    action :create_db
+  database "create #{node[:glance][:db][:database]} database" do
+    connection db_conn
+    database_name node[:glance][:db][:database]
+    provider db_provider
+    action :create
   end
 
-  mysql_database "create glance database user" do
-    host    mysql_address
-    username "db_maker"
-    password mysql[:mysql][:db_maker_password]
-    database node[:glance][:db][:database]
-    action :query
-    sql "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER on #{node[:glance][:db][:database]}.* to '#{node[:glance][:db][:user]}'@'%' IDENTIFIED BY '#{node[:glance][:db][:password]}';"
+  database_user "create glance database user" do
+    connection db_conn
+    username node[:glance][:db][:user]
+    password node[:glance][:db][:password]
+    provider db_user_provider
+    action :create
   end
 
-  node[:glance][:sql_connection] = "mysql://#{node[:glance][:db][:user]}:#{node[:glance][:db][:password]}@#{mysql_address}/#{node[:glance][:db][:database]}"
+  database_user "grant database access for glance database user" do
+    connection db_conn
+    username node[:glance][:db][:user]
+    password node[:glance][:db][:password]
+    database_name node[:glance][:db][:database]
+    host sql_address
+    privileges privs
+    provider db_user_provider
+    action :grant
+  end
+
+  node[:glance][:sql_connection] = "#{database}://#{node[:glance][:db][:user]}:#{node[:glance][:db][:password]}@#{sql_address}/#{node[:glance][:db][:database]}"
 
   file "/var/lib/glance/glance.sqlite" do
     action :delete
   end
-else
-  node[:glance][:sql_connection] = node[:glance][:sqlite_connection]
 end
 
 node.save

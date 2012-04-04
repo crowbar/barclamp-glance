@@ -83,7 +83,7 @@ locale_additions:
           database: Database Type
           sql_idle_timeout: SQL Idle Timeout
           sqlite_connection: SQLite Connection String
-          mysql_instance: MySQL Instance
+          sql_instance: SQL Instance
           use_keystone: Use Keystone
           keystone_instance: Keystone Instance
           service_user: Service User

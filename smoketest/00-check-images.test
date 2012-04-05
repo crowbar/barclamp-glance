@@ -1,7 +1,19 @@
 #!/bin/bash
-eval $(parse_yml_or_json "$LOGDIR/keystone-token.json" access.token.id)
-eval $(parse_yml_or_json "$LOGDIR/glance-deployed.json" attributes.glance.api.bind_port) 
-glance_port=$attributes_glance_api_bind_port
+
+match_keys() {
+    # $@ = regexes that we should try and match on.
+    local line='' re=''
+    while read line; do
+        for re in "$@"; do
+            [[ $line =~ ^[a-zA-Z_0-9]+\[\'$re[^\']*\'\]=\$\'(.*) ]] || continue
+            echo "${BASH_REMATCH[1]%\'}"
+            continue 2
+        done
+    done
+}
+
+access_token_id=$(parse_yml_or_json "$LOGDIR/keystone-token.json" res | match_keys 'access\.token\.id')
+glance_port=$(parse_yml_or_json "$LOGDIR/glance-deployed.json" res | match_keys 'attributes\.glance\.api\.bind_port') 
 glance_nodes=$(knife_node_find 'roles:glance-server' FQDN)
 
 for node in $glance_nodes; do

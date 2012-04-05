@@ -1,4 +1,5 @@
 #!/bin/bash
+
 declare -A keystone_res glance_res
 . <(parse_yml_or_json "$LOGDIR/keystone-deployed.json" keystone_res)
 . <(parse_yml_or_json "$LOGDIR/glance-deployed.json" glance_res)

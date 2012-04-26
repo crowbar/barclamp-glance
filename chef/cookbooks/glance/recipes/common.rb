@@ -122,5 +122,17 @@ else
   end
 end
 
+bash "Set glance version control" do
+  code "exit 0"
+  notifies :run, "bash[Sync glance db]", :immediately
+  only_if "glance-manage version_control 0"
+  action :run
+end
+
+bash "Sync glance db" do
+  code "glance-manage db_sync"
+  action :nothing
+end
+
 node.save
 

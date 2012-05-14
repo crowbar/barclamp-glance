@@ -53,6 +53,18 @@ template node[:glance][:api][:paste_ini] do
   )
 end
 
+bash "Set api glance version control" do
+  code "exit 0"
+  notifies :run, "bash[Sync api glance db]", :immediately
+  only_if "glance-manage version_control 0"
+  action :run
+end
+
+bash "Sync api glance db" do
+  code "glance-manage db_sync"
+  action :nothing
+end
+
 if node[:glance][:use_keystone]
   my_admin_ip = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
   my_public_ip = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "public").address

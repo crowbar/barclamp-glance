@@ -26,6 +26,13 @@ directory node[:glance][:image_cache_datadir] do
   action :create
 end
 
+template node[:glance][:cache][:config_file] do
+  source "glance-cache.conf.erb"
+  owner node[:glance][:user]
+  group "root"
+  mode 0644
+end
+
 template node[:glance][:prefetcher][:config_file] do
   source "glance-prefetcher.conf.erb"
   owner node[:glance][:user]

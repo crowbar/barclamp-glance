@@ -42,6 +42,11 @@ glance_args = "-H #{my_ipaddress} -p #{port} #{admin_token}"
 (node[:glance][:images] or []).each do |image|
   #get the filename of the image
   filename = image.split('/').last
+  remote_file image do
+    source image
+    path "#{node[:glance][:working_directory]}/raw_images/#{filename}"
+    action :create_if_missing
+  end
   bash "upload_image #{filename}" do
     code <<-EOH
 mkdir -p tmp_dir
@@ -54,13 +59,8 @@ glance #{glance_args} add name="ubuntu-11.04-server" disk_format=ami container_f
 rm -rf tmp_dir
 EOH
     cwd "#{node[:glance][:working_directory]}/raw_images"
-    action :nothing
-  end
-  remote_file image do
-    source image
-    path "#{node[:glance][:working_directory]}/raw_images/#{filename}"
-    action :create_if_missing
-    notifies :run, "bash[upload_image #{filename}]", :immediately
+    action :run
+    not_if { ((Dir.new("#{node[:glance][:working_directory]}/images").count-2) > 1) } 
   end
 end
 

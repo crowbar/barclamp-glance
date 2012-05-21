@@ -60,7 +60,7 @@ rm -rf tmp_dir
 EOH
     cwd "#{node[:glance][:working_directory]}/raw_images"
     action :run
-    not_if { ((Dir.new("/var/lib/glance/images").count-2) > 1) } 
+    not_if { ((Dir.new("#{node[:glance][:working_directory]}/images").count-2) > 1) } 
   end
 end
 

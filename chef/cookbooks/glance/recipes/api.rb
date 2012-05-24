@@ -54,13 +54,17 @@ template node[:glance][:api][:paste_ini] do
 end
 
 bash "Set api glance version control" do
+  user "glance"
+  group "glance"
   code "exit 0"
   notifies :run, "bash[Sync api glance db]", :immediately
-  only_if "glance-manage version_control 0"
+  only_if "glance-manage version_control 0", :user => "glance", :group => "glance"
   action :run
 end
 
 bash "Sync api glance db" do
+  user "glance"
+  group "glance"
   code "glance-manage db_sync"
   action :nothing
 end

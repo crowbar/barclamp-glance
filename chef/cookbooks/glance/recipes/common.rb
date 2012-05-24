@@ -123,13 +123,17 @@ else
 end
 
 bash "Set glance version control" do
+  user "glance"
+  group "glance"
   code "exit 0"
   notifies :run, "bash[Sync glance db]", :immediately
-  only_if "glance-manage version_control 0"
+  only_if "glance-manage version_control 0", :user => "glance", :group => "glance"
   action :run
 end
 
 bash "Sync glance db" do
+  user "glance"
+  group "glance"
   code "glance-manage db_sync"
   action :nothing
 end

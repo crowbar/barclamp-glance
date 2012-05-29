@@ -19,7 +19,7 @@ if node[:glance][:use_keystone]
     keystone = node
   end
 
-  key_ip = Chef::Recipe::Barclamp::Inventory.get_network_by_type(keystone, "admin").address
+  key_ip = keystone.address.addr
   admin_token = "-I #{keystone["keystone"]["admin"]["username"]}"
   admin_token = "#{admin_token} -K #{keystone["keystone"]["admin"]["password"]}"
   admin_token = "#{admin_token} -T #{keystone["keystone"]["admin"]["tenant"]}"
@@ -28,7 +28,7 @@ else
   admin_token = ""
 end
 
-my_ipaddress = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
+my_ipaddress = node.address.addr
 port = node["glance"]["api"]["bind_port"]
 
 glance_args = "-H #{my_ipaddress} -p #{port} #{admin_token}"

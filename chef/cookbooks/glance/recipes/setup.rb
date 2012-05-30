@@ -39,6 +39,7 @@ glance_args = "-H #{my_ipaddress} -p #{port} #{admin_token}"
 # XXX: This is not generic and only works with this one image.
 # If the json file changes, we need to update this procedure.
 #
+
 (node[:glance][:images] or []).each do |image|
   #get the filename of the image
   filename = image.split('/').last
@@ -46,21 +47,56 @@ glance_args = "-H #{my_ipaddress} -p #{port} #{admin_token}"
     source image
     path "#{node[:glance][:working_directory]}/raw_images/#{filename}"
     action :create_if_missing
+    not_if do 
+      ::File.exists?("#{node[:glance][:working_directory]}/raw_images/#{filename}.keep")
+    end
   end
-  bash "upload_image #{filename}" do
-    code <<-EOH
-mkdir -p tmp_dir
-tar -zxf #{filename} -C tmp_dir/
-glance #{glance_args} index # Make sure database is running
-sleep 15 # Pointless sleep to let the registry start up properly.
-KID=`glance #{glance_args} add name="ubuntu-11.04-kernel" disk_format=aki container_format=aki is_public='True' < tmp_dir/natty-server-cloudimg-amd64-vmlinuz-virtual | grep "with ID:" | awk -F: '{ print $2 }' | awk -F' ' '{ print $1 }'`
-RID=`glance #{glance_args} add name="ubuntu-11.04-initrd" disk_format=ari container_format=ari is_public='True' < tmp_dir/natty-server-cloudimg-amd64-loader | grep "with ID:" | awk -F: '{ print $2 }' | awk -F' ' '{ print $1 }'`
-glance #{glance_args} add name="ubuntu-11.04-server" disk_format=ami container_format=ami kernel_id=$KID ramdisk_id=$RID is_public='True' < tmp_dir/natty-server-cloudimg-amd64.img
-rm -rf tmp_dir
-EOH
-    cwd "#{node[:glance][:working_directory]}/raw_images"
-    action :run
-    not_if { ((Dir.new("#{node[:glance][:working_directory]}/images").count-2) > 1) } 
+end
+ruby_block "load glance images" do
+  block do
+    wait = true
+    rawdir="#{node[:glance][:working_directory]}/raw_images"
+    Dir.entries(rawdir).each do |name|
+      next unless node[:glance][:images].map{|n|n.split('/').last}.member?(name)
+      basename = name.split('-')[0..1].join('-')
+      tmpdir = "#{rawdir}/#{basename}"
+      Dir.mkdir("#{tmpdir}") unless File.exists?("#{tmpdir}")
+      Chef::Log.info("Extracting #{name} into #{tmpdir}")
+      ::Kernel.system("tar -zxf \"#{rawdir}/#{name}\" -C \"#{tmpdir}/\"")
+      if wait
+        ::Kernel.system("glance #{glance_args} details")
+        sleep 15
+        wait = false
+      end
+      ids = Hash.new
+      cmds = Hash.new
+      # Yes, this is exceptionally stupid for now.  Eventually it will be smarter.
+      [ ["kernel", "vmlinuz-virtual"],
+        ["initrd", "loader" ],
+        ["image", ".img"] ].each do |part|
+        next unless image_part = Dir.glob("#{tmpdir}/*#{part[1]}").first
+        cmd = "glance #{glance_args} add name=#{basename}-#{part[0]} is_public=True"
+        case part[0]
+        when "kernel" then cmd << " disk_format=aki container_format=aki"
+        when "initrd" then cmd << " disk_format=ari container_format=ari"
+        when "image"
+          cmd << " disk_format=ami container_format=ami"
+          cmd << " kernel_id=#{ids["kernel"]}" if ids["kernel"]
+          cmd << " ramdisk_id=#{ids["initrd"]}" if ids["initrd"]
+        end
+        res = %x{glance #{glance_args} index name=#{basename}-#{part[0]} 2>&1}
+        if res.nil? || res.empty?
+          Chef::Log.info("Loading #{image_part} for #{basename}-#{part[0]}")
+          res = %x{#{cmd} < "#{image_part}"}
+        else
+          Chef::Log.info("#{basename}-#{part[0]} already loaded.")
+        end
+        ids[part[0]] = res.match(/([0-9a-f]+-){4}[0-9a-f]+/)
+      end
+      ::Kernel.system("rm -rf \"#{tmpdir}\"")
+      File.truncate("#{rawdir}/#{name}",0)
+      File.rename("#{rawdir}/#{name}","#{rawdir}/#{name}.keep")
+    end
   end
 end
 

@@ -102,7 +102,7 @@ class GlanceService < ServiceObject
       # substitute the admin web portal
       new_array = []
       role.default_attributes["glance"]["images"].each do |item|
-        new_array << item.gsub("<ADMINWEB>", "#{admin_ip}:#{web_port}")
+        new_array << item.gsub("|ADMINWEB|", "#{admin_ip}:#{web_port}")
       end
       role.default_attributes["glance"]["images"] = new_array
       role.save

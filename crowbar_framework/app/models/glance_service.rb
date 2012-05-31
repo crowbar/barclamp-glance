@@ -97,7 +97,7 @@ class GlanceService < ServiceObject
     # Update images paths
     nodes = NodeObject.find("roles:provisioner-server")
     unless nodes.nil? or nodes.length < 1
-      admin_ip = nodes[0].get_network_by_type("admin")["address"]
+      admin_ip = nodes[0].address.addr
       web_port = nodes[0]["provisioner"]["web_port"]
       # substitute the admin web portal
       new_array = []
@@ -112,7 +112,7 @@ class GlanceService < ServiceObject
     all_nodes.each do |n|
       node = NodeObject.find_node_by_name n
 
-      admin_address = node.get_network_by_type("admin")["address"]
+      admin_address = node.address.addr
       node.crowbar[:glance] = {} if node.crowbar[:glance].nil?
       node.crowbar[:glance][:api_bind_host] = admin_address
       node.crowbar[:glance][:registry_bind_host] = admin_address

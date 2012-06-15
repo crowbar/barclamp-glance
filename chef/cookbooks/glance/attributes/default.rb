@@ -18,7 +18,7 @@
 # limitations under the License.
 #
 
-override[:glance][:user]="glance"
+override[:glance][:user]="openstack-glance"
 
 default[:glance][:api][:verbose] = "True"
 default[:glance][:api][:debug] = "True"

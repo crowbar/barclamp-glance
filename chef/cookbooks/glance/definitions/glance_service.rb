@@ -1,6 +1,7 @@
 define :glance_service do
 
   glance_name="glance-#{params[:name]}"
+  glance_name="openstack-glance-#{params[:name]}" if node.platform == "suse"
   short_name="#{params[:name]}"
 
   service glance_name do
@@ -13,6 +14,7 @@ define :glance_service do
     supports :status => true, :restart => true
     action [:enable, :start]
     subscribes :restart, resources(:template => node[:glance][short_name][:config_file]), :immediately
+    subscribes :restart, resources(:template => node[:glance][short_name][:paste_ini]), :immediately
   end
 
 end

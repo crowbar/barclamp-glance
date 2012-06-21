@@ -167,14 +167,8 @@
       %label{ :for => :database_header }= t('.database_header')
     %div.container
       %p
-        %label{ :for => :database }= t('.database')
-        = select_tag :database, options_for_select([['MySQL','mysql'], ['SQLite', 'sqlite']], @proposal.raw_data['attributes'][@proposal.barclamp]["database"]), :onchange => "update_value('database', 'database', 'string')"
-      %p
         %label{ :for => :sql_idle_timeout }= t('.sql_idle_timeout')
         %input#sql_idle_timeout{:type => "text", :name => "sql_idle_timeout", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["sql_idle_timeout"], :onchange => "update_value('sql_idle_timeout','sql_idle_timeout', 'integer')"}
-      %p
-        %label{ :for => :sqlite_connection }= t('.sqlite_connection')
-        %input#sqlite_connection{:type => "text", :name => "sqlite_connection", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["sqlite_connection"], :onchange => "update_value('sqlite_connection','sqlite_connection', 'string')"}
       %p
         %label{ :for => :mysql_instance }= t('.mysql_instance')
         = instance_selector("mysql", :mysql_instance, "mysql_instance", @proposal)

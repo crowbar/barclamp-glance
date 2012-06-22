@@ -55,14 +55,12 @@ class GlanceService < ServiceObject
         # No actives, look for proposals
         mysqls = mysqlService.proposals[1]
       end
-      if mysqls.empty?
-        base["attributes"]["glance"]["database"] = "sqlite"
-      else
+      unless mysqls.empty?
         base["attributes"]["glance"]["mysql_instance"] = mysqls[0]
-        base["attributes"]["glance"]["database"] = "mysql"
       end
+      base["attributes"]["glance"]["database"] = "mysql"
     rescue
-      base["attributes"]["glance"]["database"] = "sqlite"
+      base["attributes"]["glance"]["database"] = "mysql"
       @logger.info("Glance create_proposal: no mysql found")
     end
     

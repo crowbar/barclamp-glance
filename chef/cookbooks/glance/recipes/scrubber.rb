@@ -28,7 +28,7 @@ if node[:glance][:use_keystone]
     keystone = node
   end
 
-  keystone_address = Chef::Recipe::Barclamp::Inventory.get_network_by_type(keystone, "admin").address if keystone_address.nil?
+  keystone_address = keystone.address.addr
   keystone_token = keystone["keystone"]["service"]["token"]
   Chef::Log.info("Keystone server found at #{keystone_address}")
 else

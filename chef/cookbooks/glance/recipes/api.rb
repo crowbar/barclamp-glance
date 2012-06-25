@@ -17,7 +17,7 @@ if node[:glance][:use_keystone]
     keystone = node
   end
 
-  keystone_address = Chef::Recipe::Barclamp::Inventory.get_network_by_type(keystone, "admin").address if keystone_address.nil?
+  keystone_address = keystone.address.addr
   keystone_token = keystone["keystone"]["service"]["token"]
   keystone_service_port = keystone["keystone"]["api"]["service_port"]
   keystone_admin_port = keystone["keystone"]["api"]["admin_port"]
@@ -70,8 +70,8 @@ bash "Sync api glance db" do
 end
 
 if node[:glance][:use_keystone]
-  my_admin_ip = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
-  my_public_ip = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "public").address
+  my_admin_ip = node.address.addr
+  my_public_ip = node.address("public").addr
   api_port = node["glance"]["api"]["bind_port"]
 
   keystone_register "glance api wakeup keystone" do

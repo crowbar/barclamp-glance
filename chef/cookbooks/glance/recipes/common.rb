@@ -33,7 +33,7 @@ package "glance" do
 end
 
 # Make sure we use the admin node for now.
-my_ipaddress = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
+my_ipaddress = node.address.addr
 node[:glance][:api][:bind_host] = my_ipaddress
 node[:glance][:registry][:bind_host] = my_ipaddress
 
@@ -61,7 +61,7 @@ if node[:glance][:database] == "mysql"
     mysql = node
   end
 
-  mysql_address = Chef::Recipe::Barclamp::Inventory.get_network_by_type(mysql, "admin").address if mysql_address.nil?
+  mysql_address = mysql.address.addr
   Chef::Log.info("Mysql server found at #{mysql_address}")
 
   # Create the Glance Database

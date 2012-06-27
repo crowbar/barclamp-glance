@@ -26,9 +26,8 @@ class GlanceService < ServiceObject
 
   def proposal_dependencies(role)
     answer = []
-    database =  role.default_attributes["glance"]["database"]
-    if database == "mysql" or database == "postgresql"
-      answer << { "barclamp" => database, "inst" => role.default_attributes["glance"]["sql_instance"] }
+    if role.default_attributes["glance"]["database"] == "database"
+      answer << { "barclamp" => "database", "inst" => role.default_attributes["glance"]["sql_instance"] }
     end
     if role.default_attributes["glance"]["use_keystone"]
       answer << { "barclamp" => "keystone", "inst" => role.default_attributes["glance"]["keystone_instance"] }
@@ -50,44 +49,24 @@ class GlanceService < ServiceObject
 
     base["attributes"]["glance"]["database"] = ""
     begin
-      mysqlService = MysqlService.new(@logger)
-      mysqls = mysqlService.list_active[1]
-      if mysqls.empty?
+      databaseService = DatabaseService.new(@logger)
+      dbs = databaseService.list_active[1]
+      if dbs.empty?
         # No actives, look for proposals
-        mysqls = mysqlService.proposals[1]
+        dbs = databaseService.proposals[1]
       end
-      if mysqls.empty?
-        @logger.info("Glance create_proposal: no mysql proposal found")
+      if dbs.empty?
+        @logger.info("Glance create_proposal: no database proposal found")
         base["attributes"]["glance"]["database"] = ""
       else
-        base["attributes"]["glance"]["sql_instance"] = mysqls[0]
-        base["attributes"]["glance"]["database"] = "mysql"
+        base["attributes"]["glance"]["sql_instance"] = dbs[0]
+        base["attributes"]["glance"]["database"] = "database"
       end
     rescue
       base["attributes"]["glance"]["database"] = ""
-      @logger.info("Glance create_proposal: no mysql found")
+      @logger.info("Glance create_proposal: no database found")
     end
 
-    if  base["attributes"]["glance"]["database"] == ""
-      begin
-        pgsqlService = PostgresqlService.new(@logger)
-        pgsqls = pgsqlService.list_active[1]
-        if pgsqls.empty?
-          # No actives, look for proposals
-          pgsqls = pgsqlService.proposals[1]
-        end
-        if pgsqls.empty?
-          @logger.info("Glance create_proposal: no postgresql proposal found")
-          base["attributes"]["glance"]["database"] = ""
-        else
-          base["attributes"]["glance"]["sql_instance"] = pgsqls[0]
-          base["attributes"]["glance"]["database"] = "postgresql"
-        end
-      rescue
-        base["attributes"]["glance"]["database"] = ""
-        @logger.info("Glance create_proposal: no Postgresql found")
-      end
-    end
     base["attributes"]["glance"]["database"] == "sqlite" if base["attributes"]["glance"]["database"] == ""
 
     base["attributes"]["glance"]["keystone_instance"] = ""

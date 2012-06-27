@@ -41,36 +41,12 @@ database = node[:glance][:database]
 db_provider = nil
 db_user_provider = nil
 privs = nil
+url_scheme = ""
 
 Chef::Log.info("Configuring Glance to use #{database} backend")
 
-if database == "mysql"
-  package "python-mysqldb" do
-      package_name "python-mysql" if node.platform == "suse"
-      action :install
-  end
-  db_provider = Chef::Provider::Database::Mysql
-  db_user_provider = Chef::Provider::Database::MysqlUser
-  privs = [ "SELECT", "INSERT", "UPDATE", "DELETE", "CREATE",
-            "DROP", "INDEX", "ALTER" ]
-elsif database == "postgresql"
-  package "python-psycopg2" do
-    action :install
-  end
-  db_provider = Chef::Provider::Database::Postgresql
-  db_user_provider = Chef::Provider::Database::PostgresqlUser
-  privs = [ "CREATE", "CONNECT", "TEMP" ]
-end
-
-if database == "sqlite"
-  node[:glance][:sql_connection] = node[:glance][:sqlite_connection]
-else
-  include_recipe "#{database}::client"
-  ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
-
-  node.set_unless['glance']['db']['password'] = secure_password
-  node.set_unless['glance']['db']['user'] = "glance"
-  node.set_unless['glance']['db']['database'] = "glancedb"
+if database == "database"
+  include_recipe "database::client"
 
   env_filter = " AND #{database}_config_environment:#{database}-config-#{node[:glance][:sql_instance]}"
   sqls = search(:node, "recipes:#{database}\\:\\:server#{env_filter}") || []
@@ -80,6 +56,21 @@ else
   else
     sql = node
   end
+
+  db_provider = Chef::Recipe::Database::Util.get_database_provider(sql)
+  db_user_provider = Chef::Recipe::Database::Util.get_user_provider(sql)
+  privs = Chef::Recipe::Database::Util.get_default_priviledges(sql)
+  backend_name = Chef::Recipe::Database::Util.get_backend_name(sql)
+  url_scheme = backend_name
+  include_recipe "#{backend_name}::client"
+  include_recipe "#{backend_name}::python-client"
+
+  ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
+
+  node.set_unless['glance']['db']['password'] = secure_password
+  node.set_unless['glance']['db']['user'] = "glance"
+  node.set_unless['glance']['db']['database'] = "glancedb"
+
 
   sql_address = Chef::Recipe::Barclamp::Inventory.get_network_by_type(sql, "admin").address if sql_address.nil?
   Chef::Log.info("#{database} server found at #{sql_address}")
@@ -114,13 +105,15 @@ else
     provider db_user_provider
     action :grant
   end
-
-  node[:glance][:sql_connection] = "#{database}://#{node[:glance][:db][:user]}:#{node[:glance][:db][:password]}@#{sql_address}/#{node[:glance][:db][:database]}"
-
   file "/var/lib/glance/glance.sqlite" do
     action :delete
   end
+elsif database == "sqlite"
+  node[:glance][:sql_connection] = node[:glance][:sqlite_connection]
+  url_scheme = "sqlite"
 end
+
+node[:glance][:sql_connection] = "#{url_scheme}://#{node[:glance][:db][:user]}:#{node[:glance][:db][:password]}@#{sql_address}/#{node[:glance][:db][:database]}"
 
 bash "Set glance version control" do
   user "glance"

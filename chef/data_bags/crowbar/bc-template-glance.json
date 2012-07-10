@@ -9,7 +9,7 @@
       "api": {
         "verbose": true,
         "debug": false,
-        "bind_open_address": false,
+        "bind_open_address": true,
         "bind_port": 9292,
         "log_file": "/var/log/glance/api.log",
         "config_file": "/etc/glance/glance-api.conf",
@@ -18,7 +18,7 @@
       "registry": {
         "verbose": true,
         "debug": false,
-        "bind_open_address": false,
+        "bind_open_address": true,
         "bind_port": 9191,
         "log_file": "/var/log/glance/registry.log",
         "config_file": "/etc/glance/glance-registry.conf",

@@ -18,6 +18,7 @@
 barclamp:
   name: glance
   display: Glance
+  description: Discovers, registers and retrieves VM images
   version: 0
   requires:
     - keystone

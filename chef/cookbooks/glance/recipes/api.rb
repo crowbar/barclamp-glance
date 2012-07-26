@@ -108,7 +108,13 @@ if node[:glance][:use_keystone]
     token keystone_token
     endpoint_service "glance"
     endpoint_region "RegionOne"
-    endpoint_publicURL "http://#{my_public_ip}:#{api_port}/v1"
+    #endpoint_publicURL "http://#{my_public_ip}:#{api_port}/v1"
+    # We use my_admin_ip here as public_ip because all other services
+    # query the public_ip for the 'image' endpoint in keystone's endpoint
+    # catalog. All OpenStack services are in the admin network anyway
+    # and can thus query glance without compromising security (contrary
+    # to making glance listen on all interfaces):
+    endpoint_publicURL "http://#{my_admin_ip}:#{api_port}/v1"
     endpoint_adminURL "http://#{my_admin_ip}:#{api_port}/v1"
     endpoint_internalURL "http://#{my_admin_ip}:#{api_port}/v1"
 #  endpoint_global true

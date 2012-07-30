@@ -12,7 +12,12 @@
         "bind_port": 9292,
         "log_file": "/var/log/glance/api.log",
         "config_file": "/etc/glance/glance-api.conf",
-        "paste_ini": "/etc/glance/glance-api-paste.ini"
+        "paste_ini": "/etc/glance/glance-api-paste.ini",
+        "protocol": "http"
+      },
+      "apache": {
+        "ssl_crt_file": "/etc/apache2/ssl.crt/openstack-keystone-server.crt",
+        "ssl_key_file": "/etc/apache2/ssl.key/openstack-keystone-server.key"
       },
       "registry": {
         "verbose": true,

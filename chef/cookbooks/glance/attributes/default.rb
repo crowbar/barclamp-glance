@@ -19,6 +19,7 @@
 #
 
 override[:glance][:user]="openstack-glance"
+override[:glance][:group]="openstack-glance"
 
 default[:glance][:api][:verbose] = "True"
 default[:glance][:api][:debug] = "True"
@@ -26,6 +27,11 @@ default[:glance][:api][:bind_host] = ipaddress
 default[:glance][:api][:bind_port] = "9292"
 default[:glance][:api][:log_file] = "/var/log/glance/api.log"
 default[:glance][:api][:config_file]="/etc/glance/glance-api.conf"
+default[:glance][:api][:protocol] = "http"
+
+# Secure Apache config
+default[:glance][:apache][:ssl_crt_file] = "/etc/apache2/ssl.crt/openstack-glance-server.crt"
+default[:glance][:apache][:ssl_key_file] = "/etc/apache2/ssl.key/openstack-glance-server.key"
 
 default[:glance][:registry][:verbose] = "True"
 default[:glance][:registry][:debug] = "True"

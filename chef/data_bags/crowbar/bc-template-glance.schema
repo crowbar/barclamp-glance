@@ -27,7 +27,16 @@
                 "bind_port": { "type": "int", "required": true },
                 "log_file": { "type": "str", "required": true },
                 "config_file": { "type": "str", "required": true },
-                "paste_ini": { "type": "str", "required": true }
+                "paste_ini": { "type": "str", "required": true },
+                "protocol": { "type": "str", "required": true }
+              }
+            },
+            "apache": {
+              "type" : "map",
+              "required" : true,
+              "mapping": {
+                "ssl_crt_file": { "type": "str", "required": true },
+                "ssl_key_file": { "type": "str", "required": true }
               }
             },
             "registry": {

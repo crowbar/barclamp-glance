@@ -90,6 +90,11 @@ locale_additions:
           service_user: Service User
           service_password: Service Password
           use_syslog: Use Syslog
+          ssl: Security Attributes
+          ssl_hint: Glance will be provided by Apache2 via SSL-enabled WSGI vhost
+          protocol: Protocol
+          apache_ssl_crt_file: SSL Certificate File
+          apache_ssl_key_file: SSL Key File
         edit_deployment: 
           deployment: Deployment
 

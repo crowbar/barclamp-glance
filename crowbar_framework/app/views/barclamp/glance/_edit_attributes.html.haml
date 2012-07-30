@@ -37,6 +37,24 @@
       %p
         %label{ :for => :swift_store_key }= t('.swift_store_key')
         %input#swift_store_key{:type => "text", :name => "swift_store_key", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["swift_store_key"], :onchange => "update_value('swift_store_key','swift_store_key', 'string')"}
+
+    %label{ :for => :ssl }= t('.ssl')
+    %div.container{ :id => :ssl }
+      %p
+        %label{ :for => :protocol }= t('.protocol')
+        = select_tag :protocol, options_for_select([['HTTP','http'], ['HTTPS', 'https']], @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["protocol"].to_s), :onchange => "update_value('api/protocol', 'protocol', 'string')"
+        %em= t('.ssl_hint')
+
+      %div{ :id => :protocol_div }
+        //TODO/Fixme: provide upload dialog for these. For now we have to rely on the files being present on the machine:
+        %p
+          %label{ :for => :apache_ssl_crt_file }= t('.apache_ssl_crt_file')
+          = text_field_tag :apache_ssl_crt_file, @proposal.raw_data['attributes'][@proposal.barclamp]["apache"]["ssl_crt_file"], :size => 80, :onchange => "update_value('apache/ssl_crt_file', 'apache_ssl_crt_file', 'string')"
+
+        %p
+          %label{ :for => :apache_ssl_key_file }= t('.apache_ssl_key_file')
+          = text_field_tag :apache_ssl_key_file, @proposal.raw_data['attributes'][@proposal.barclamp]["apache"]["ssl_key_file"], :size => 80, :onchange => "update_value('apache/ssl_key_file', 'apache_ssl_key_file', 'string')"
+
     %p
       %label{ :for => :scrubber_header }= t('.scrubber_header')
     %div.container
@@ -193,3 +211,16 @@
     %p
       %label{ :for => :use_syslog }= t('.use_syslog')
       = select_tag :use_syslog, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["use_syslog"].to_s), :onchange => "update_value('use_syslog', 'use_syslog', 'boolean')"
+
+
+:javascript
+  function toggle_protocol() {
+    if ($('#protocol option:selected').attr('value') == 'https') {
+      $('#protocol_div').show();
+    } else {
+      $('#protocol_div').hide();
+    }
+  };
+
+  $(document).ready(function () { toggle_protocol(); });
+  $('#protocol').change(toggle_protocol);

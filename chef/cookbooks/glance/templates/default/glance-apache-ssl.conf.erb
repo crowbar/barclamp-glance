@@ -1,0 +1,40 @@
+#
+# OpenStack Image (Glance) Apache2 SSL proxy example configuration.
+#
+# Required Apache2 modules:
+#  - mod_ssl
+#  - mod_wsgi
+#
+
+
+<IfDefine SSL>
+<IfDefine !NOSSL>
+
+# Proxy Keystone public API:
+Listen <%= node[:glance][:api][:bind_port] %>
+
+<VirtualHost *:<%= node[:glance][:api][:bind_port] %>>
+    ServerName openstack-glance.example.com
+    ServerAdmin webmaster@openstack-glance.example.com
+
+    ErrorLog /var/log/apache2/openstack-glance-error_log
+    TransferLog /var/log/apache2/openstack-glance-access_log
+    LogLevel warn
+
+    SSLEngine on
+    SSLCertificateFile <%= node[:glance][:apache][:ssl_crt_file] %>
+    SSLCertificateKeyFile <%= node[:glance][:apache][:ssl_key_file] %>
+
+    # Need to run as user 'openstack-glance' to gain access to '/etc/glance/glance.conf'
+    WSGIDaemonProcess glance_main user=<%= node[:glance][:user] %> group=<%= node[:glance][:group] %> processes=2
+    WSGIProcessGroup glance_main
+
+    WSGIScriptAlias / /var/lib/glance/wsgi/glance-api.wsgi
+    <Directory /var/lib/glance/wsgi/>
+        Order allow,deny
+        Allow from all
+    </Directory>
+</VirtualHost>
+
+</IfDefine>
+</IfDefine>

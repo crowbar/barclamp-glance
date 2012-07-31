@@ -67,6 +67,9 @@ class GlanceService < ServiceObject
 
     # SQLite setups are not supported
     # base["attributes"]["glance"]["database"] == "sqlite" if base["attributes"]["glance"]["database"] == ""
+    if base["attributes"]["glance"]["sql_engine"] == ""
+        raise(I18n.t('model.service.dependency_missing', :name => @bc_name, :dependson => "database"))
+    end
 
     base["attributes"]["glance"]["keystone_instance"] = ""
     begin
@@ -85,6 +88,9 @@ class GlanceService < ServiceObject
     rescue
       @logger.info("Glance create_proposal: no keystone found")
       base["attributes"]["glance"]["use_keystone"] = false
+    end
+    if ! base["attributes"]["glance"]["use_keystone"]
+        raise(I18n.t('model.service.dependency_missing', :name => @bc_name, :dependson => "keystone"))
     end
     base["attributes"]["glance"]["service_password"] = '%012d' % rand(1e12)
 

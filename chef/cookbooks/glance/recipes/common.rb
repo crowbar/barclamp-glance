@@ -19,17 +19,17 @@
 #
 
 package "curl" do
-  action :install
+  action :upgrade
 end
 
 package "python-keystone" do
-  action :install
+  action :upgrade
 end
 
 package "glance" do
   package_name "openstack-glance" if node.platform == "suse"
   options "--force-yes" if node.platform != "suse"
-  action :install
+  action :upgrade
 end
 
 # Make sure we use the admin node for now.

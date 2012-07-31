@@ -26,9 +26,7 @@ class GlanceService < ServiceObject
 
   def proposal_dependencies(role)
     answer = []
-    if role.default_attributes["glance"]["database"] == "database"
-      answer << { "barclamp" => "database", "inst" => role.default_attributes["glance"]["sql_instance"] }
-    end
+    answer << { "barclamp" => "database", "inst" => role.default_attributes["glance"]["sql_instance"] }
     if role.default_attributes["glance"]["use_keystone"]
       answer << { "barclamp" => "keystone", "inst" => role.default_attributes["glance"]["keystone_instance"] }
     end
@@ -67,7 +65,8 @@ class GlanceService < ServiceObject
       @logger.info("Glance create_proposal: no database found")
     end
 
-    base["attributes"]["glance"]["database"] == "sqlite" if base["attributes"]["glance"]["database"] == ""
+    # SQLite setups are not supported
+    # base["attributes"]["glance"]["database"] == "sqlite" if base["attributes"]["glance"]["database"] == ""
 
     base["attributes"]["glance"]["keystone_instance"] = ""
     begin

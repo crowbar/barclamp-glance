@@ -17,8 +17,8 @@ Listen <%= node[:glance][:api][:bind_port] %>
     ServerName openstack-glance.example.com
     ServerAdmin webmaster@openstack-glance.example.com
 
-    ErrorLog /var/log/apache2/openstack-glance-error_log
-    TransferLog /var/log/apache2/openstack-glance-access_log
+    ErrorLog /var/log/apache2/openstack-glance-api-error_log
+    TransferLog /var/log/apache2/openstack-glance-api-access_log
     LogLevel warn
 
     SSLEngine on

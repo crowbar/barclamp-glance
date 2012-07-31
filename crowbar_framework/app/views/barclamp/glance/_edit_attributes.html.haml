@@ -43,7 +43,7 @@
       %p
         %label{ :for => :protocol }= t('.protocol')
         = select_tag :protocol, options_for_select([['HTTP','http'], ['HTTPS', 'https']], @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["protocol"].to_s), :onchange => "update_value('api/protocol', 'protocol', 'string')"
-        %em= t('.ssl_hint')
+        %em{ :id => :ssl_hint }= t('.ssl_hint')
 
       %div{ :id => :protocol_div }
         //TODO/Fixme: provide upload dialog for these. For now we have to rely on the files being present on the machine:
@@ -217,8 +217,10 @@
   function toggle_protocol() {
     if ($('#protocol option:selected').attr('value') == 'https') {
       $('#protocol_div').show();
+      $('#ssl_hint').show();
     } else {
       $('#protocol_div').hide();
+      $('#ssl_hint').hide();
     }
   };
 

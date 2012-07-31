@@ -166,7 +166,7 @@ else
   # Remove potentially left-over Apache2 config files:
   file "/etc/logrotate.d/openstack-glance" do
     action :delete
-  end if ::File.exist?("/etc/logrotate.dropenstack-glance")
+  end if ::File.exist?("/etc/logrotate.d/openstack-glance")
 
   apache_site "openstack-glance.conf" do
     enable false

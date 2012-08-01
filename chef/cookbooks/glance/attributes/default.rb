@@ -20,8 +20,10 @@
 
 unless platform == "suse"
   override[:glance][:user]="glance"
+  override[:glance][:group]="glance"
 else
   override[:glance][:user]="openstack-glance"
+  override[:glance][:group]="openstack-glance"
 end
 
 default[:glance][:api][:verbose] = "True"

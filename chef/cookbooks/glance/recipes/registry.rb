@@ -57,17 +57,17 @@ template node[:glance][:registry][:paste_ini] do
 end
 
 bash "Set registry glance version control" do
-  user "glance"
-  group "glance"
+  user node[:glance][:user]
+  group node[:glance][:group]
   code "exit 0"
   notifies :run, "bash[Sync registry glance db]", :immediately
-  only_if "#{venv_prefix}glance-manage version_control 0", :user => "glance", :group => "glance"
+  only_if "#{venv_prefix}glance-manage version_control 0", :user => node[:glance][:user], :group => node[:glance][:group]
   action :run
 end
 
 bash "Sync registry glance db" do
-  user "glance"
-  group "glance"
+  user node[:glance][:user]
+  group node[:glance][:group]
   code "#{venv_prefix}glance-manage db_sync"
   action :nothing
 end

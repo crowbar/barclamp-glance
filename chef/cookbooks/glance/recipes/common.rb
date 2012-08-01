@@ -116,17 +116,17 @@ end
 node[:glance][:sql_connection] = "#{url_scheme}://#{node[:glance][:db][:user]}:#{node[:glance][:db][:password]}@#{sql_address}/#{node[:glance][:db][:database]}"
 
 bash "Set glance version control" do
-  user "glance"
-  group "glance"
+  user  node[:glance][:user]
+  group node[:glance][:group]
   code "exit 0"
   notifies :run, "bash[Sync glance db]", :immediately
-  only_if "glance-manage version_control 0", :user => "glance", :group => "glance"
+  only_if "glance-manage version_control 0", :user => node[:glance][:user], :group => node[:glance][:group]
   action :run
 end
 
 bash "Sync glance db" do
-  user "glance"
-  group "glance"
+  user  node[:glance][:user]
+  group node[:glance][:group]
   code "glance-manage db_sync"
   action :nothing
 end

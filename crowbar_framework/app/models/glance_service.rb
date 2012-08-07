@@ -20,10 +20,6 @@ class GlanceService < ServiceObject
     @logger = thelogger
   end
 
-  def self.allow_multiple_proposals?
-    true
-  end
-
   def proposal_dependencies(role)
     answer = []
     if role.default_attributes["glance"]["database"] == "mysql"

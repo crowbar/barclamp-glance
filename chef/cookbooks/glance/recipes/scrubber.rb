@@ -40,7 +40,7 @@ template node[:glance][:scrubber][:config_file] do
   source "glance-scrubber.conf.erb"
   owner node[:glance][:user]
   group "root"
-  mode 0640
+  mode 0600
   variables(
     :keystone_address => keystone_address,
     :keystone_admin_token => keystone_token

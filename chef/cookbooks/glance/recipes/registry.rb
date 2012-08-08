@@ -34,7 +34,7 @@ template node[:glance][:registry][:config_file] do
   source "glance-registry.conf.erb"
   owner node[:glance][:user]
   group "root"
-  mode 0644
+  mode 0600
 end
 
 template node[:glance][:registry][:paste_ini] do

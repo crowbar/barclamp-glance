@@ -16,8 +16,8 @@
         "protocol": "http"
       },
       "apache": {
-        "ssl_crt_file": "/etc/apache2/ssl.crt/openstack-keystone-server.crt",
-        "ssl_key_file": "/etc/apache2/ssl.key/openstack-keystone-server.key"
+        "ssl_crt_file": "/etc/apache2/ssl.crt/openstack-glance-server.crt",
+        "ssl_key_file": "/etc/apache2/ssl.key/openstack-glance-server.key"
       },
       "registry": {
         "verbose": true,

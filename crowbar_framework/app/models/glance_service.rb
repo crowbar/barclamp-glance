@@ -18,11 +18,11 @@ class GlanceService < ServiceObject
   def proposal_dependencies(prop_config)
     answer = []
     hash = prop_config.config_hash
-    if hash["database"] == "mysql"
-      answer << { "barclamp" => "mysql", "inst" => hash["mysql_instance"] }
+    if hash["glance"]["database"] == "mysql"
+      answer << { "barclamp" => "mysql", "inst" => hash["glance"]["mysql_instance"] }
     end
-    if hash["use_keystone"]
-      answer << { "barclamp" => "keystone", "inst" => hash["keystone_instance"] }
+    if hash["glance"]["use_keystone"]
+      answer << { "barclamp" => "keystone", "inst" => hash["glance"]["keystone_instance"] }
     end
     answer
   end
@@ -38,7 +38,7 @@ class GlanceService < ServiceObject
     end
 
     hash = base.config_hash
-    hash["mysql_instance"] = ""
+    hash["glance"]["mysql_instance"] = ""
     begin
       mysql = Barclamp.find_by_name("mysql")
       mysqls = mysql.active_proposals
@@ -47,15 +47,15 @@ class GlanceService < ServiceObject
         mysqls = mysql.proposals
       end
       unless mysqls.empty?
-        hash["mysql_instance"] = mysqls[0].name
+        hash["glance"]["mysql_instance"] = mysqls[0].name
       end
-      hash["database"] = "mysql"
+      hash["glance"]["database"] = "mysql"
     rescue
-      hash["database"] = "mysql"
+      hash["glance"]["database"] = "mysql"
       @logger.info("Glance create_proposal: no mysql found")
     end
     
-    hash["keystone_instance"] = ""
+    hash["glance"]["keystone_instance"] = ""
     begin
       keystone = Barclamp.find_by_name("keystone")
       keystones = keystone.active_proposals
@@ -64,18 +64,18 @@ class GlanceService < ServiceObject
         keystones = keystone.proposals
       end
       if keystones.empty?
-        hash["use_keystone"] = false
+        hash["glance"]["use_keystone"] = false
       else
-        hash["keystone_instance"] = keystones[0].name
-        hash["use_keystone"] = true
+        hash["glance"]["keystone_instance"] = keystones[0].name
+        hash["glance"]["use_keystone"] = true
       end
     rescue
       @logger.info("Glance create_proposal: no keystone found")
-      hash["use_keystone"] = false
+      hash["glance"]["use_keystone"] = false
     end
-    hash["service_password"] = '%012d' % rand(1e12)
-    hash["api"]["bind_open_address"] = true
-    hash["registry"]["bind_open_address"] = true
+    hash["glance"]["service_password"] = '%012d' % rand(1e12)
+    hash["glance"]["api"]["bind_open_address"] = true
+    hash["glance"]["registry"]["bind_open_address"] = true
 
     base.config_hash = hash
 
@@ -92,15 +92,15 @@ class GlanceService < ServiceObject
     nodes = pc.get_nodes_by_role("provisioner-server")
     unless nodes.nil? or nodes.length < 1
       admin_ip = nodes[0].address.addr
-      web_port = pc.config_hash["web_port"]
+      web_port = pc.config_hash["provisioner"]["web_port"]
 
       # substitute the admin web portal
       dep_config = new_config.config_hash
       new_array = []
-      dep_config["images"].each do |item|
+      dep_config["glance"]["images"].each do |item|
         new_array << item.gsub("|ADMINWEB|", "#{admin_ip}:#{web_port}")
       end
-      dep_config["images"] = new_array
+      dep_config["glance"]["images"] = new_array
       new_config.config_hash = dep_config
     end
 

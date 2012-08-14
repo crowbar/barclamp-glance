@@ -157,23 +157,20 @@ if node[:glance][:api][:protocol] == "https"
   end
 else
   # Remove potentially left-over Apache2 config files:
-  file "/etc/logrotate.d/openstack-glance" do
-    action :delete
-  end if ::File.exist?("/etc/logrotate.d/openstack-glance")
-
   apache_site "openstack-glance.conf" do
     enable false
   end
 
-  if node.platform == "suse"
-    vhost_config = "#{node[:apache][:dir]}/vhosts.d/openstack-glance.conf"
-  else
+  if node.platform != "suse"
     vhost_config = "#{node[:apache][:dir]}/sites-available/openstack-glance.conf"
+    file vhost_config do
+      action :delete
+    end
   end
-  file vhost_config do
+
+  file "/etc/logrotate.d/openstack-glance" do
     action :delete
-    notifies :reload, resources(:service => "apache2"), :immediately
-  end if ::File.exist?(vhost_config)
+  end
   # End of Apache2 vhost cleanup
 
   service "keystone" do

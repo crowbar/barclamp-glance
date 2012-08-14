@@ -178,12 +178,6 @@ else
   end
   # End of Apache2 vhost cleanup
 
-  service "keystone" do
-    service_name "openstack-keystone" if node.platform == "suse"
-    supports :status => true, :restart => true
-    action :enable
-  end
-
   glance_service "api"
 end
 

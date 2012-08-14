@@ -133,6 +133,11 @@ end
 if node[:glance][:api][:protocol] == "https"
   Chef::Log.info("Configuring Glance to use SSL via Apache2+mod_wsgi")
 
+  service "glance-api" do
+    service_name "openstack-glance-api" if node.platform == "suse"
+    action [:disable, :stop]
+  end
+
   # Prepare Apache2 SSL vhost template:
   template "#{node[:apache][:dir]}/sites-available/openstack-glance.conf" do
     if node.platform == "suse"

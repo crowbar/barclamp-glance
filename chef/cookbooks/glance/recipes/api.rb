@@ -6,8 +6,8 @@
 
 include_recipe "#{@cookbook_name}::common"
 
-include_recipe "apache2"
 if node[:keystone][:api][:protocol] == "https"
+  include_recipe "apache2"
   include_recipe "apache2::mod_ssl"
   include_recipe "apache2::mod_wsgi"
 end
@@ -162,19 +162,24 @@ if node[:glance][:api][:protocol] == "https"
   end
 else
   # Remove potentially left-over Apache2 config files:
-  apache_site "openstack-glance.conf" do
-    enable false
+  if node.platform == "suse"
+    vhost_config = "#{node[:apache][:dir]}/vhosts.d/openstack-glance.conf"
+  else
+    vhost_config = "#{node[:apache][:dir]}/sites-available/openstack-glance.conf"
   end
 
-  if node.platform != "suse"
-    vhost_config = "#{node[:apache][:dir]}/sites-available/openstack-glance.conf"
+  if ::File.exist?(vhost_config)
+    apache_site "openstack-glance.conf" do
+      enable false
+    end
+
     file vhost_config do
       action :delete
-    end
-  end
+    end if node.platform != "suse"
 
-  file "/etc/logrotate.d/openstack-glance" do
-    action :delete
+    file "/etc/logrotate.d/openstack-glance" do
+      action :delete
+    end
   end
   # End of Apache2 vhost cleanup
 

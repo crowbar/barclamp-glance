@@ -1,4 +1,4 @@
-# Copyright 2011, Dell 
+# Copyright 2012, Dell 
 # 
 # Licensed under the Apache License, Version 2.0 (the "License"); 
 # you may not use this file except in compliance with the License. 
@@ -15,22 +15,14 @@
 
 class GlanceService < ServiceObject
 
-  def initialize(thelogger)
-    @bc_name = "glance"
-    @logger = thelogger
-  end
-
-  def self.allow_multiple_proposals?
-    true
-  end
-
-  def proposal_dependencies(role)
+  def proposal_dependencies(prop_config)
     answer = []
-    if role.default_attributes["glance"]["database"] == "mysql"
-      answer << { "barclamp" => "mysql", "inst" => role.default_attributes["glance"]["mysql_instance"] }
+    hash = prop_config.config_hash
+    if hash["glance"]["database"] == "mysql"
+      answer << { "barclamp" => "mysql", "inst" => hash["glance"]["mysql_instance"] }
     end
-    if role.default_attributes["glance"]["use_keystone"]
-      answer << { "barclamp" => "keystone", "inst" => role.default_attributes["glance"]["keystone_instance"] }
+    if hash["glance"]["use_keystone"]
+      answer << { "barclamp" => "keystone", "inst" => hash["glance"]["keystone_instance"] }
     end
     answer
   end
@@ -39,85 +31,88 @@ class GlanceService < ServiceObject
     @logger.debug("Glance create_proposal: entering")
     base = super
 
-    nodes = NodeObject.all
-    nodes.delete_if { |n| n.nil? or n.admin? }
+    nodes = Node.all
+    nodes.delete_if { |n| n.nil? or n.is_admin? }
     if nodes.size >= 1
-      base["deployment"]["glance"]["elements"] = {
-        "glance-server" => [ nodes.first[:fqdn] ]
-      }
+      add_role_to_instance_and_node(n[0].name, base.name, "glance-server")
     end
 
-    base["attributes"]["glance"]["mysql_instance"] = ""
+    hash = base.config_hash
+    hash["glance"]["mysql_instance"] = ""
     begin
-      mysqlService = MysqlService.new(@logger)
-      mysqls = mysqlService.list_active[1]
+      mysql = Barclamp.find_by_name("mysql")
+      mysqls = mysql.active_proposals
       if mysqls.empty?
         # No actives, look for proposals
-        mysqls = mysqlService.proposals[1]
+        mysqls = mysql.proposals
       end
       unless mysqls.empty?
-        base["attributes"]["glance"]["mysql_instance"] = mysqls[0]
+        hash["glance"]["mysql_instance"] = mysqls[0].name
       end
-      base["attributes"]["glance"]["database"] = "mysql"
+      hash["glance"]["database"] = "mysql"
     rescue
-      base["attributes"]["glance"]["database"] = "mysql"
+      hash["glance"]["database"] = "mysql"
       @logger.info("Glance create_proposal: no mysql found")
     end
     
-    base["attributes"]["glance"]["keystone_instance"] = ""
+    hash["glance"]["keystone_instance"] = ""
     begin
-      keystoneService = KeystoneService.new(@logger)
-      keystones = keystoneService.list_active[1]
+      keystone = Barclamp.find_by_name("keystone")
+      keystones = keystone.active_proposals
       if keystones.empty?
         # No actives, look for proposals
-        keystones = keystoneService.proposals[1]
+        keystones = keystone.proposals
       end
       if keystones.empty?
-        base["attributes"]["glance"]["use_keystone"] = false
+        hash["glance"]["use_keystone"] = false
       else
-        base["attributes"]["glance"]["keystone_instance"] = keystones[0]
-        base["attributes"]["glance"]["use_keystone"] = true
+        hash["glance"]["keystone_instance"] = keystones[0].name
+        hash["glance"]["use_keystone"] = true
       end
     rescue
       @logger.info("Glance create_proposal: no keystone found")
-      base["attributes"]["glance"]["use_keystone"] = false
+      hash["glance"]["use_keystone"] = false
     end
-    base["attributes"]["glance"]["service_password"] = '%012d' % rand(1e12)
-    base["attributes"]["glance"]["api"]["bind_open_address"] = true
-    base["attributes"]["glance"]["registry"]["bind_open_address"] = true
+    hash["glance"]["service_password"] = '%012d' % rand(1e12)
+    hash["glance"]["api"]["bind_open_address"] = true
+    hash["glance"]["registry"]["bind_open_address"] = true
+
+    base.config_hash = hash
 
     @logger.debug("Glance create_proposal: exiting")
     base
   end
 
-  def apply_role_pre_chef_call(old_role, role, all_nodes)
+  def apply_role_pre_chef_call(old_config, new_config, all_nodes)
     @logger.debug("Glance apply_role_pre_chef_call: entering #{all_nodes.inspect}")
     return if all_nodes.empty?
 
     # Update images paths
-    nodes = NodeObject.find("roles:provisioner-server")
+    pc = Barclamp.find_by_name("provisioner").get_proposal("default").active_config
+    nodes = pc.get_nodes_by_role("provisioner-server")
     unless nodes.nil? or nodes.length < 1
-      admin_ip = nodes[0].get_network_by_type("admin")["address"]
-      web_port = nodes[0]["provisioner"]["web_port"]
+      admin_ip = nodes[0].address.addr
+      web_port = pc.config_hash["provisioner"]["web_port"]
+
       # substitute the admin web portal
+      dep_config = new_config.config_hash
       new_array = []
-      role.default_attributes["glance"]["images"].each do |item|
+      dep_config["glance"]["images"].each do |item|
         new_array << item.gsub("|ADMINWEB|", "#{admin_ip}:#{web_port}")
       end
-      role.default_attributes["glance"]["images"] = new_array
-      role.save
+      dep_config["glance"]["images"] = new_array
+      new_config.config_hash = dep_config
     end
 
     # Make sure the bind hosts are in the admin network
-    all_nodes.each do |n|
-      node = NodeObject.find_node_by_name n
+    all_nodes.each do |node|
+      admin_address = node.address.addr
 
-      admin_address = node.get_network_by_type("admin")["address"]
-      node.crowbar[:glance] = {} if node.crowbar[:glance].nil?
-      node.crowbar[:glance][:api_bind_host] = admin_address
-      node.crowbar[:glance][:registry_bind_host] = admin_address
-
-      node.save
+      chash = new_config.get_node_config_hash(node)
+      chash[:glance] = {} if node.crowbar[:glance].nil?
+      chash[:glance][:api_bind_host] = admin_address
+      chash[:glance][:registry_bind_host] = admin_address
+      new_config.set_node_config_hash(node, chash)
     end
     @logger.debug("Glance apply_role_pre_chef_call: leaving")
   end

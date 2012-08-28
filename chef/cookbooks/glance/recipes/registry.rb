@@ -55,8 +55,6 @@ template node[:glance][:registry][:paste_ini] do
 end
 
 if node[:glance][:use_keystone]
-  my_admin_ip = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
-  my_public_ip = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "public").address
   api_port = node["glance"]["api"]["bind_port"]
 
   keystone_register "glance registry wakeup keystone" do

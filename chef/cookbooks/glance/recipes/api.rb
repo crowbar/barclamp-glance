@@ -22,7 +22,7 @@ if node[:glance][:use_keystone]
     keystone = node
   end
 
-  keystone_address = Chef::Recipe::Barclamp::Inventory.get_network_by_type(keystone, "admin").address if keystone_address.nil?
+  keystone_host = keystone[:fqdn]
   keystone_protocol = keystone["keystone"]["api"]["protocol"]
   keystone_token = keystone["keystone"]["service"]["token"]
   keystone_service_port = keystone["keystone"]["api"]["service_port"]
@@ -30,9 +30,9 @@ if node[:glance][:use_keystone]
   keystone_service_tenant = keystone["keystone"]["service"]["tenant"]
   keystone_service_user = node[:glance][:service_user]
   keystone_service_password = node[:glance][:service_password]
-  Chef::Log.info("Keystone server found at #{keystone_address}")
+  Chef::Log.info("Keystone server found at #{keystone_host}")
 else
-  keystone_address = ""
+  keystone_host = ""
   keystone_token = ""
 end
 
@@ -50,7 +50,7 @@ template node[:glance][:api][:paste_ini] do
   mode 0640
   variables(
     :keystone_protocol => keystone_protocol,
-    :keystone_address => keystone_address,
+    :keystone_host => keystone_host,
     :keystone_auth_token => keystone_token,
     :keystone_service_port => keystone_service_port,
     :keystone_service_user => keystone_service_user,
@@ -61,14 +61,14 @@ template node[:glance][:api][:paste_ini] do
 end
 
 if node[:glance][:use_keystone]
-  my_admin_ip = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
-  my_public_ip = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "public").address
+  my_admin_host = node[:fqdn]
+  my_public_host = 'public.'+node[:fqdn]
   api_protocol = node[:glance][:api][:protocol]
   api_port = node["glance"]["api"]["bind_port"]
 
   keystone_register "glance api wakeup keystone" do
     protocol keystone_protocol
-    host keystone_address
+    host keystone_host
     port keystone_admin_port
     token keystone_token
     action :wakeup
@@ -76,7 +76,7 @@ if node[:glance][:use_keystone]
 
   keystone_register "register glance user" do
     protocol keystone_protocol
-    host keystone_address
+    host keystone_host
     port keystone_admin_port
     token keystone_token
     user_name keystone_service_user
@@ -87,7 +87,7 @@ if node[:glance][:use_keystone]
 
   keystone_register "give glance user access" do
     protocol keystone_protocol
-    host keystone_address
+    host keystone_host
     port keystone_admin_port
     token keystone_token
     user_name keystone_service_user
@@ -98,7 +98,7 @@ if node[:glance][:use_keystone]
 
   keystone_register "register glance service" do
     protocol keystone_protocol
-    host keystone_address
+    host keystone_host
     port keystone_admin_port
     token keystone_token
     service_name "glance"
@@ -109,20 +109,20 @@ if node[:glance][:use_keystone]
 
   keystone_register "register glance endpoint" do
     protocol keystone_protocol
-    host keystone_address
+    host keystone_host
     port keystone_admin_port
     token keystone_token
     endpoint_service "glance"
     endpoint_region "RegionOne"
-    #endpoint_publicURL "http://#{my_public_ip}:#{api_port}/v1"
+    #endpoint_publicURL "http://#{my_public_host}:#{api_port}/v1"
     # We use my_admin_ip here as public_ip because all other services
     # query the public_ip for the 'image' endpoint in keystone's endpoint
     # catalog. All OpenStack services are in the admin network anyway
     # and can thus query glance without compromising security (contrary
     # to making glance listen on all interfaces):
-    endpoint_publicURL "#{api_protocol}://#{my_admin_ip}:#{api_port}/v1"
-    endpoint_adminURL "#{api_protocol}://#{my_admin_ip}:#{api_port}/v1"
-    endpoint_internalURL "#{api_protocol}://#{my_admin_ip}:#{api_port}/v1"
+    endpoint_publicURL "#{api_protocol}://#{my_admin_host}:#{api_port}/v1"
+    endpoint_adminURL "#{api_protocol}://#{my_admin_host}:#{api_port}/v1"
+    endpoint_internalURL "#{api_protocol}://#{my_admin_host}:#{api_port}/v1"
 #  endpoint_global true
 #  endpoint_enabled true
     action :add_endpoint_template

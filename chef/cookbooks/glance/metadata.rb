@@ -8,4 +8,4 @@ depends          "keystone"
 depends          "mysql"
 depends          "openssl"
 depends          "nagios"
-
+depends          "git"

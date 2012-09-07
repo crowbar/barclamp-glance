@@ -4,6 +4,7 @@
   %label{:for => "proposal_attributes"}= t('.attributes')
   = link_to t('raw'), proposal_barclamp_path(:id => @proposal.name, :controller => @proposal.barclamp, :dep_raw => @dep_raw, :attr_raw => true), :style => "float: right;"
   %div.container
+    = render 'barclamp/git/pfsdeps.html.haml'
     %p
       %label{ :for => :working_directory }= t('.working_directory')
       %input#working_directory{:type => "text", :name => "working_directory", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["working_directory"], :onchange => "update_value('working_directory','working_directory', 'string')"}

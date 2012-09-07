@@ -101,6 +101,7 @@ if node[:glance][:use_keystone]
   end
 end
 
+link_service "glance-registry"
 glance_service "registry"
 
 node[:glance][:monitor][:svcs] << ["glance-registry"]

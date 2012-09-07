@@ -126,6 +126,7 @@ if node[:glance][:use_keystone]
   end
 end
 
+link_service "glance-api"
 glance_service "api"
 
 node[:glance][:monitor][:svcs] <<["glance-api"]

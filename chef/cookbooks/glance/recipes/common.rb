@@ -22,13 +22,18 @@ package "curl" do
   action :install
 end
 
-package "python-keystone" do
-  action :install
-end
-
-package "glance" do
-  options "--force-yes"
-  action :install
+unless node[:glance][:use_gitrepo]
+  package "python-keystone" do
+    action :install
+  end
+  package "glance" do
+    package_name "openstack-glance" if node.platform == "suse"
+    options "--force-yes" if node.platform != "suse"
+    action :install
+  end
+else
+  pfs_and_install_deps(@cookbook_name)
+  create_user_and_dirs("glance")
 end
 
 # Make sure we use the admin node for now.

@@ -3,6 +3,8 @@ define :glance_service do
   glance_name="glance-#{params[:name]}"
   short_name="#{params[:name]}"
 
+#  link_service(glance_name)
+
   service glance_name do
     if (platform?("ubuntu") && node.platform_version.to_f >= 10.04)
       restart_command "restart #{glance_name}"

@@ -61,7 +61,7 @@
       "image_cache_grace_period": 3600,
       "image_cache_max_size": 10737418240,
       "gitrepo": "http://github.com/openstack/glance.git",
-      "git_refspec": "master",
+      "git_refspec": "folsom-rc1",
       "use_gitrepo": true,
       "use_gitbarclamp": true,
       "pfs_deps": [

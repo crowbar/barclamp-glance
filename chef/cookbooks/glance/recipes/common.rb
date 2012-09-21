@@ -34,6 +34,8 @@ unless node[:glance][:use_gitrepo]
 else
   pfs_and_install_deps(@cookbook_name)
   create_user_and_dirs("glance")
+  link_service("glance-api")
+  link_service("glance-registry")
 end
 
 # Make sure we use the admin node for now.

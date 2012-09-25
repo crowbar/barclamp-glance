@@ -109,7 +109,7 @@ class GlanceService < ServiceObject
       admin_address = node.address.addr
 
       chash = new_config.get_node_config_hash(node)
-      chash[:glance] = {} if node.crowbar[:glance].nil?
+      chash[:glance] = {} unless chash[:glance]
       chash[:glance][:api_bind_host] = admin_address
       chash[:glance][:registry_bind_host] = admin_address
       new_config.set_node_config_hash(node, chash)

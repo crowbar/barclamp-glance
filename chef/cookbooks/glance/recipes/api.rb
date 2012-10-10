@@ -25,6 +25,14 @@ if node[:glance][:use_keystone]
   keystone_service_user = node[:glance][:service_user]
   keystone_service_password = node[:glance][:service_password]
   Chef::Log.info("Keystone server found at #{keystone_address}")
+
+  if node[:glance][:use_gitrepo]
+    pfs_and_install_deps "keystone" do
+      cookbook "keystone"
+      cnode keystone
+    end
+  end
+
 else
   keystone_address = ""
   keystone_token = ""

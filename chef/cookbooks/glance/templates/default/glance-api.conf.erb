@@ -3,7 +3,7 @@
 verbose = <%= node[:glance][:api][:verbose] ? "True" : "False" %>
 debug = <%= node[:glance][:api][:debug] ? "True" : "False" %>
 default_store = <%= node[:glance][:default_store] %>
-bind_host = <%= node[:glance][:api][:bind_open_address] || "0.0.0.0" %>
+bind_host = <%= node[:glance][:api][:bind_open_address] ? "0.0.0.0" : node[:glance][:api][:bind_host] %>
 bind_port = <%= node[:glance][:api][:bind_port] %>
 log_file = <%= node[:glance][:api][:log_file] %>
 backlog = 4096

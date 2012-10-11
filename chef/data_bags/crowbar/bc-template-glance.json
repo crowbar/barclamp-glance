@@ -61,8 +61,9 @@
       "image_cache_grace_period": 3600,
       "image_cache_max_size": 10737418240,
       "gitrepo": "http://github.com/openstack/glance.git",
-      "git_refspec": "2012.2",
+      "git_refspec": "stable/folsom",
       "use_gitrepo": true,
+      "use_pip_cache": true,
       "use_gitbarclamp": true,
       "pfs_deps": [
         "python-greenlet",

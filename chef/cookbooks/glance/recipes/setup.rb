@@ -75,20 +75,21 @@ ruby_block "load glance images" do
         ["initrd", "loader" ],
         ["image", ".img"] ].each do |part|
         next unless image_part = Dir.glob("#{tmpdir}/*#{part[1]}").first
-        cmd = "glance #{glance_args} add name=#{basename}-#{part[0]} is_public=True"
+        cmd = "glance #{glance_args} image-create --name #{basename}-#{part[0]} --is-public True"
         case part[0]
-        when "kernel" then cmd << " disk_format=aki container_format=aki"
-        when "initrd" then cmd << " disk_format=ari container_format=ari"
+        when "kernel" then cmd << " --disk-format aki --container-format aki"
+        when "initrd" then cmd << " --disk-format ari --container-format ari"
         when "image"
-          cmd << " disk_format=ami container_format=ami"
-          cmd << " kernel_id=#{ids["kernel"]}" if ids["kernel"]
-          cmd << " ramdisk_id=#{ids["initrd"]}" if ids["initrd"]
+          cmd << " --disk-format ami --container-format ami"
+          cmd << " --property kernel_id=#{ids["kernel"]}" if ids["kernel"]
+          cmd << " --property ramdisk_id=#{ids["initrd"]}" if ids["initrd"]
         end
-        res = %x{glance #{glance_args} index name=#{basename}-#{part[0]} 2>&1}
+        res = %x{glance #{glance_args} image-list --name #{basename}-#{part[0]} 2>&1}.strip
         if res.nil? || res.empty?
           Chef::Log.info("Loading #{image_part} for #{basename}-#{part[0]}")
           res = %x{#{cmd} < "#{image_part}"}
         else
+          Chef::Log.info("Result was :#{res}.")
           Chef::Log.info("#{basename}-#{part[0]} already loaded.")
         end
         ids[part[0]] = res.match(/([0-9a-f]+-){4}[0-9a-f]+/)

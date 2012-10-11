@@ -1,7 +1,7 @@
 [DEFAULT]
 verbose = <%= node[:glance][:registry][:verbose] ? "True" : "False" %>
 debug = <%= node[:glance][:registry][:debug] ? "True" : "False" %>
-bind_host = <%= node[:glance][:registry][:bind_open_address] || "0.0.0.0"%>
+bind_host = <%= node[:glance][:registry][:bind_open_address] ? "0.0.0.0" : node[:glance][:registry][:bind_host]%>
 bind_port = <%= node[:glance][:registry][:bind_port] %>
 log_file = <%= node[:glance][:registry][:log_file] %>
 backlog = 4096

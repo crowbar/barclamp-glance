@@ -6,7 +6,6 @@
 
 include_recipe "#{@cookbook_name}::common"
 
-
 if node[:glance][:use_keystone]
   env_filter = " AND keystone_config_environment:keystone-config-#{node[:glance][:keystone_instance]}"
   keystones = search(:node, "recipes:keystone\\:\\:server#{env_filter}") || []
@@ -35,6 +34,15 @@ template node[:glance][:api][:config_file] do
   owner node[:glance][:user]
   group "root"
   mode 0644
+  variables(
+    :keystone_address => keystone_address,
+    :keystone_auth_token => keystone_token,
+    :keystone_service_port => keystone_service_port,
+    :keystone_service_user => keystone_service_user,
+    :keystone_service_password => keystone_service_password,
+    :keystone_service_tenant => keystone_service_tenant,
+    :keystone_admin_port => keystone_admin_port
+  )
 end
 
 template node[:glance][:api][:paste_ini] do

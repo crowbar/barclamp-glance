@@ -100,6 +100,7 @@
             "image_cache_grace_period": { "type": "int", "required": true },
             "image_cache_max_size": { "type": "int", "required": true },
             "gitrepo": { "type": "str", "required": true },
+            "git_instance": { "type": "str", "required": true },
             "git_refspec": { "type": "str", "required": true },
             "use_gitrepo": { "type": "bool", "required": true },
             "use_gitbarclamp": { "type": "bool", "required": true },

@@ -34,6 +34,15 @@ template node[:glance][:registry][:config_file] do
   owner node[:glance][:user]
   group "root"
   mode 0644
+  variables(
+    :keystone_address => keystone_address,
+    :keystone_auth_token => keystone_token,
+    :keystone_service_port => keystone_service_port,
+    :keystone_service_user => keystone_service_user,
+    :keystone_service_password => keystone_service_password,
+    :keystone_service_tenant => keystone_service_tenant,
+    :keystone_admin_port => keystone_admin_port
+  )
 end
 
 template node[:glance][:registry][:paste_ini] do

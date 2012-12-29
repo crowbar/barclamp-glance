@@ -75,7 +75,7 @@ default[:glance][:swift_store_create_container_on_put] = "False"
 default[:glance][:tty_linux_image] = "http://c3226372.r72.cf0.rackcdn.com/tty_linux.tar.gz"
 
 # declare what needs to be monitored
-node[:glance][:monitor]={}
-node[:glance][:monitor][:svcs] = []
-node[:glance][:monitor][:ports]={}
+node.set[:glance][:monitor]={}
+node.set[:glance][:monitor][:svcs] = []
+node.set[:glance][:monitor][:ports]={}
 

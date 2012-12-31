@@ -34,10 +34,10 @@ class GlanceService < ServiceObject
     nodes = Node.all
     nodes.delete_if { |n| n.nil? or n.is_admin? }
     if nodes.size >= 1
-      add_role_to_instance_and_node(n[0].name, base.name, "glance-server")
+      add_role_to_instance_and_node(nodes[0].name, base.name, "glance-server")
     end
 
-    hash = base.config_hash
+    hash = base.current_config.config_hash
     hash["glance"]["mysql_instance"] = ""
     begin
       mysql = Barclamp.find_by_name("mysql")
@@ -77,7 +77,7 @@ class GlanceService < ServiceObject
     hash["glance"]["api"]["bind_open_address"] = true
     hash["glance"]["registry"]["bind_open_address"] = true
 
-    base.config_hash = hash
+    base.current_config.config_hash = hash
 
     @logger.debug("Glance create_proposal: exiting")
     base

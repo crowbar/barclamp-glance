@@ -19,9 +19,9 @@
     %p
       %label{ :for => :filesystem_store_datadir }= t('.filesystem_store_datadir')
       %input#filesystem_store_datadir{:type => "text", :name => "filesystem_store_datadir", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["filesystem_store_datadir"], :onchange => "update_value('filesystem_store_datadir','filesystem_store_datadir', 'string')"}
-    %p
+    -# %p
       %label{ :for => :swift_header }= t('.swift_header')
-    %div.container
+    -# %div.container
       %p
         %label{ :for => :swift_store_container }= t('.swift_store_container')
         %input#swift_store_container{:type => "text", :name => "swift_store_container", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["swift_store_container"], :onchange => "update_value('swift_store_container','swift_store_container', 'string')"}

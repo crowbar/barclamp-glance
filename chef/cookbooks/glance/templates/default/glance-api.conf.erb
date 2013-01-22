@@ -43,7 +43,7 @@ filesystem_store_datadir = <%= node[:glance][:filesystem_store_datadir] %>
 
 <% if node[:glance][:use_keystone] -%>
 # Address where the Swift authentication service lives
-swift_store_auth_address = http://<%= @keystone_address %>:<%= keystone_service_port %>/v2.0/
+swift_store_auth_address = http://<%= @keystone_address %>:<%= @keystone_service_port %>/v2.0/
 
 # User to authenticate against the Swift authentication service
 swift_store_user = <%= @keystone_service_tenant %>:<%= @keystone_service_user %>

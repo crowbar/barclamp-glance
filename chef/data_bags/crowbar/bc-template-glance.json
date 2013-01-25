@@ -62,7 +62,7 @@
       "image_cache_max_size": 10737418240,
       "gitrepo": "http://github.com/openstack/glance.git",
       "git_instance": "",
-      "git_refspec": "stable/folsom",
+      "git_refspec": "grizzly-1",
       "use_gitrepo": true,
       "use_pip_cache": true,
       "use_gitbarclamp": true,

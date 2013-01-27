@@ -32,8 +32,13 @@ unless node[:glance][:use_gitrepo]
     action :install
   end
 else
+  glance_path = "/opt/glance"
   pfs_and_install_deps(@cookbook_name)
   create_user_and_dirs("glance")
+  execute "cp_.json_#{@cookbook_name}" do
+    command "cp #{glance_path}/etc/*.json /etc/#{@cookbook_name}"
+    creates "/etc/#{@cookbook_name}/policy.json"
+  end
   link_service("glance-api")
   link_service("glance-registry")
 end

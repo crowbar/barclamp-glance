@@ -67,14 +67,14 @@ ruby_block "load glance images" do
       FileUtils.rm_rf "#{rawdir}/#{basename}"
       FileUtils.mkdir "#{rawdir}/#{basename}"
       ::Kernel.system "tar -zxf \"#{rawdir}/#{image}\" -C \"#{rawdir}/#{basename}/\""
+
       # wait about 15 seconds for check of accessible glance service
-      Timeout::timeout(15) {
-        ::Kernel.system "glance #{glance_args} details > /dev/null"
-      }
+      Timeout::timeout(15) { ::Kernel.system "glance #{glance_args} details > /dev/null" }
+
       ids = Hash.new
       [["kernel", "vmlinuz-virtual"],["initrd", "loader" ],["image", ".img"]].each do |part|
         next unless image_part = Dir.glob("#{rawdir}/#{basename}/*#{part[1]}").first
-        res = %x{glance #{glance_args} image-list --name #{basename}-#{part[0]} 2>&1}.strip
+        res = %x{glance #{glance_args} image-list --name #{basename}-#{part[0]} > /dev/null 2>&1}.strip
         if res.nil? || res.empty?
           # image not exists in glance
           Chef::Log.info "Loading #{image_part} for #{basename}-#{part[0]}"
@@ -99,4 +99,7 @@ ruby_block "load glance images" do
       node[:glance][:processed_images] << url
     end
   end
+  retries 3
+  # defore retry wait about 60 seconds
+  retry_delay 60
 end

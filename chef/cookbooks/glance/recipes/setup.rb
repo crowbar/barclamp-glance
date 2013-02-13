@@ -40,64 +40,66 @@ glance_args = "-H #{my_ipaddress} -p #{port} #{admin_token}"
 # If the json file changes, we need to update this procedure.
 #
 
-(node[:glance][:images] or []).each do |image|
-  #get the filename of the image
-  filename = image.split('/').last
-  remote_file image do
-    source image
-    path "#{node[:glance][:working_directory]}/raw_images/#{filename}"
+# crate empty list of images and processed_images if nil
+node[:glance][:processed_images] ||= []
+node[:glance][:images] ||= []
+
+images = node[:glance][:images] - node[:glance][:processed_images]
+raw_images = []
+
+rawdir="#{node[:glance][:working_directory]}/raw_images"
+
+images.each do |url|
+  filename = url.split("/").last
+  remote_file "#{rawdir}/#{filename}" do
+    source url
     action :create_if_missing
-    not_if do 
-      ::File.exists?("#{node[:glance][:working_directory]}/raw_images/#{filename}.keep")
-    end
   end
-end
-ruby_block "load glance images" do
-  block do
-    wait = true
-    rawdir="#{node[:glance][:working_directory]}/raw_images"
-    Dir.entries(rawdir).each do |name|
-      next unless node[:glance][:images].map{|n|n.split('/').last}.member?(name)
-      basename = name.split('-')[0..1].join('-')
-      tmpdir = "#{rawdir}/#{basename}"
-      Dir.mkdir("#{tmpdir}") unless File.exists?("#{tmpdir}")
-      Chef::Log.info("Extracting #{name} into #{tmpdir}")
-      ::Kernel.system("tar -zxf \"#{rawdir}/#{name}\" -C \"#{tmpdir}/\"")
-      if wait
-        ::Kernel.system("glance #{glance_args} details")
-        sleep 15
-        wait = false
-      end
-      ids = Hash.new
-      cmds = Hash.new
-      # Yes, this is exceptionally stupid for now.  Eventually it will be smarter.
-      [ ["kernel", "vmlinuz-virtual"],
-        ["initrd", "loader" ],
-        ["image", ".img"] ].each do |part|
-        next unless image_part = Dir.glob("#{tmpdir}/*#{part[1]}").first
-        cmd = "glance #{glance_args} image-create --name #{basename}-#{part[0]} --is-public True"
-        case part[0]
-        when "kernel" then cmd << " --disk-format aki --container-format aki"
-        when "initrd" then cmd << " --disk-format ari --container-format ari"
-        when "image"
-          cmd << " --disk-format ami --container-format ami"
-          cmd << " --property kernel_id=#{ids["kernel"]}" if ids["kernel"]
-          cmd << " --property ramdisk_id=#{ids["initrd"]}" if ids["initrd"]
-        end
-        res = %x{glance #{glance_args} image-list --name #{basename}-#{part[0]} 2>&1}.strip
-        if res.nil? || res.empty?
-          Chef::Log.info("Loading #{image_part} for #{basename}-#{part[0]}")
-          res = %x{#{cmd} < "#{image_part}"}
-        else
-          Chef::Log.info("Result was :#{res}.")
-          Chef::Log.info("#{basename}-#{part[0]} already loaded.")
-        end
-        ids[part[0]] = res.match(/([0-9a-f]+-){4}[0-9a-f]+/)
-      end
-      ::Kernel.system("rm -rf \"#{tmpdir}\"")
-      File.truncate("#{rawdir}/#{name}",0)
-      File.rename("#{rawdir}/#{name}","#{rawdir}/#{name}.keep")
-    end
-  end
+  raw_images << url
 end
 
+ruby_block "load glance images" do
+  block do
+    raw_images.each do |url|
+      image = url.split("/").last
+      basename = image.split('-')[0..1].join('-')
+      puts "Basename: #{basename}"
+      FileUtils.rm_rf "#{rawdir}/#{basename}"
+      FileUtils.mkdir "#{rawdir}/#{basename}"
+      ::Kernel.system "tar -zxf \"#{rawdir}/#{image}\" -C \"#{rawdir}/#{basename}/\""
+
+      # wait about 15 seconds for check of accessible glance service
+      Timeout::timeout(15) { ::Kernel.system "glance #{glance_args} details > /dev/null" }
+
+      ids = Hash.new
+      [["kernel", "vmlinuz-virtual"],["initrd", "loader" ],["image", ".img"]].each do |part|
+        next unless image_part = Dir.glob("#{rawdir}/#{basename}/*#{part[1]}").first
+        res = %x{glance #{glance_args} image-list --name #{basename}-#{part[0]} > /dev/null 2>&1}.strip
+        if res.nil? || res.empty?
+          # image not exists in glance
+          Chef::Log.info "Loading #{image_part} for #{basename}-#{part[0]}"
+          cmd = "glance #{glance_args} image-create --name #{basename}-#{part[0]} --is-public True"
+          case part[0]
+            when "kernel" then cmd << " --disk-format aki --container-format aki"
+            when "initrd" then cmd << " --disk-format ari --container-format ari"
+            when "image"
+              cmd << " --disk-format ami --container-format ami"
+              cmd << " --property kernel_id=#{ids["kernel"]}" if ids["kernel"]
+              cmd << " --property ramdisk_id=#{ids["initrd"]}" if ids["initrd"]
+          end
+          res = %x{#{cmd} < "#{image_part}"}
+          ids[part[0]] = res.match(/([0-9a-f]+-){4}[0-9a-f]+/)
+          Chef::Log.info "Loading complete"
+        else
+          # image already exists in glance
+          Chef::Log.info "Skip #{basename}-#{part[0]}, already loaded."
+        end
+      end
+      FileUtils.rm_rf "#{rawdir}/#{basename}"
+      node[:glance][:processed_images] << url
+    end
+  end
+  retries 3
+  # defore retry wait about 60 seconds
+  retry_delay 60
+end

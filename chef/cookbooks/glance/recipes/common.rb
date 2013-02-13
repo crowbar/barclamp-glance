@@ -18,6 +18,9 @@
 # limitations under the License.
 #
 
+include_recipe "barclamp"
+
+
 package "curl" do
   action :install
 end
@@ -33,8 +36,8 @@ end
 
 # Make sure we use the admin node for now.
 my_ipaddress = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
-node[:glance][:api][:bind_host] = my_ipaddress
-node[:glance][:registry][:bind_host] = my_ipaddress
+node.set[:glance][:api][:bind_host] = my_ipaddress
+node.set[:glance][:registry][:bind_host] = my_ipaddress
 
 if node[:glance][:database] == "mysql"
   ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
@@ -80,13 +83,13 @@ if node[:glance][:database] == "mysql"
     sql "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER on #{node[:glance][:db][:database]}.* to '#{node[:glance][:db][:user]}'@'%' IDENTIFIED BY '#{node[:glance][:db][:password]}';"
   end
 
-  node[:glance][:sql_connection] = "mysql://#{node[:glance][:db][:user]}:#{node[:glance][:db][:password]}@#{mysql_address}/#{node[:glance][:db][:database]}"
+  node.set[:glance][:sql_connection] = "mysql://#{node[:glance][:db][:user]}:#{node[:glance][:db][:password]}@#{mysql_address}/#{node[:glance][:db][:database]}"
 
   file "/var/lib/glance/glance.sqlite" do
     action :delete
   end
 else
-  node[:glance][:sql_connection] = node[:glance][:sqlite_connection]
+  node.set[:glance][:sql_connection] = node[:glance][:sqlite_connection]
 end
 
 node.save

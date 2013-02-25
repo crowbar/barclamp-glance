@@ -41,6 +41,17 @@ filesystem_store_datadir = <%= node[:glance][:filesystem_store_datadir] %>
 
 # ============ Swift Store Options =============================
 
+<% if node[:glance][:use_keystone] -%>
+# Address where the Swift authentication service lives
+swift_store_auth_address = http://<%= @keystone_address %>:<%= @keystone_service_port %>/v2.0/
+
+# User to authenticate against the Swift authentication service
+swift_store_user = <%= @keystone_service_tenant %>:<%= @keystone_service_user %>
+
+# Auth key for the user authenticating against the
+# Swift authentication service
+swift_store_key = <%= @keystone_service_password %>
+<% else -%>
 # Address where the Swift authentication service lives
 swift_store_auth_address = <%= node[:glance][:swift_store_auth_address] %>
 
@@ -50,6 +61,7 @@ swift_store_user = <%= node[:glance][:swift_store_user] %>
 # Auth key for the user authenticating against the
 # Swift authentication service
 swift_store_key = <%= node[:glance][:swift_store_key] %>
+<% end -%>
 
 # Container within the account that the account should use
 # for storing images in Swift

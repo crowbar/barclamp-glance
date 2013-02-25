@@ -13,7 +13,7 @@
     %p
       %label{ :for => :notifier_strategy }= t('.notifier_strategy')
       = select_tag :notifier_strategy, options_for_select([['Noop','noop']], @proposal.raw_data['attributes'][@proposal.barclamp]["notifier_strategy"]), :onchange => "update_value('notifier_strategy', 'notifier_strategy', 'string')"
-    -# %p
+    %p
       %label{ :for => :backing_type }= t('.backing_type')
       = select_tag :backing_type, options_for_select([['File','file'], ['Swift', 'swift']], @proposal.raw_data['attributes'][@proposal.barclamp]["default_store"]), :onchange => "update_value('default_store', 'default_store', 'string')"
     %p

@@ -68,7 +68,7 @@
       "swift_store_user": "glance_user",
       "swift_store_key": "glance_key",
       "swift_store_container": "glance",
-      "swift_store_create_container_on_put": false,
+      "swift_store_create_container_on_put": true,
       "pid_directory": "/var/run/glance",
       "working_directory": "/var/lib/glance",
       "sql_idle_timeout": 3600,

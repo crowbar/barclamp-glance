@@ -62,7 +62,7 @@
       "image_cache_max_size": 10737418240,
       "use_syslog": false,
       "notifier_strategy": "noop",
-      "default_store": "swift",
+      "default_store": "file",
       "filesystem_store_datadir": "/var/lib/glance/images",
       "swift_store_auth_address": "127.0.0.1:8080/v1.0",
       "swift_store_user": "glance_user",

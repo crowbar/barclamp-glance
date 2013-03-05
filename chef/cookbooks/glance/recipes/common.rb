@@ -33,7 +33,12 @@ unless node[:glance][:use_gitrepo]
   end
 else
   glance_path = "/opt/glance"
-  pfs_and_install_deps(@cookbook_name)
+
+  pfs_and_install_deps @cookbook_name do
+    venv node[:glance][:virtualenv]
+    venv_bins ["glance","glance-cache-cleaner","glance-cache-prefetcher","glance-control","glance-registry","glance-scrubber","glance-api","glance-cache-manage","glance-cache-pruner","glance-manage","glance-replicator"]
+  end
+
   create_user_and_dirs("glance")
   execute "cp_.json_#{@cookbook_name}" do
     command "cp #{glance_path}/etc/*.json /etc/#{@cookbook_name}"

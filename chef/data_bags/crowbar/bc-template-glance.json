@@ -64,6 +64,7 @@
       "git_instance": "",
       "git_refspec": "grizzly-1",
       "use_gitrepo": true,
+      "virtualenv": "/opt/virtualenv/keystone",
       "use_pip_cache": true,
       "use_gitbarclamp": true,
       "pfs_deps": [

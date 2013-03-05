@@ -30,6 +30,7 @@ if node[:glance][:use_keystone]
     pfs_and_install_deps "keystone" do
       cookbook "keystone"
       cnode keystone
+      venv node[:glance][:virtualenv]
     end
   end
 

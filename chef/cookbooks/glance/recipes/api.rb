@@ -6,12 +6,14 @@
 
 include_recipe "#{@cookbook_name}::common"
 
+glance_path = "/opt/glance"
+venv_path = node[:glance][:use_virtualenv] ? "#{glance_path}/.venv" : nil
 
 if node[:glance][:use_keystone]
   env_filter = " AND keystone_config_environment:keystone-config-#{node[:glance][:keystone_instance]}"
   keystones = search(:node, "recipes:keystone\\:\\:server#{env_filter}") || []
   if keystones.length > 0
-    keystone = keystones[0]
+    keystone = keystones.first
     keystone = node if keystone.name == node.name
   else
     keystone = node
@@ -30,7 +32,8 @@ if node[:glance][:use_keystone]
     pfs_and_install_deps "keystone" do
       cookbook "keystone"
       cnode keystone
-      venv node[:glance][:virtualenv]
+      # venv_path from common recipe
+      virtualenv venv_path
     end
   end
 

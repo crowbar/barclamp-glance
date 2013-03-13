@@ -39,7 +39,7 @@ else
 
   pfs_and_install_deps @cookbook_name do
     virtualenv venv_path
-    wrap_bins [ "/bin/glance" ]
+    wrap_bins [ "glance" ]
   end
 
   create_user_and_dirs("glance")

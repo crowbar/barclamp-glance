@@ -1,0 +1,84 @@
+> NOTE: should be moved to Glance barclamp
+
+See all, [[Barclamp List]]
+
+//This is a Creole document//
+
+== Overview
+
+The Glance barclamp deploys Openstack's Image Service.  The barclamp can be configured to deploy the sub-services of scrubber, reaper, and cache as well.
+
+Glance is required for Nova and can be used as a stand-alone entity.  It can be configured to use a MySQL instance for storage or a local sqlite database.
+
+== Roles
+
+The Glance Barclamp provides a single role: glance-server.  This role in conjunction with the proposal attributes drive the configuration and installation of the glance server.
+
+== Scripts
+
+The barclamp provides a single glance cookbook. The cookbook is used for glance installation.
+
+== Parameters
+
+The barclamp has the following parameters:
+
+| **Name** | **Default** | **Description** |
+| Working Directory | /var/lib/glance | Glance's operation home directory |
+| PID Directory | /var/run/glance | Location of Glance's PID files |
+| Notification Strategy | Noop | Unsupported in Crowbar notification system.  Other strategies will one day be available. |
+| Backing Type | file | Tells Glance where to put the images.  **file** places images in the **Image Store Directory**.  **swift** uses Swift.  Swift is untested. |
+| Image Store Directory | /var/lib/glance/images | Location of images when backing type is **file** |
+
+Swift Parameters (Not tested)
+| **Name** | **Default** | **Description** |
+| Glance Swift Container | glance | String name of the container glance should use to store image |
+| Swift Authentication URL | 127.0.0.1:8080/v1.0 | Connection String to access swift auth/proxy |
+| Create Container | false | Automatically create the container for glance |
+| Glance Swift User | glance | The default user for glance to use to access Swift |
+| Glance Swift Key | glance | The password of the default user to access Swift |
+| Use Keystone | true or false | The value is set based upon the prescence of an existing Keystone entry |
+| Keystone Instance | String name of proposal | The Keystone instance to use |
+| Use Syslog | false | Should glance log to syslog? |
+
+Scrubber, Reaper, Pruner, Prefetcher, API, and Registry all have the common parameters.
+| **Name** | **Default** | **Description** |
+| Log File | /var/log/glance/XXX.log | The log file for that service. XXX is the name of the sub-service |
+| Config File | /etc/glance/glance-XXX.conf | The configuration file for glance.  XXX is the name of the sub-service. |
+| Debug | false | Should the service run in debug mode |
+| Verbose | true | should the service run in loud mode |
+
+API and Registry have extra parameters
+| **Name** | **Default** | **Description** |
+| Bind to All Addresses | true | Bind address to 0.0.0.0 instead of the public address |
+| Access Port | API: 9292 Registry: 9191 | The port the service should run on |
+
+Caching - Glance can cache images
+| **Name** | **Default** | **Description** |
+| Enable Caching | false | Should caching be turned on |
+| Directory | /var/lib/glance/image-cache | Where are the images cached |
+| Grace Period | 3600 | Timeout for accessing the image | 
+| Stall Timeout | 86400 | Timeout to wait for a stalled get request |
+
+Database - Parameters
+| **Name** | **Default** | **Description** |
+| Database Type | MySQL or sqlite | Which type of database to use.  MySQL is selected if one is present. |
+| SQL Idle Timeout | 3600 | MySQL Idle time check |
+| MySQL Instance | String name of proposal | String name of proposal of a MySQL instance |
+| SQLite Connection String | sqlite:////var/lib/glance/glance.sqlite | String for sqlite database access |
+
+
+== Operations
+
+The registry and API services run as a long-lived process.  The other sub-services are launched from cron to do their jobs.
+
+== Useful Commands and Information
+
+Glance provides a glance-manage command that can be used to look at glance information.
+
+An example that lists all images in glance.
+{{{
+glance-manage -A <admin token> -H <admin ip of glance-server> index
+}}}
+
+== Limitations and/or Futures
+

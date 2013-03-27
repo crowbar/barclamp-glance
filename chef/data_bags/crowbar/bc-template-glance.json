@@ -64,6 +64,7 @@
       "git_instance": "",
       "git_refspec": "grizzly-1",
       "use_gitrepo": true,
+      "use_virtualenv": true,
       "use_pip_cache": true,
       "use_gitbarclamp": true,
       "pfs_deps": [
@@ -88,7 +89,8 @@
         "pip://jsonschema",
         "pip://warlock<2",
         "pip://python-swiftclient>=1,<2",
-        "pip://python-glanceclient"
+        "pip://python-glanceclient",
+        "pip://python-keystoneclient>=0.2,<0.3"
       ],
       "use_syslog": false,
       "notifier_strategy": "noop",

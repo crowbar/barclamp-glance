@@ -5,6 +5,10 @@
 
 include_recipe "#{@cookbook_name}::common"
 
+glance_path = "/opt/glance"
+venv_path = node[:glance][:use_virtualenv] ? "#{glance_path}/.venv" : nil
+venv_prefix = node[:glance][:use_virtualenv] ? ". #{venv_path}/bin/activate &&" : nil
+
 directory "#{node[:glance][:working_directory]}/raw_images" do
   action :create
 end
@@ -64,7 +68,7 @@ ruby_block "load glance images" do
       Chef::Log.info("Extracting #{name} into #{tmpdir}")
       ::Kernel.system("tar -zxf \"#{rawdir}/#{name}\" -C \"#{tmpdir}/\"")
       if wait
-        ::Kernel.system("glance #{glance_args} image-list")
+        ::Kernel.system("#{venv_prefix}glance #{glance_args} image-list")
         sleep 15
         wait = false
       end
@@ -75,7 +79,7 @@ ruby_block "load glance images" do
         ["initrd", "loader" ],
         ["image", ".img"] ].each do |part|
         next unless image_part = Dir.glob("#{tmpdir}/*#{part[1]}").first
-        cmd = "glance #{glance_args} image-create --name #{basename}-#{part[0]} --public"
+        cmd = "#{venv_prefix}glance #{glance_args} image-create --name #{basename}-#{part[0]} --public"
         case part[0]
         when "kernel" then cmd << " --disk-format aki --container-format aki"
         when "initrd" then cmd << " --disk-format ari --container-format ari"
@@ -84,7 +88,7 @@ ruby_block "load glance images" do
           cmd << " --property kernel_id=#{ids["kernel"]}" if ids["kernel"]
           cmd << " --property ramdisk_id=#{ids["initrd"]}" if ids["initrd"]
         end
-        res = %x{glance #{glance_args} image-list| grep #{basename}-#{part[0]} 2>&1}
+        res = %x{#{venv_prefix}glance #{glance_args} image-list| grep #{basename}-#{part[0]} 2>&1}
         if res.nil? || res.empty?
           Chef::Log.info("Loading #{image_part} for #{basename}-#{part[0]}")
           res = %x{#{cmd} < "#{image_part}"}

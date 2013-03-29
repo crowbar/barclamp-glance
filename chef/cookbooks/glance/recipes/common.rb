@@ -18,6 +18,10 @@
 # limitations under the License.
 #
 
+glance_path = "/opt/glance"
+venv_path = node[:glance][:use_virtualenv] ? "#{glance_path}/.venv" : nil
+venv_prefix = node[:glance][:use_virtualenv] ? ". #{venv_path}/bin/activate &&" : nil
+
 package "curl" do
   action :install
 end
@@ -32,15 +36,26 @@ unless node[:glance][:use_gitrepo]
     action :install
   end
 else
-  glance_path = "/opt/glance"
-  pfs_and_install_deps(@cookbook_name)
+
+  pfs_and_install_deps @cookbook_name do
+    virtualenv venv_path
+    wrap_bins [ "glance" ]
+  end
+
   create_user_and_dirs("glance")
   execute "cp_.json_#{@cookbook_name}" do
     command "cp #{glance_path}/etc/*.json /etc/#{@cookbook_name}"
     creates "/etc/#{@cookbook_name}/policy.json"
   end
-  link_service("glance-api")
-  link_service("glance-registry")
+
+  link_service "glance-api" do
+    virtualenv venv_path
+  end
+
+  link_service "glance-registry" do
+    virtualenv venv_path
+  end
+
 end
 
 # Make sure we use the admin node for now.

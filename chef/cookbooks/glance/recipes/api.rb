@@ -6,12 +6,15 @@
 
 include_recipe "#{@cookbook_name}::common"
 
+glance_path = "/opt/glance"
+venv_path = node[:glance][:use_virtualenv] ? "#{glance_path}/.venv" : nil
+venv_prefix = node[:glance][:use_virtualenv] ? ". #{venv_path}/bin/activate &&" : nil
 
 if node[:glance][:use_keystone]
   env_filter = " AND keystone_config_environment:keystone-config-#{node[:glance][:keystone_instance]}"
   keystones = search(:node, "recipes:keystone\\:\\:server#{env_filter}") || []
   if keystones.length > 0
-    keystone = keystones[0]
+    keystone = keystones.first
     keystone = node if keystone.name == node.name
   else
     keystone = node
@@ -30,6 +33,8 @@ if node[:glance][:use_keystone]
     pfs_and_install_deps "keystone" do
       cookbook "keystone"
       cnode keystone
+      path File.join(glance_path,"keystone")
+      virtualenv venv_path
     end
   end
 
@@ -66,14 +71,14 @@ bash "Set api glance version control" do
   group "glance"
   code "exit 0"
   notifies :run, "bash[Sync api glance db]", :immediately
-  only_if "glance-manage version_control 0", :user => "glance", :group => "glance"
+  only_if "#{venv_prefix}glance-manage version_control 0", :user => "glance", :group => "glance"
   action :run
 end
 
 bash "Sync api glance db" do
   user "glance"
   group "glance"
-  code "glance-manage db_sync"
+  code "#{venv_prefix}glance-manage db_sync"
   action :nothing
 end
 

@@ -80,6 +80,9 @@
       "sqlite_connection": "sqlite:////var/lib/glance/glance.sqlite"
     }
   },
+  "roles": {
+      "glance-server": { "jig": "chef" }
+  },
   "deployment": {
     "glance": {
       "crowbar-revision": 0,

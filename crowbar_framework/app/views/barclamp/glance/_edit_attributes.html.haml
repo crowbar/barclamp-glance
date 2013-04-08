@@ -14,7 +14,7 @@
     %p
       %label{ :for => :notifier_strategy }= t('.notifier_strategy')
       = select_tag :notifier_strategy, options_for_select([['Noop','noop']], @proposal.raw_data['attributes'][@proposal.barclamp]["notifier_strategy"]), :onchange => "update_value('notifier_strategy', 'notifier_strategy', 'string')"
-    -# %p
+    %p
       %label{ :for => :backing_type }= t('.backing_type')
       = select_tag :backing_type, options_for_select([['File','file'], ['Swift', 'swift']], @proposal.raw_data['attributes'][@proposal.barclamp]["default_store"]), :onchange => "update_value('default_store', 'default_store', 'string')"
     %p
@@ -22,11 +22,11 @@
       %input#filesystem_store_datadir{:type => "text", :name => "filesystem_store_datadir", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["filesystem_store_datadir"], :onchange => "update_value('filesystem_store_datadir','filesystem_store_datadir', 'string')"}
     -# %p
       %label{ :for => :swift_header }= t('.swift_header')
-    -# %div.container
+    %div.container
       %p
         %label{ :for => :swift_store_container }= t('.swift_store_container')
         %input#swift_store_container{:type => "text", :name => "swift_store_container", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["swift_store_container"], :onchange => "update_value('swift_store_container','swift_store_container', 'string')"}
-      %p
+      -#%p
         %label{ :for => :swift_store_auth_address }= t('.swift_store_auth_address')
         %input#swift_store_auth_address{:type => "text", :name => "swift_store_auth_address", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["swift_store_auth_address"], :onchange => "update_value('swift_store_auth_address','swift_store_auth_address', 'string')"}
       %p

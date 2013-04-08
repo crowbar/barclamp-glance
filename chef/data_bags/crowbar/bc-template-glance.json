@@ -94,7 +94,7 @@
       ],
       "use_syslog": false,
       "notifier_strategy": "noop",
-      "default_store": "file",
+      "default_store": "swift",
       "filesystem_store_datadir": "/var/lib/glance/images",
       "swift_store_auth_address": "127.0.0.1:8080/v1.0",
       "swift_store_user": "glance_user",

@@ -97,7 +97,6 @@
       "default_store": "swift",
       "filesystem_store_datadir": "/var/lib/glance/images",
       "swift_store_container": "glance",
-      "swift_store_create_container_on_put": false,
       "pid_directory": "/var/run/glance",
       "working_directory": "/var/lib/glance",
       "sql_idle_timeout": 3600,

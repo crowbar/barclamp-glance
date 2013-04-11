@@ -57,7 +57,7 @@ template node[:glance][:api][:config_file] do
       :keystone_service_port => keystone_service_port,
       :keystone_service_user => keystone_service_user,
       :keystone_service_password => keystone_service_password,
-      :keystone_service_tenant => keystone_service_tenant,
+      :keystone_service_tenant => keystone_service_tenant
   )
 end
 

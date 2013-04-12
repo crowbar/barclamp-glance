@@ -41,6 +41,10 @@ if node[:glance][:use_keystone]
 else
   keystone_address = ""
   keystone_token = ""
+  keystone_service_port = ""
+  keystone_service_tenant = ""
+  keystone_service_user = ""
+  keystone_service_password = ""
 end
 
 template node[:glance][:api][:config_file] do
@@ -48,6 +52,13 @@ template node[:glance][:api][:config_file] do
   owner node[:glance][:user]
   group "root"
   mode 0644
+  variables(
+      :keystone_address => keystone_address,
+      :keystone_service_port => keystone_service_port,
+      :keystone_service_user => keystone_service_user,
+      :keystone_service_password => keystone_service_password,
+      :keystone_service_tenant => keystone_service_tenant
+  )
 end
 
 template node[:glance][:api][:paste_ini] do

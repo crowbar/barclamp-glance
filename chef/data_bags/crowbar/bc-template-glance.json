@@ -94,7 +94,7 @@
       ],
       "use_syslog": false,
       "notifier_strategy": "noop",
-      "default_store": "swift",
+      "default_store": "file",
       "filesystem_store_datadir": "/var/lib/glance/images",
       "swift_store_container": "glance",
       "pid_directory": "/var/run/glance",

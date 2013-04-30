@@ -7,7 +7,7 @@
         "http://|ADMINWEB|/files/ami/ubuntu-12.04-server-cloudimg-amd64.tar.gz"
       ],
       "api": {
-        "verbose": true,
+        "verbose": false,
         "debug": false,
         "bind_open_address": false,
         "bind_port": 9292,
@@ -16,7 +16,7 @@
         "paste_ini": "/etc/glance/glance-api-paste.ini"
       },
       "registry": {
-        "verbose": true,
+        "verbose": false,
         "debug": false,
         "bind_open_address": false,
         "bind_port": 9191,
@@ -25,31 +25,31 @@
         "paste_ini": "/etc/glance/glance-registry-paste.ini"
       },
       "prefetcher": {
-        "verbose": true,
+        "verbose": false,
         "debug": false,
         "log_file": "/var/log/glance/prefetcher.log",
         "config_file": "/etc/glance/glance-prefetcher.conf"
       },
       "pruner": {
-        "verbose": true,
+        "verbose": false,
         "debug": false,
         "log_file": "/var/log/glance/pruner.log",
         "config_file": "/etc/glance/glance-pruner.conf"
       },
       "reaper": {
-        "verbose": true,
+        "verbose": false,
         "debug": false,
         "log_file": "/var/log/glance/reaper.log",
         "config_file": "/etc/glance/glance-reaper.conf"
       },
       "scrubber": {
-        "verbose": true,
+        "verbose": false,
         "debug": false,
         "log_file": "/var/log/glance/scrubber.log",
         "config_file": "/etc/glance/glance-scrubber.conf"
       },
       "cache": {
-        "verbose": true,
+        "verbose": false,
         "debug": false,
         "log_file": "/var/log/glance/scrubber.log",
         "config_file": "/etc/glance/glance-scrubber.conf"
@@ -128,4 +128,3 @@
     }
   }
 }
-

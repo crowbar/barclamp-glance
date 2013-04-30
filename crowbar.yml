@@ -21,7 +21,6 @@ barclamp:
   version: 0
   requires:
     - keystone
-    - swift
   member:
     - openstack
 

@@ -18,6 +18,7 @@
 barclamp:
   name: glance
   display: Glance
+  description: 'OpenStack Image Service: discovery, registration and delivery services for disk and server images.'
   version: 0
   requires:
     - keystone

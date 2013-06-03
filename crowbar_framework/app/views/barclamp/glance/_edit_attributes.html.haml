@@ -170,8 +170,8 @@
         %label{ :for => :sql_idle_timeout }= t('.sql_idle_timeout')
         %input#sql_idle_timeout{:type => "text", :name => "sql_idle_timeout", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["sql_idle_timeout"], :onchange => "update_value('sql_idle_timeout','sql_idle_timeout', 'integer')"}
       %p
-        %label{ :for => :mysql_instance }= t('.mysql_instance')
-        = instance_selector("mysql", :mysql_instance, "mysql_instance", @proposal)
+        %label{ :for => :database_instance }= t('.database_instance')
+        = instance_selector("database", :database_instance, "database_instance", @proposal)
     %p
       %label{ :for => :use_keystone }= t('.use_keystone')
       = select_tag :use_keystone, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["use_keystone"].to_s), :onchange => "update_value('use_keystone', 'use_keystone', 'boolean')"

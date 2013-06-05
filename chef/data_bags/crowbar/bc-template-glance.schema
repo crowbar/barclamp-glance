@@ -109,13 +109,9 @@
             "pfs_deps": { "type": "seq", "required": true, "sequence": [ { "type": "str" } ] },
             "use_syslog": { "type": "bool", "required": true },
             "notifier_strategy": { "type": "str", "required": true },
-            "default_store": { "type": "str", "required": true },
+            "default_store": { "type": "str", "required": true, "pattern": "/^(file|swift)$/"  },
             "filesystem_store_datadir": { "type": "str", "required": true },
-            "swift_store_auth_address": { "type": "str", "required": true },
-            "swift_store_user": { "type": "str", "required": true },
-            "swift_store_key": { "type": "str", "required": true },
             "swift_store_container": { "type": "str", "required": true },
-            "swift_store_create_container_on_put": { "type": "bool", "required": true },
             "pid_directory": { "type": "str", "required": true },
             "working_directory": { "type": "str", "required": true },
             "sql_idle_timeout": { "type": "int", "required": true },
@@ -123,8 +119,8 @@
             "keystone_instance": { "type": "str", "required": true },
             "service_user": { "type": "str", "required": true },
             "service_password": { "type": "str" },
-            "database": { "type": "str", "required": true },
-            "mysql_instance": { "type": "str", "required": true },
+            "database_engine": { "type": "str", "required": true },
+            "database_instance": { "type": "str", "required": true },
             "sqlite_connection": { "type": "str", "required": true }
           }
         }

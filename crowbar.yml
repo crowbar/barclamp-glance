@@ -18,6 +18,7 @@
 barclamp:
   name: glance
   display: Glance
+  description: 'OpenStack Image Service: discovery, registration and delivery services for disk and server images.'
   version: 0
   requires:
     - keystone
@@ -80,10 +81,10 @@ locale_additions:
           image_cache_grace_period: Grace Period
           image_cache_stall_timeout: Stall Timeout
           database_header: Database
-          database: Database Type
+          database_engine: Database Engine
           sql_idle_timeout: SQL Idle Timeout
           sqlite_connection: SQLite Connection String
-          mysql_instance: MySQL Instance
+          database_instance: Database Instance
           use_keystone: Use Keystone
           keystone_instance: Keystone Instance
           service_user: Service User
@@ -93,25 +94,14 @@ locale_additions:
           deployment: Deployment
 
 debs:
-  ubuntu-10.10:
-    repos:
-      - deb http://ops.rcb.me/packages maverick diablo-final
-  ubuntu-11.04:
-    repos:
-      - deb http://ops.rcb.me/packages natty diablo-final
-  ubuntu-11.10:
-    repos:
-      - deb http://ops.rcb.me/packages oneiric diablo-final
-  ubuntu-12.04:
-    pkgs:
-      - sqlite3
   pkgs:
+    - sqlite3
     - glance
     - python-glance
     - python-keystone
 
 extra_files:
-  - http://uec-images.ubuntu.com/releases/11.04/release/ubuntu-11.04-server-cloudimg-amd64.tar.gz ami
-
+  - http://uec-images.ubuntu.com/releases/12.04.2/release/ubuntu-12.04-server-cloudimg-amd64.tar.gz ami
+  
 git_repo:
   - glance https://github.com/openstack/glance.git stable/grizzly

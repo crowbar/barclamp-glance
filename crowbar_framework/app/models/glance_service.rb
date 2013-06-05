@@ -26,8 +26,8 @@ class GlanceService < ServiceObject
 
   def proposal_dependencies(role)
     answer = []
-    if role.default_attributes["glance"]["database"] == "mysql"
-      answer << { "barclamp" => "mysql", "inst" => role.default_attributes["glance"]["mysql_instance"] }
+    if role.default_attributes["glance"]["database_engine"] == "database"
+      answer << { "barclamp" => "database", "inst" => role.default_attributes["glance"]["database_instance"] }
     end
     if role.default_attributes["glance"]["use_keystone"]
       answer << { "barclamp" => "keystone", "inst" => role.default_attributes["glance"]["keystone_instance"] }
@@ -65,21 +65,21 @@ class GlanceService < ServiceObject
       @logger.info("#{@bc_name} create_proposal: no git found")
     end
 
-    base["attributes"]["glance"]["mysql_instance"] = ""
+    base["attributes"]["glance"]["database_instance"] = ""
     begin
-      mysqlService = MysqlService.new(@logger)
-      mysqls = mysqlService.list_active[1]
-      if mysqls.empty?
+      databaseService = DatabaseService.new(@logger)
+      dbs = databaseService.list_active[1]
+      if dbs.empty?
         # No actives, look for proposals
-        mysqls = mysqlService.proposals[1]
+        dbs = databaseService.proposals[1]
       end
-      unless mysqls.empty?
-        base["attributes"]["glance"]["mysql_instance"] = mysqls[0]
+      unless dbs.empty?
+        base["attributes"]["glance"]["database_instance"] = dbs[0]
       end
-      base["attributes"]["glance"]["database"] = "mysql"
+      base["attributes"]["glance"]["database_engine"] = "database"
     rescue
-      base["attributes"]["glance"]["database"] = "mysql"
-      @logger.info("Glance create_proposal: no mysql found")
+      base["attributes"]["glance"]["database_engine"] = "sqlite"
+      @logger.info("Glance create_proposal: no database found")
     end
     
     base["attributes"]["glance"]["keystone_instance"] = ""

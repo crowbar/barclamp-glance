@@ -101,8 +101,6 @@ class GlanceService < ServiceObject
       base["attributes"]["glance"]["use_keystone"] = false
     end
     base["attributes"]["glance"]["service_password"] = '%012d' % rand(1e12)
-    base["attributes"]["glance"]["api"]["bind_open_address"] = true
-    base["attributes"]["glance"]["registry"]["bind_open_address"] = true
 
     @logger.debug("Glance create_proposal: exiting")
     base

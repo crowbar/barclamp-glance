@@ -49,10 +49,8 @@ locale_additions:
           swift_store_key: Glance Swift Key
           api_header: API
           api_bind_open_address: Bind to All Addresses
-          api_bind_port: Access Port
           registry_header: Registry
           registry_bind_open_address: Bind to All Addresses
-          registry_bind_port: Access Port
           cache_header: Caching
           enable_caching: Enable Caching
           use_cachemanagement: Turn On Cache Management

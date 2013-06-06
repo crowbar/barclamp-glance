@@ -40,18 +40,12 @@
       %p
         %label{ :for => :api_bind_open_address }= t('.api_bind_open_address')
         = select_tag :api_bind_open_address, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["bind_open_address"].to_s), :onchange => "update_value('api/bind_open_address', 'api_bind_open_address', 'boolean')"
-      %p
-        %label{ :for => :api_bind_port }= t('.api_bind_port')
-        %input#api_bind_port{:type => "text", :name => "api_bind_port", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["bind_port"], :onchange => "update_value('api/bind_port','api_bind_port', 'integer')"}
     %p
       %label{ :for => :registry_header }= t('.registry_header')
     %div.container
       %p
         %label{ :for => :registry_bind_open_address }= t('.registry_bind_open_address')
         = select_tag :registry_bind_open_address, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["registry"]["bind_open_address"].to_s), :onchange => "update_value('registry/bind_open_address', 'registry_bind_open_address', 'boolean')"
-      %p
-        %label{ :for => :registry_bind_port }= t('.registry_bind_port')
-        %input#registry_bind_port{:type => "text", :name => "registry_bind_port", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["registry"]["bind_port"], :onchange => "update_value('registry/bind_port','registry_bind_port', 'integer')"}
     %p
       %label{ :for => :cache_header }= t('.cache_header')
     %div.container

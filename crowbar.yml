@@ -37,7 +37,6 @@ locale_additions:
       glance:
         edit_attributes: 
           verbose: Verbose
-          debug: Debug
           attributes: Attributes
           backing_type: Backing Type
           notifier_strategy: Notification Strategy

@@ -9,38 +9,10 @@
         "http://|ADMINWEB|/files/ami/ubuntu-12.04-server-cloudimg-amd64.tar.gz"
       ],
       "api": {
-        "bind_open_address": false,
-        "bind_port": 9292,
-        "log_file": "/var/log/glance/api.log",
-        "config_file": "/etc/glance/glance-api.conf",
-        "paste_ini": "/etc/glance/glance-api-paste.ini"
+        "bind_open_address": false
       },
       "registry": {
-        "bind_open_address": false,
-        "bind_port": 9191,
-        "log_file": "/var/log/glance/registry.log",
-        "config_file": "/etc/glance/glance-registry.conf",
-        "paste_ini": "/etc/glance/glance-registry-paste.ini"
-      },
-      "prefetcher": {
-        "log_file": "/var/log/glance/prefetcher.log",
-        "config_file": "/etc/glance/glance-prefetcher.conf"
-      },
-      "pruner": {
-        "log_file": "/var/log/glance/pruner.log",
-        "config_file": "/etc/glance/glance-pruner.conf"
-      },
-      "reaper": {
-        "log_file": "/var/log/glance/reaper.log",
-        "config_file": "/etc/glance/glance-reaper.conf"
-      },
-      "scrubber": {
-        "log_file": "/var/log/glance/scrubber.log",
-        "config_file": "/etc/glance/glance-scrubber.conf"
-      },
-      "cache": {
-        "log_file": "/var/log/glance/scrubber.log",
-        "config_file": "/etc/glance/glance-scrubber.conf"
+        "bind_open_address": false
       },
       "enable_caching": false,
       "use_cachemanagement": false,
@@ -85,8 +57,6 @@
       "default_store": "file",
       "filesystem_store_datadir": "/var/lib/glance/images",
       "swift_store_container": "glance",
-      "pid_directory": "/var/run/glance",
-      "working_directory": "/var/lib/glance",
       "sql_idle_timeout": 3600,
       "use_keystone": true,
       "keystone_instance": "none",

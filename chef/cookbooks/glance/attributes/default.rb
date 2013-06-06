@@ -27,11 +27,16 @@ default[:glance][:api][:bind_host] = ipaddress
 default[:glance][:api][:bind_port] = "9292"
 default[:glance][:api][:log_file] = "/var/log/glance/api.log"
 default[:glance][:api][:config_file]="/etc/glance/glance-api.conf"
+default[:glance][:api][:paste_ini]="/etc/glance/glance-api-paste.ini"
 
 default[:glance][:registry][:bind_host] = ipaddress
 default[:glance][:registry][:bind_port] = "9191"
 default[:glance][:registry][:log_file] = "/var/log/glance/registry.log"
 default[:glance][:registry][:config_file]="/etc/glance/glance-registry.conf"
+default[:glance][:registry][:paste_ini]="/etc/glance/glance-registry-paste.ini"
+
+default[:glance][:cache][:log_file] = "/var/log/glance/cache.log"
+default[:glance][:cache][:config_file]="/etc/glance/glance-cache.conf"
 
 default[:glance][:prefetcher][:log_file] = "/var/log/glance/prefetcher.log"
 default[:glance][:prefetcher][:config_file]="/etc/glance/glance-prefetcher.conf"
@@ -46,7 +51,7 @@ default[:glance][:scrubber][:log_file] = "/var/log/glance/scrubber.log"
 default[:glance][:scrubber][:config_file]="/etc/glance/glance-scrubber.conf"
 
 default[:glance][:working_directory]="/var/lib/glance"
-default[:glance][:pid_directory]="/var/run/glance/"
+default[:glance][:pid_directory]="/var/run/glance"
 default[:glance][:image_cache_datadir] = "/var/lib/glance/image-cache/"
 
 default[:glance][:sql_connection] = "sqlite:////var/lib/glance/glance.sqlite"

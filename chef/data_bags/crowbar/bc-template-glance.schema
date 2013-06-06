@@ -12,6 +12,8 @@
           "type": "map",
           "required": true,
           "mapping": {
+            "verbose": { "type": "bool", "required": true },
+            "debug": { "type": "bool", "required": true },
             "images": {
               "type": "seq",
               "required": true,
@@ -21,8 +23,6 @@
               "type": "map",
               "required": true,
               "mapping": {
-                "verbose": { "type": "bool", "required": true },
-                "debug": { "type": "bool", "required": true },
                 "bind_open_address": { "type": "bool", "required": true },
                 "bind_port": { "type": "int", "required": true },
                 "log_file": { "type": "str", "required": true },
@@ -34,8 +34,6 @@
               "type": "map",
               "required": true,
               "mapping": {
-                "verbose": { "type": "bool", "required": true },
-                "debug": { "type": "bool", "required": true },
                 "bind_open_address": { "type": "bool", "required": true },
                 "bind_port": { "type": "int", "required": true },
                 "log_file": { "type": "str", "required": true },
@@ -47,8 +45,6 @@
               "type": "map",
               "required": true,
               "mapping": {
-                "verbose": { "type": "bool", "required": true },
-                "debug": { "type": "bool", "required": true },
                 "log_file": { "type": "str", "required": true },
                 "config_file": { "type": "str", "required": true }
               }
@@ -57,8 +53,6 @@
               "type": "map",
               "required": true,
               "mapping": {
-                "verbose": { "type": "bool", "required": true },
-                "debug": { "type": "bool", "required": true },
                 "log_file": { "type": "str", "required": true },
                 "config_file": { "type": "str", "required": true }
               }
@@ -67,8 +61,6 @@
               "type": "map",
               "required": true,
               "mapping": {
-                "verbose": { "type": "bool", "required": true },
-                "debug": { "type": "bool", "required": true },
                 "log_file": { "type": "str", "required": true },
                 "config_file": { "type": "str", "required": true }
               }
@@ -77,8 +69,6 @@
               "type": "map",
               "required": true,
               "mapping": {
-                "verbose": { "type": "bool", "required": true },
-                "debug": { "type": "bool", "required": true },
                 "log_file": { "type": "str", "required": true },
                 "config_file": { "type": "str", "required": true }
               }
@@ -87,8 +77,6 @@
               "type": "map",
               "required": true,
               "mapping": {
-                "verbose": { "type": "bool", "required": true },
-                "debug": { "type": "bool", "required": true },
                 "log_file": { "type": "str", "required": true },
                 "config_file": { "type": "str", "required": true }
               }

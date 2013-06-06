@@ -47,10 +47,6 @@ locale_additions:
           swift_store_auth_address: Swift Authentication URL
           swift_store_user: Glance Swift User
           swift_store_key: Glance Swift Key
-          scrubber_header: Scrubber
-          reaper_header: Reaper
-          pruner_header: Pruner
-          prefetcher_header: Prefetcher
           api_header: API
           api_bind_open_address: Bind to All Addresses
           api_bind_port: Access Port

@@ -40,8 +40,6 @@ locale_additions:
           debug: Debug
           attributes: Attributes
           backing_type: Backing Type
-          working_directory: Working Directory
-          pid_directory: PID Directory
           notifier_strategy: Notification Strategy
           filesystem_store_datadir: Image Store Directory
           swift_header: Swift
@@ -51,27 +49,13 @@ locale_additions:
           swift_store_user: Glance Swift User
           swift_store_key: Glance Swift Key
           scrubber_header: Scrubber
-          scrubber_log_file: Log File
-          scrubber_config_file: Config File
           reaper_header: Reaper
-          reaper_log_file: Log File
-          reaper_config_file: Config File
           pruner_header: Pruner
-          pruner_log_file: Log File
-          pruner_config_file: Config File
           prefetcher_header: Prefetcher
-          prefetcher_log_file: Log File
-          prefetcher_config_file: Config File
           api_header: API
-          api_log_file: Log File
-          api_config_file: Config File
-          api_paste_ini: Paste INI File
           api_bind_open_address: Bind to All Addresses
           api_bind_port: Access Port
           registry_header: Registry
-          registry_log_file: Log File
-          registry_config_file: Config File
-          registry_paste_ini: Paste INI File
           registry_bind_open_address: Bind to All Addresses
           registry_bind_port: Access Port
           cache_header: Caching

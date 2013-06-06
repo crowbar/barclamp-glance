@@ -6,12 +6,6 @@
   %div.container
     = render 'barclamp/git/pfsdeps.html.haml'
     %p
-      %label{ :for => :working_directory }= t('.working_directory')
-      %input#working_directory{:type => "text", :name => "working_directory", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["working_directory"], :onchange => "update_value('working_directory','working_directory', 'string')"}
-    %p
-      %label{ :for => :pid_directory }= t('.pid_directory')
-      %input#pid_directory{:type => "text", :name => "pid_directory", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["pid_directory"], :onchange => "update_value('pid_directory','pid_directory', 'string')"}
-    %p
       %label{ :for => :notifier_strategy }= t('.notifier_strategy')
       = select_tag :notifier_strategy, options_for_select([['Noop','noop']], @proposal.raw_data['attributes'][@proposal.barclamp]["notifier_strategy"]), :onchange => "update_value('notifier_strategy', 'notifier_strategy', 'string')"
     %p
@@ -41,12 +35,6 @@
       %label{ :for => :scrubber_header }= t('.scrubber_header')
     %div.container
       %p
-        %label{ :for => :scrubber_log_file }= t('.scrubber_log_file')
-        %input#scrubber_log_file{:type => "text", :name => "scrubber_log_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["scrubber"]["log_file"], :onchange => "update_value('scrubber/log_file','scrubber_log_file', 'string')"}
-      %p
-        %label{ :for => :scrubber_config_file }= t('.scrubber_config_file')
-        %input#scrubber_config_file{:type => "text", :name => "scrubber_config_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["scrubber"]["config_file"], :onchange => "update_value('scrubber/config_file','scrubber_config_file', 'string')"}
-      %p
         %label{ :for => :scrubber_debug }= t('.debug')
         = select_tag :scrubber_debug, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["scrubber"]["debug"].to_s), :onchange => "update_value('scrubber/debug', 'scrubber_debug', 'boolean')"
       %p
@@ -55,12 +43,6 @@
     %p
       %label{ :for => :reaper_header }= t('.reaper_header')
     %div.container
-      %p
-        %label{ :for => :reaper_log_file }= t('.reaper_log_file')
-        %input#reaper_log_file{:type => "text", :name => "reaper_log_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["reaper"]["log_file"], :onchange => "update_value('reaper/log_file','reaper_log_file', 'string')"}
-      %p
-        %label{ :for => :reaper_config_file }= t('.reaper_config_file')
-        %input#reaper_config_file{:type => "text", :name => "reaper_config_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["reaper"]["config_file"], :onchange => "update_value('reaper/config_file','reaper_config_file', 'string')"}
       %p
         %label{ :for => :reaper_debug }= t('.debug')
         = select_tag :reaper_debug, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["reaper"]["debug"].to_s), :onchange => "update_value('reaper/debug', 'reaper_debug', 'boolean')"
@@ -71,12 +53,6 @@
       %label{ :for => :pruner_header }= t('.pruner_header')
     %div.container
       %p
-        %label{ :for => :pruner_log_file }= t('.pruner_log_file')
-        %input#pruner_log_file{:type => "text", :name => "pruner_log_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["pruner"]["log_file"], :onchange => "update_value('pruner/log_file','pruner_log_file', 'string')"}
-      %p
-        %label{ :for => :pruner_config_file }= t('.pruner_config_file')
-        %input#pruner_config_file{:type => "text", :name => "pruner_config_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["pruner"]["config_file"], :onchange => "update_value('pruner/config_file','pruner_config_file', 'string')"}
-      %p
         %label{ :for => :pruner_debug }= t('.debug')
         = select_tag :pruner_debug, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["pruner"]["debug"].to_s), :onchange => "update_value('pruner/debug', 'pruner_debug', 'boolean')"
       %p
@@ -86,12 +62,6 @@
       %label{ :for => :prefetcher_header }= t('.prefetcher_header')
     %div.container
       %p
-        %label{ :for => :prefetcher_log_file }= t('.prefetcher_log_file')
-        %input#prefetcher_log_file{:type => "text", :name => "prefetcher_log_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["prefetcher"]["log_file"], :onchange => "update_value('prefetcher/log_file','prefetcher_log_file', 'string')"}
-      %p
-        %label{ :for => :prefetcher_config_file }= t('.prefetcher_config_file')
-        %input#prefetcher_config_file{:type => "text", :name => "prefetcher_config_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["prefetcher"]["config_file"], :onchange => "update_value('prefetcher/config_file','prefetcher_config_file', 'string')"}
-      %p
         %label{ :for => :prefetcher_debug }= t('.debug')
         = select_tag :prefetcher_debug, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["prefetcher"]["debug"].to_s), :onchange => "update_value('prefetcher/debug', 'prefetcher_debug', 'boolean')"
       %p
@@ -100,15 +70,6 @@
     %p
       %label{ :for => :api_header }= t('.api_header')
     %div.container
-      %p
-        %label{ :for => :api_log_file }= t('.api_log_file')
-        %input#api_log_file{:type => "text", :name => "api_log_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["log_file"], :onchange => "update_value('api/log_file','api_log_file', 'string')"}
-      %p
-        %label{ :for => :api_config_file }= t('.api_config_file')
-        %input#api_config_file{:type => "text", :name => "api_config_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["config_file"], :onchange => "update_value('api/config_file','api_config_file', 'string')"}
-      %p
-        %label{ :for => :api_paste_ini }= t('.api_paste_ini')
-        %input#api_paste_ini{:type => "text", :name => "api_paste_ini", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["paste_ini"], :onchange => "update_value('api/paste_ini','api_paste_ini', 'string')"}
       %p
         %label{ :for => :api_debug }= t('.debug')
         = select_tag :api_debug, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["debug"].to_s), :onchange => "update_value('api/debug', 'api_debug', 'boolean')"
@@ -124,15 +85,6 @@
     %p
       %label{ :for => :registry_header }= t('.registry_header')
     %div.container
-      %p
-        %label{ :for => :registry_log_file }= t('.registry_log_file')
-        %input#registry_log_file{:type => "text", :name => "registry_log_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["registry"]["log_file"], :onchange => "update_value('registry/log_file','registry_log_file', 'string')"}
-      %p
-        %label{ :for => :registry_config_file }= t('.registry_config_file')
-        %input#registry_config_file{:type => "text", :name => "registry_config_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["registry"]["config_file"], :onchange => "update_value('registry/config_file','registry_config_file', 'string')"}
-      %p
-        %label{ :for => :registry_paste_ini }= t('.registry_paste_ini')
-        %input#registry_paste_ini{:type => "text", :name => "registry_paste_ini", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["registry"]["paste_ini"], :onchange => "update_value('registry/paste_ini','registry_paste_ini', 'string')"}
       %p
         %label{ :for => :registry_debug }= t('.debug')
         = select_tag :registry_debug, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["registry"]["debug"].to_s), :onchange => "update_value('registry/debug', 'registry_debug', 'boolean')"

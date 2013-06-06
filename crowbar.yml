@@ -64,8 +64,6 @@ locale_additions:
           database_instance: Database Instance
           use_keystone: Use Keystone
           keystone_instance: Keystone Instance
-          service_user: Service User
-          service_password: Service Password
           use_syslog: Use Syslog
         edit_deployment: 
           deployment: Deployment

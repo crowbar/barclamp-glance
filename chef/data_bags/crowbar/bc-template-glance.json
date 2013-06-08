@@ -9,10 +9,12 @@
         "http://|ADMINWEB|/files/ami/ubuntu-12.04-server-cloudimg-amd64.tar.gz"
       ],
       "api": {
-        "bind_open_address": true
+        "bind_open_address": true,
+        "bind_port": 9292
       },
       "registry": {
-        "bind_open_address": true
+        "bind_open_address": true,
+        "bind_port": 9191
       },
       "enable_caching": false,
       "use_cachemanagement": false,

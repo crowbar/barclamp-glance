@@ -1,21 +1,25 @@
 #!/bin/bash
+keystone_nodes=($(knife_node_find 'roles:keystone-server' FQDN))
+[[ $keystone_nodes ]] || {
+    echo "Could not find keystone"
+    exit 1
+}
 
-declare -A keystone_res glance_res
-. <(parse_yml_or_json "$LOGDIR/keystone-deployed.json" keystone_res)
-. <(parse_yml_or_json "$LOGDIR/glance-deployed.json" glance_res)
-glance_port=${glance_res['attributes.glance.api.bind_port']}
-glance_nodes=$(knife_node_find 'roles:glance-server' FQDN)
-keystone_nodes=$(knife_node_find 'roles:keystone-server' FQDN)
-keystone_user=${keystone_res['attributes.keystone.admin.username']}
-keystone_tenant=${keystone_res['attributes.keystone.admin.tenant']}
-keystone_password=${keystone_res['attributes.keystone.admin.password']}
-keystone_port=${keystone_res['attributes.keystone.api.api_port']}
+glance_nodes=($(knife_node_find 'roles:glance-server' FQDN))
+[[ $glance_nodes ]] || {
+    echo "Could not find glance!"
+    exit 1
+}
 
-keystone_ip=$(name_to_ip $keystone_nodes)  # Assuming there is only one Keystone
+export OS_USERNAME=admin
+export OS_PASSWORD=crowbar
+export OS_TENANT_NAME=admin
+export OS_AUTH_URL="http://${keystone_nodes[0]}:5000/v2.0"
 
-for node in $glance_nodes; do
-    if run_on $node glance -H $(name_to_ip $node) -p "$glance_port" -I $keystone_user -K $keystone_password \
-        -T $keystone_tenant -N http://$keystone_ip:$keystone_port/v2.0 details |grep -q 'Status: active'; then
+sudo apt-get install -y python-glanceclient
+
+for node in "${glance_nodes[@]}"; do
+    if glance image-list |grep -q active; then
        echo "Glance running on $node"
     else
        echo "Glance not running on $node!"

@@ -60,7 +60,6 @@ default[:glance][:working_directory]="/var/lib/glance"
 default[:glance][:pid_directory]="/var/run/glance"
 default[:glance][:image_cache_datadir] = "/var/lib/glance/image-cache/"
 
-default[:glance][:sql_connection] = "sqlite:////var/lib/glance/glance.sqlite"
 default[:glance][:sql_idle_timeout] = "3600"
 
 #default_store choices are: file, http, https, swift, s3

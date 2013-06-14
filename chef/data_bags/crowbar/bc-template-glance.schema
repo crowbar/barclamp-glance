@@ -59,9 +59,7 @@
             "keystone_instance": { "type": "str", "required": true },
             "service_user": { "type": "str", "required": true },
             "service_password": { "type": "str" },
-            "database_engine": { "type": "str", "required": true },
-            "database_instance": { "type": "str", "required": true },
-            "sqlite_connection": { "type": "str", "required": true }
+            "database_instance": { "type": "str", "required": true }
           }
         }
       }

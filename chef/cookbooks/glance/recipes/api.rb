@@ -51,7 +51,7 @@ template node[:glance][:api][:config_file] do
   source "glance-api.conf.erb"
   owner node[:glance][:user]
   group "root"
-  mode 0644
+  mode 0640
   variables(
       :keystone_address => keystone_address,
       :keystone_service_port => keystone_service_port,
@@ -65,7 +65,7 @@ template node[:glance][:api][:paste_ini] do
   source "glance-api-paste.ini.erb"
   owner node[:glance][:user]
   group "root"
-  mode 0644
+  mode 0640
   variables(
     :keystone_address => keystone_address,
     :keystone_auth_token => keystone_token,
@@ -78,17 +78,17 @@ template node[:glance][:api][:paste_ini] do
 end
 
 bash "Set api glance version control" do
-  user "glance"
-  group "glance"
+  user node[:glance][:user]
+  group node[:glance][:group]
   code "exit 0"
   notifies :run, "bash[Sync api glance db]", :immediately
-  only_if "#{venv_prefix}glance-manage version_control 0", :user => "glance", :group => "glance"
+  only_if "#{venv_prefix}glance-manage version_control 0", :user => node[:glance][:user], :group => node[:glance][:group]
   action :run
 end
 
 bash "Sync api glance db" do
-  user "glance"
-  group "glance"
+  user node[:glance][:user]
+  group node[:glance][:group]
   code "#{venv_prefix}glance-manage db_sync"
   action :nothing
 end

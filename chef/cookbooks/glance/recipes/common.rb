@@ -63,75 +63,66 @@ my_ipaddress = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admi
 node[:glance][:api][:bind_host] = my_ipaddress
 node[:glance][:registry][:bind_host] = my_ipaddress
 
-if node[:glance][:database_engine] == "database"
-
-  env_filter = " AND database_config_environment:database-config-#{node[:glance][:database_instance]}"
-  sqls = search(:node, "roles:database-server#{env_filter}") || []
-  if sqls.length > 0
-      sql = sqls[0]
-      sql = node if sql.name == node.name
-  else
-      sql = node
-  end
-  include_recipe "database::client"
-  backend_name = Chef::Recipe::Database::Util.get_backend_name(sql)
-  include_recipe "#{backend_name}::client"
-  include_recipe "#{backend_name}::python-client"
-
-  db_provider = Chef::Recipe::Database::Util.get_database_provider(sql)
-  db_user_provider = Chef::Recipe::Database::Util.get_user_provider(sql)
-  privs = Chef::Recipe::Database::Util.get_default_priviledges(sql)
-  url_scheme = backend_name
-
-  ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
-
-  node.set_unless['glance']['db']['password'] = secure_password
-  node.set_unless['glance']['db']['user'] = "glance"
-  node.set_unless['glance']['db']['database'] = "glancedb"
-
-  sql_address = Chef::Recipe::Barclamp::Inventory.get_network_by_type(sql, "admin").address if sql_address.nil?
-  Chef::Log.info("Database server found at #{sql_address}")
-
-  db_conn = { :host => sql_address,
-              :username => "db_maker",
-              :password => sql[:database][:db_maker_password] }
-
-  # Create the Glance Database
-  database "create #{node[:glance][:db][:database]} database" do
-      connection db_conn
-      database_name node[:glance][:db][:database]
-      provider db_provider
-      action :create
-  end
-
-  database_user "create glance database user" do
-      host '%'
-      connection db_conn
-      username node[:glance][:db][:user]
-      password node[:glance][:db][:password]
-      provider db_user_provider
-      action :create
-  end
-
-  database_user "grant database access for glance database user" do
-      connection db_conn
-      username node[:glance][:db][:user]
-      password node[:glance][:db][:password]
-      database_name node[:glance][:db][:database]
-      host '%'
-      privileges privs
-      provider db_user_provider
-      action :grant
-  end
-
-  node[:glance][:sql_connection] = "#{url_scheme}://#{node[:glance][:db][:user]}:#{node[:glance][:db][:password]}@#{sql_address}/#{node[:glance][:db][:database]}"
-
-  file "/var/lib/glance/glance.sqlite" do
-    action :delete
-  end
+env_filter = " AND database_config_environment:database-config-#{node[:glance][:database_instance]}"
+sqls = search(:node, "roles:database-server#{env_filter}") || []
+if sqls.length > 0
+  sql = sqls[0]
+  sql = node if sql.name == node.name
 else
-  node[:glance][:sql_connection] = node[:glance][:sqlite_connection]
+  sql = node
 end
+include_recipe "database::client"
+backend_name = Chef::Recipe::Database::Util.get_backend_name(sql)
+include_recipe "#{backend_name}::client"
+include_recipe "#{backend_name}::python-client"
+
+db_provider = Chef::Recipe::Database::Util.get_database_provider(sql)
+db_user_provider = Chef::Recipe::Database::Util.get_user_provider(sql)
+privs = Chef::Recipe::Database::Util.get_default_priviledges(sql)
+url_scheme = backend_name
+
+::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
+
+node.set_unless['glance']['db']['password'] = secure_password
+node.set_unless['glance']['db']['user'] = "glance"
+node.set_unless['glance']['db']['database'] = "glancedb"
+
+sql_address = Chef::Recipe::Barclamp::Inventory.get_network_by_type(sql, "admin").address if sql_address.nil?
+Chef::Log.info("Database server found at #{sql_address}")
+
+db_conn = { :host => sql_address,
+          :username => "db_maker",
+          :password => sql[:database][:db_maker_password] }
+
+# Create the Glance Database
+database "create #{node[:glance][:db][:database]} database" do
+  connection db_conn
+  database_name node[:glance][:db][:database]
+  provider db_provider
+  action :create
+end
+
+database_user "create glance database user" do
+  host '%'
+  connection db_conn
+  username node[:glance][:db][:user]
+  password node[:glance][:db][:password]
+  provider db_user_provider
+  action :create
+end
+
+database_user "grant database access for glance database user" do
+  connection db_conn
+  username node[:glance][:db][:user]
+  password node[:glance][:db][:password]
+  database_name node[:glance][:db][:database]
+  host '%'
+  privileges privs
+  provider db_user_provider
+  action :grant
+end
+
+node[:glance][:sql_connection] = "#{url_scheme}://#{node[:glance][:db][:user]}:#{node[:glance][:db][:password]}@#{sql_address}/#{node[:glance][:db][:database]}"
 
 node.save
 

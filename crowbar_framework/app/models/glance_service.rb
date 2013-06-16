@@ -27,9 +27,7 @@ class GlanceService < ServiceObject
 
   def proposal_dependencies(role)
     answer = []
-    if role.default_attributes["glance"]["database_engine"] == "database"
-      answer << { "barclamp" => "database", "inst" => role.default_attributes["glance"]["database_instance"] }
-    end
+    answer << { "barclamp" => "database", "inst" => role.default_attributes["glance"]["database_instance"] }
     if role.default_attributes["glance"]["use_keystone"]
       answer << { "barclamp" => "keystone", "inst" => role.default_attributes["glance"]["keystone_instance"] }
     end
@@ -76,13 +74,17 @@ class GlanceService < ServiceObject
       end
       unless dbs.empty?
         base["attributes"]["glance"]["database_instance"] = dbs[0]
+      else
+        @logger.info("Glance create_proposal: no database found")
       end
-      base["attributes"]["glance"]["database_engine"] = "database"
     rescue
-      base["attributes"]["glance"]["database_engine"] = "sqlite"
       @logger.info("Glance create_proposal: no database found")
     end
-    
+
+    if base["attributes"]["glance"]["database_instance"] == ""
+      raise(I18n.t('model.service.dependency_missing', :name => @bc_name, :dependson => "database"))
+    end
+
     base["attributes"]["glance"]["keystone_instance"] = ""
     begin
       keystoneService = KeystoneService.new(@logger)

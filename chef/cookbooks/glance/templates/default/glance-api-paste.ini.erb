@@ -70,7 +70,7 @@ paste.filter_factory = glance.api.middleware.cache_manage:CacheManageFilter.fact
 paste.filter_factory = glance.api.middleware.context:ContextMiddleware.factory
 
 [filter:authtoken]
-paste.filter_factory = keystone.middleware.auth_token:filter_factory
+paste.filter_factory = keystoneclient.middleware.auth_token:filter_factory
 service_protocol = <%= @keystone_protocol %>
 service_host = <%= @keystone_address %>
 service_port = <%= @keystone_service_port %>

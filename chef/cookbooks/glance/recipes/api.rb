@@ -21,6 +21,7 @@ if node[:glance][:use_keystone]
   end
 
   keystone_address = Chef::Recipe::Barclamp::Inventory.get_network_by_type(keystone, "admin").address if keystone_address.nil?
+  keystone_protocol = keystone["keystone"]["api"]["protocol"]
   keystone_token = keystone["keystone"]["service"]["token"]
   keystone_service_port = keystone["keystone"]["api"]["service_port"]
   keystone_admin_port = keystone["keystone"]["api"]["admin_port"]
@@ -39,6 +40,7 @@ if node[:glance][:use_keystone]
   end
 
 else
+  keystone_protocol = ""
   keystone_address = ""
   keystone_token = ""
   keystone_service_port = ""
@@ -53,6 +55,7 @@ template node[:glance][:api][:config_file] do
   group "root"
   mode 0640
   variables(
+      :keystone_protocol => keystone_protocol,
       :keystone_address => keystone_address,
       :keystone_service_port => keystone_service_port,
       :keystone_service_user => keystone_service_user,
@@ -67,6 +70,7 @@ template node[:glance][:api][:paste_ini] do
   group "root"
   mode 0640
   variables(
+    :keystone_protocol => keystone_protocol,
     :keystone_address => keystone_address,
     :keystone_auth_token => keystone_token,
     :keystone_service_port => keystone_service_port,
@@ -99,6 +103,7 @@ if node[:glance][:use_keystone]
   api_port = node["glance"]["api"]["bind_port"]
 
   keystone_register "glance api wakeup keystone" do
+    protocol keystone_protocol
     host keystone_address
     port keystone_admin_port
     token keystone_token
@@ -106,6 +111,7 @@ if node[:glance][:use_keystone]
   end
 
   keystone_register "register glance user" do
+    protocol keystone_protocol
     host keystone_address
     port keystone_admin_port
     token keystone_token
@@ -116,6 +122,7 @@ if node[:glance][:use_keystone]
   end
 
   keystone_register "give glance user access" do
+    protocol keystone_protocol
     host keystone_address
     port keystone_admin_port
     token keystone_token
@@ -126,6 +133,7 @@ if node[:glance][:use_keystone]
   end
 
   keystone_register "register glance service" do
+    protocol keystone_protocol
     host keystone_address
     port keystone_admin_port
     token keystone_token
@@ -136,6 +144,7 @@ if node[:glance][:use_keystone]
   end
 
   keystone_register "register glance endpoint" do
+    protocol keystone_protocol
     host keystone_address
     port keystone_admin_port
     token keystone_token

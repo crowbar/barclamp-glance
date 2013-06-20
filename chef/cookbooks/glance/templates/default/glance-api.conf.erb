@@ -70,7 +70,7 @@ filesystem_store_datadir = <%= node[:glance][:filesystem_store_datadir] %>
 # ============ Swift Store Options =============================
 
 # Address where the Swift authentication service lives
-swift_store_auth_address = http://<%= @keystone_address %>:<%= @keystone_service_port %>/v2.0/
+swift_store_auth_address = <%= @keystone_protocol %>://<%= @keystone_address %>:<%= @keystone_service_port %>/v2.0/
 
 # Ensure we'll be using version 2 when authenticating with Keystone
 swift_store_auth_version = 2.0

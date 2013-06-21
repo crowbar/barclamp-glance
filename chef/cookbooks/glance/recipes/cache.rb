@@ -84,6 +84,7 @@ if node[:glance][:enable_caching]
     variables(
       :glance_min => "5",
       :glance_hour => "*",
+      :glance_user => node[:glance][:user],
       :glance_command => "/usr/bin/glance-cache-reaper")
   end
 
@@ -95,6 +96,7 @@ if node[:glance][:enable_caching]
     variables(
       :glance_min => "45",
       :glance_hour => "*",
+      :glance_user => node[:glance][:user],
       :glance_command => "/usr/bin/glance-cache-pruner")
   end
 
@@ -106,6 +108,7 @@ if node[:glance][:enable_caching]
     variables(
       :glance_min => "25",
       :glance_hour => "*",
+      :glance_user => node[:glance][:user],
       :glance_command => "/usr/bin/glance-cache-prefetcher")
   end
 

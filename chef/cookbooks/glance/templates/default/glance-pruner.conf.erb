@@ -1,9 +1,9 @@
 [DEFAULT]
 # Show more verbose log output (sets INFO log level output)
-verbose = <%= node[:glance][:pruner][:verbose] ? "True" : "False" %>
+verbose = <%= node[:glance][:verbose] ? "True" : "False" %>
 
 # Show debugging output in logs (sets DEBUG log level output)
-debug = <%= node[:glance][:pruner][:debug] ? "True" : "False" %>
+debug = <%= node[:glance][:debug] ? "True" : "False" %>
 
 log_file = <%= node[:glance][:pruner][:log_file] %>
 

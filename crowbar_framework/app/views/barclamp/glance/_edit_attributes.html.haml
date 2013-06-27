@@ -6,12 +6,6 @@
   %div.container
     = render 'barclamp/git/pfsdeps.html.haml'
     %p
-      %label{ :for => :working_directory }= t('.working_directory')
-      %input#working_directory{:type => "text", :name => "working_directory", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["working_directory"], :onchange => "update_value('working_directory','working_directory', 'string')"}
-    %p
-      %label{ :for => :pid_directory }= t('.pid_directory')
-      %input#pid_directory{:type => "text", :name => "pid_directory", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["pid_directory"], :onchange => "update_value('pid_directory','pid_directory', 'string')"}
-    %p
       %label{ :for => :notifier_strategy }= t('.notifier_strategy')
       = select_tag :notifier_strategy, options_for_select([['Noop','noop']], @proposal.raw_data['attributes'][@proposal.barclamp]["notifier_strategy"]), :onchange => "update_value('notifier_strategy', 'notifier_strategy', 'string')"
     %p
@@ -25,6 +19,9 @@
     %p
       %label{ :for => :swift_store_container }= t('.swift_store_container')
       %input#swift_store_container{:type => "text", :name => "swift_store_container", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["swift_store_container"], :onchange => "update_value('swift_store_container','swift_store_container', 'string')"}
+    %p
+      %label{ :for => :verbose }= t('.verbose')
+      = select_tag :verbose, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["verbose"].to_s), :onchange => "update_value('verbose', 'verbose', 'boolean')"
     -#%p
       %label{ :for => :swift_store_auth_address }= t('.swift_store_auth_address')
       %input#swift_store_auth_address{:type => "text", :name => "swift_store_auth_address", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["swift_store_auth_address"], :onchange => "update_value('swift_store_auth_address','swift_store_auth_address', 'string')"}
@@ -38,113 +35,17 @@
       %label{ :for => :swift_store_key }= t('.swift_store_key')
       %input#swift_store_key{:type => "text", :name => "swift_store_key", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["swift_store_key"], :onchange => "update_value('swift_store_key','swift_store_key', 'string')"}
     %p
-      %label{ :for => :scrubber_header }= t('.scrubber_header')
-    %div.container
-      %p
-        %label{ :for => :scrubber_log_file }= t('.scrubber_log_file')
-        %input#scrubber_log_file{:type => "text", :name => "scrubber_log_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["scrubber"]["log_file"], :onchange => "update_value('scrubber/log_file','scrubber_log_file', 'string')"}
-      %p
-        %label{ :for => :scrubber_config_file }= t('.scrubber_config_file')
-        %input#scrubber_config_file{:type => "text", :name => "scrubber_config_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["scrubber"]["config_file"], :onchange => "update_value('scrubber/config_file','scrubber_config_file', 'string')"}
-      %p
-        %label{ :for => :scrubber_debug }= t('.debug')
-        = select_tag :scrubber_debug, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["scrubber"]["debug"].to_s), :onchange => "update_value('scrubber/debug', 'scrubber_debug', 'boolean')"
-      %p
-        %label{ :for => :scrubber_verbose }= t('.verbose')
-        = select_tag :scrubber_verbose, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["scrubber"]["verbose"].to_s), :onchange => "update_value('scrubber/verbose', 'scrubber_verbose', 'boolean')"
-    %p
-      %label{ :for => :reaper_header }= t('.reaper_header')
-    %div.container
-      %p
-        %label{ :for => :reaper_log_file }= t('.reaper_log_file')
-        %input#reaper_log_file{:type => "text", :name => "reaper_log_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["reaper"]["log_file"], :onchange => "update_value('reaper/log_file','reaper_log_file', 'string')"}
-      %p
-        %label{ :for => :reaper_config_file }= t('.reaper_config_file')
-        %input#reaper_config_file{:type => "text", :name => "reaper_config_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["reaper"]["config_file"], :onchange => "update_value('reaper/config_file','reaper_config_file', 'string')"}
-      %p
-        %label{ :for => :reaper_debug }= t('.debug')
-        = select_tag :reaper_debug, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["reaper"]["debug"].to_s), :onchange => "update_value('reaper/debug', 'reaper_debug', 'boolean')"
-      %p
-        %label{ :for => :reaper_verbose }= t('.verbose')
-        = select_tag :reaper_verbose, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["reaper"]["verbose"].to_s), :onchange => "update_value('reaper/verbose', 'reaper_verbose', 'boolean')"
-    %p
-      %label{ :for => :pruner_header }= t('.pruner_header')
-    %div.container
-      %p
-        %label{ :for => :pruner_log_file }= t('.pruner_log_file')
-        %input#pruner_log_file{:type => "text", :name => "pruner_log_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["pruner"]["log_file"], :onchange => "update_value('pruner/log_file','pruner_log_file', 'string')"}
-      %p
-        %label{ :for => :pruner_config_file }= t('.pruner_config_file')
-        %input#pruner_config_file{:type => "text", :name => "pruner_config_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["pruner"]["config_file"], :onchange => "update_value('pruner/config_file','pruner_config_file', 'string')"}
-      %p
-        %label{ :for => :pruner_debug }= t('.debug')
-        = select_tag :pruner_debug, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["pruner"]["debug"].to_s), :onchange => "update_value('pruner/debug', 'pruner_debug', 'boolean')"
-      %p
-        %label{ :for => :pruner_verbose }= t('.verbose')
-        = select_tag :pruner_verbose, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["pruner"]["verbose"].to_s), :onchange => "update_value('pruner/verbose', 'pruner_verbose', 'boolean')"
-    %p
-      %label{ :for => :prefetcher_header }= t('.prefetcher_header')
-    %div.container
-      %p
-        %label{ :for => :prefetcher_log_file }= t('.prefetcher_log_file')
-        %input#prefetcher_log_file{:type => "text", :name => "prefetcher_log_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["prefetcher"]["log_file"], :onchange => "update_value('prefetcher/log_file','prefetcher_log_file', 'string')"}
-      %p
-        %label{ :for => :prefetcher_config_file }= t('.prefetcher_config_file')
-        %input#prefetcher_config_file{:type => "text", :name => "prefetcher_config_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["prefetcher"]["config_file"], :onchange => "update_value('prefetcher/config_file','prefetcher_config_file', 'string')"}
-      %p
-        %label{ :for => :prefetcher_debug }= t('.debug')
-        = select_tag :prefetcher_debug, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["prefetcher"]["debug"].to_s), :onchange => "update_value('prefetcher/debug', 'prefetcher_debug', 'boolean')"
-      %p
-        %label{ :for => :prefetcher_verbose }= t('.verbose')
-        = select_tag :prefetcher_verbose, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["prefetcher"]["verbose"].to_s), :onchange => "update_value('prefetcher/verbose', 'prefetcher_verbose', 'boolean')"
-    %p
       %label{ :for => :api_header }= t('.api_header')
     %div.container
       %p
-        %label{ :for => :api_log_file }= t('.api_log_file')
-        %input#api_log_file{:type => "text", :name => "api_log_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["log_file"], :onchange => "update_value('api/log_file','api_log_file', 'string')"}
-      %p
-        %label{ :for => :api_config_file }= t('.api_config_file')
-        %input#api_config_file{:type => "text", :name => "api_config_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["config_file"], :onchange => "update_value('api/config_file','api_config_file', 'string')"}
-      %p
-        %label{ :for => :api_paste_ini }= t('.api_paste_ini')
-        %input#api_paste_ini{:type => "text", :name => "api_paste_ini", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["paste_ini"], :onchange => "update_value('api/paste_ini','api_paste_ini', 'string')"}
-      %p
-        %label{ :for => :api_debug }= t('.debug')
-        = select_tag :api_debug, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["debug"].to_s), :onchange => "update_value('api/debug', 'api_debug', 'boolean')"
-      %p
-        %label{ :for => :api_verbose }= t('.verbose')
-        = select_tag :api_verbose, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["verbose"].to_s), :onchange => "update_value('api/verbose', 'api_verbose', 'boolean')"
-      %p
         %label{ :for => :api_bind_open_address }= t('.api_bind_open_address')
         = select_tag :api_bind_open_address, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["bind_open_address"].to_s), :onchange => "update_value('api/bind_open_address', 'api_bind_open_address', 'boolean')"
-      %p
-        %label{ :for => :api_bind_port }= t('.api_bind_port')
-        %input#api_bind_port{:type => "text", :name => "api_bind_port", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["bind_port"], :onchange => "update_value('api/bind_port','api_bind_port', 'integer')"}
     %p
       %label{ :for => :registry_header }= t('.registry_header')
     %div.container
       %p
-        %label{ :for => :registry_log_file }= t('.registry_log_file')
-        %input#registry_log_file{:type => "text", :name => "registry_log_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["registry"]["log_file"], :onchange => "update_value('registry/log_file','registry_log_file', 'string')"}
-      %p
-        %label{ :for => :registry_config_file }= t('.registry_config_file')
-        %input#registry_config_file{:type => "text", :name => "registry_config_file", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["registry"]["config_file"], :onchange => "update_value('registry/config_file','registry_config_file', 'string')"}
-      %p
-        %label{ :for => :registry_paste_ini }= t('.registry_paste_ini')
-        %input#registry_paste_ini{:type => "text", :name => "registry_paste_ini", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["registry"]["paste_ini"], :onchange => "update_value('registry/paste_ini','registry_paste_ini', 'string')"}
-      %p
-        %label{ :for => :registry_debug }= t('.debug')
-        = select_tag :registry_debug, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["registry"]["debug"].to_s), :onchange => "update_value('registry/debug', 'registry_debug', 'boolean')"
-      %p
-        %label{ :for => :registry_verbose }= t('.verbose')
-        = select_tag :registry_verbose, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["registry"]["verbose"].to_s), :onchange => "update_value('registry/verbose', 'registry_verbose', 'boolean')"
-      %p
         %label{ :for => :registry_bind_open_address }= t('.registry_bind_open_address')
         = select_tag :registry_bind_open_address, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["registry"]["bind_open_address"].to_s), :onchange => "update_value('registry/bind_open_address', 'registry_bind_open_address', 'boolean')"
-      %p
-        %label{ :for => :registry_bind_port }= t('.registry_bind_port')
-        %input#registry_bind_port{:type => "text", :name => "registry_bind_port", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["registry"]["bind_port"], :onchange => "update_value('registry/bind_port','registry_bind_port', 'integer')"}
     %p
       %label{ :for => :cache_header }= t('.cache_header')
     %div.container
@@ -169,21 +70,11 @@
       %p
         %label{ :for => :sql_idle_timeout }= t('.sql_idle_timeout')
         %input#sql_idle_timeout{:type => "text", :name => "sql_idle_timeout", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["sql_idle_timeout"], :onchange => "update_value('sql_idle_timeout','sql_idle_timeout', 'integer')"}
-      %p
-        %label{ :for => :database_instance }= t('.database_instance')
-        = instance_selector("database", :database_instance, "database_instance", @proposal)
+      = render_instance_selector("database", :database_instance, t('.database_instance'), "database_instance", @proposal)
     %p
       %label{ :for => :use_keystone }= t('.use_keystone')
       = select_tag :use_keystone, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["use_keystone"].to_s), :onchange => "update_value('use_keystone', 'use_keystone', 'boolean')"
-    %p
-      %label{ :for => :keystone_instance }= t('.keystone_instance')
-      = instance_selector("keystone", :keystone_instance, "keystone_instance", @proposal)
-    %p
-      %label{ :for => :service_user }= t('.service_user')
-      %input#service_user{:type => "text", :name => "service_user", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["service_user"], :onchange => "update_value('service_user','service_user', 'string')"}
-    %p
-      %label{ :for => :service_password }= t('.service_password')
-      %input#service_password{:type => "text", :name => "service_password", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["service_password"], :onchange => "update_value('service_password','service_password', 'string')"}
+    = render_instance_selector("keystone", :keystone_instance, t('.keystone_instance'), "keystone_instance", @proposal)
     %p
       %label{ :for => :use_syslog }= t('.use_syslog')
       = select_tag :use_syslog, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["use_syslog"].to_s), :onchange => "update_value('use_syslog', 'use_syslog', 'boolean')"

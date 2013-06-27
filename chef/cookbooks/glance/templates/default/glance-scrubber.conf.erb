@@ -1,9 +1,9 @@
 [DEFAULT]
 # Show more verbose log output (sets INFO log level output)
-verbose = <%= node[:glance][:scrubber][:verbose] ? "True" : "False" %>
+verbose = <%= node[:glance][:verbose] ? "True" : "False" %>
 
 # Show debugging output in logs (sets DEBUG log level output)
-debug = <%= node[:glance][:scrubber][:debug] ? "True" : "False" %>
+debug = <%= node[:glance][:debug] ? "True" : "False" %>
 
 # Log to this file. Make sure you do not set the same log
 # file for both the API and registry servers!

@@ -12,6 +12,8 @@
           "type": "map",
           "required": true,
           "mapping": {
+            "verbose": { "type": "bool", "required": true },
+            "debug": { "type": "bool", "required": true },
             "images": {
               "type": "seq",
               "required": true,
@@ -21,76 +23,16 @@
               "type": "map",
               "required": true,
               "mapping": {
-                "verbose": { "type": "bool", "required": true },
-                "debug": { "type": "bool", "required": true },
                 "bind_open_address": { "type": "bool", "required": true },
-                "bind_port": { "type": "int", "required": true },
-                "log_file": { "type": "str", "required": true },
-                "config_file": { "type": "str", "required": true },
-                "paste_ini": { "type": "str", "required": true }
+                "bind_port": { "type": "int", "required": true }
               }
             },
             "registry": {
               "type": "map",
               "required": true,
               "mapping": {
-                "verbose": { "type": "bool", "required": true },
-                "debug": { "type": "bool", "required": true },
                 "bind_open_address": { "type": "bool", "required": true },
-                "bind_port": { "type": "int", "required": true },
-                "log_file": { "type": "str", "required": true },
-                "config_file": { "type": "str", "required": true },
-                "paste_ini": { "type": "str", "required": true }
-              }
-            },
-            "prefetcher": {
-              "type": "map",
-              "required": true,
-              "mapping": {
-                "verbose": { "type": "bool", "required": true },
-                "debug": { "type": "bool", "required": true },
-                "log_file": { "type": "str", "required": true },
-                "config_file": { "type": "str", "required": true }
-              }
-            },
-            "pruner": {
-              "type": "map",
-              "required": true,
-              "mapping": {
-                "verbose": { "type": "bool", "required": true },
-                "debug": { "type": "bool", "required": true },
-                "log_file": { "type": "str", "required": true },
-                "config_file": { "type": "str", "required": true }
-              }
-            },
-            "reaper": {
-              "type": "map",
-              "required": true,
-              "mapping": {
-                "verbose": { "type": "bool", "required": true },
-                "debug": { "type": "bool", "required": true },
-                "log_file": { "type": "str", "required": true },
-                "config_file": { "type": "str", "required": true }
-              }
-            },
-            "scrubber": {
-              "type": "map",
-              "required": true,
-              "mapping": {
-                "verbose": { "type": "bool", "required": true },
-                "debug": { "type": "bool", "required": true },
-                "log_file": { "type": "str", "required": true },
-                "config_file": { "type": "str", "required": true }
-              }
-            },
-            "cache": {
-              "type": "map",
-              "required": true,
-              "mapping": {
-                "verbose": { "type": "bool", "required": true },
-                "debug": { "type": "bool", "required": true },
-                "log_file": { "type": "str", "required": true },
-                "config_file": { "type": "str", "required": true }
+                "bind_port": { "type": "int", "required": true }
               }
             },
             "enable_caching": { "type": "bool", "required": true },
@@ -112,16 +54,12 @@
             "default_store": { "type": "str", "required": true, "pattern": "/^(file|swift)$/"  },
             "filesystem_store_datadir": { "type": "str", "required": true },
             "swift_store_container": { "type": "str", "required": true },
-            "pid_directory": { "type": "str", "required": true },
-            "working_directory": { "type": "str", "required": true },
             "sql_idle_timeout": { "type": "int", "required": true },
             "use_keystone": { "type": "bool", "required": true },
             "keystone_instance": { "type": "str", "required": true },
             "service_user": { "type": "str", "required": true },
             "service_password": { "type": "str" },
-            "database_engine": { "type": "str", "required": true },
-            "database_instance": { "type": "str", "required": true },
-            "sqlite_connection": { "type": "str", "required": true }
+            "database_instance": { "type": "str", "required": true }
           }
         }
       }

@@ -3,56 +3,18 @@
   "description": "Glance service (image registry and delivery service) for the cloud",
   "attributes": {
     "glance": {
+      "verbose": false,
+      "debug": false,
       "images": [
         "http://|ADMINWEB|/files/ami/ubuntu-12.04-server-cloudimg-amd64.tar.gz"
       ],
       "api": {
-        "verbose": false,
-        "debug": false,
-        "bind_open_address": false,
-        "bind_port": 9292,
-        "log_file": "/var/log/glance/api.log",
-        "config_file": "/etc/glance/glance-api.conf",
-        "paste_ini": "/etc/glance/glance-api-paste.ini"
+        "bind_open_address": true,
+        "bind_port": 9292
       },
       "registry": {
-        "verbose": false,
-        "debug": false,
-        "bind_open_address": false,
-        "bind_port": 9191,
-        "log_file": "/var/log/glance/registry.log",
-        "config_file": "/etc/glance/glance-registry.conf",
-        "paste_ini": "/etc/glance/glance-registry-paste.ini"
-      },
-      "prefetcher": {
-        "verbose": false,
-        "debug": false,
-        "log_file": "/var/log/glance/prefetcher.log",
-        "config_file": "/etc/glance/glance-prefetcher.conf"
-      },
-      "pruner": {
-        "verbose": false,
-        "debug": false,
-        "log_file": "/var/log/glance/pruner.log",
-        "config_file": "/etc/glance/glance-pruner.conf"
-      },
-      "reaper": {
-        "verbose": false,
-        "debug": false,
-        "log_file": "/var/log/glance/reaper.log",
-        "config_file": "/etc/glance/glance-reaper.conf"
-      },
-      "scrubber": {
-        "verbose": false,
-        "debug": false,
-        "log_file": "/var/log/glance/scrubber.log",
-        "config_file": "/etc/glance/glance-scrubber.conf"
-      },
-      "cache": {
-        "verbose": false,
-        "debug": false,
-        "log_file": "/var/log/glance/scrubber.log",
-        "config_file": "/etc/glance/glance-scrubber.conf"
+        "bind_open_address": true,
+        "bind_port": 9191
       },
       "enable_caching": false,
       "use_cachemanagement": false,
@@ -97,15 +59,11 @@
       "default_store": "file",
       "filesystem_store_datadir": "/var/lib/glance/images",
       "swift_store_container": "glance",
-      "pid_directory": "/var/run/glance",
-      "working_directory": "/var/lib/glance",
       "sql_idle_timeout": 3600,
       "use_keystone": true,
       "keystone_instance": "none",
       "service_user": "glance",
-      "database_engine": "database",
-      "database_instance": "none",
-      "sqlite_connection": "sqlite:////var/lib/glance/glance.sqlite"
+      "database_instance": "none"
     }
   },
   "deployment": {

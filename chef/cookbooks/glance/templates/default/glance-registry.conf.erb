@@ -1,9 +1,9 @@
 [DEFAULT]
 # Show more verbose log output (sets INFO log level output)
-verbose = <%= node[:glance][:registry][:verbose] ? "True" : "False" %>
+verbose = <%= node[:glance][:verbose] ? "True" : "False" %>
 
 # Show debugging output in logs (sets DEBUG log level output)
-debug = <%= node[:glance][:registry][:debug] ? "True" : "False" %>
+debug = <%= node[:glance][:debug] ? "True" : "False" %>
 
 # Address to bind the registry server
 bind_host = <%= node[:glance][:registry][:bind_open_address] ? "0.0.0.0" : node[:glance][:registry][:bind_host] %>
@@ -16,7 +16,7 @@ bind_port = <%= node[:glance][:registry][:bind_port] %>
 log_file = <%= node[:glance][:registry][:log_file] %>
 
 # Send logs to syslog (/dev/log) instead of to file specified by `log_file`
-use_syslog = False
+use_syslog = <%= node[:glance][:use_syslog] ? "True" : "False" %>
 
 # SQLAlchemy connection string for the reference implementation
 # registry server. Any valid SQLAlchemy connection string is fine.

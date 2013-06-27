@@ -1,9 +1,9 @@
 [DEFAULT]
 # Show more verbose log output (sets INFO log level output)
-verbose = <%= node[:glance][:api][:verbose] ? "True" : "False" %>
+verbose = <%= node[:glance][:verbose] ? "True" : "False" %>
 
 # Show debugging output in logs (sets DEBUG log level output)
-debug = <%= node[:glance][:api][:debug] ? "True" : "False" %>
+debug = <%= node[:glance][:debug] ? "True" : "False" %>
 
 # Which backend store should Glance use by default is not specified
 # in a request to add a new image to Glance? Default: 'file'
@@ -70,7 +70,7 @@ filesystem_store_datadir = <%= node[:glance][:filesystem_store_datadir] %>
 # ============ Swift Store Options =============================
 
 # Address where the Swift authentication service lives
-swift_store_auth_address = http://<%= @keystone_address %>:<%= @keystone_service_port %>/v2.0/
+swift_store_auth_address = <%= @keystone_protocol %>://<%= @keystone_address %>:<%= @keystone_service_port %>/v2.0/
 
 # Ensure we'll be using version 2 when authenticating with Keystone
 swift_store_auth_version = 2.0

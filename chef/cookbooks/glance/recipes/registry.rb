@@ -75,40 +75,6 @@ bash "Sync registry glance db" do
   action :nothing
 end
 
-if node[:glance][:use_keystone]
-  api_port = node["glance"]["api"]["bind_port"]
-
-  keystone_register "glance registry wakeup keystone" do
-    protocol keystone_protocol
-    host keystone_address
-    port keystone_admin_port
-    token keystone_token
-    action :wakeup
-  end
-
-  keystone_register "register glance user" do
-    protocol keystone_protocol
-    host keystone_address
-    port keystone_admin_port
-    token keystone_token
-    user_name keystone_service_user
-    user_password keystone_service_password
-    tenant_name keystone_service_tenant
-    action :add_user
-  end
-
-  keystone_register "give glance user access" do
-    protocol keystone_protocol
-    host keystone_address
-    port keystone_admin_port
-    token keystone_token
-    user_name keystone_service_user
-    tenant_name keystone_service_tenant
-    role_name "admin"
-    action :add_access
-  end
-end
-
 glance_service "registry"
 
 node[:glance][:monitor][:svcs] << ["glance-registry"]

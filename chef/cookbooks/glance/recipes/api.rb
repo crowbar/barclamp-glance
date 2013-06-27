@@ -98,8 +98,16 @@ bash "Sync api glance db" do
 end
 
 if node[:glance][:use_keystone]
-  my_admin_ip = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
-  my_public_ip = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "public").address
+  # If we let the service bind to all IPs, then the service is obviously usable
+  # from the public network. Otherwise, the endpoint URL should use the unique
+  # IP that will be listened on.
+  if node[:glance][:api][:bind_open_address]
+    endpoint_admin_ip = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
+    endpoint_public_ip = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "public").address
+  else
+    endpoint_admin_ip = node[:glance][:api][:bind_host]
+    endpoint_public_ip = node[:glance][:api][:bind_host]
+  end
   api_port = node["glance"]["api"]["bind_port"]
 
   keystone_register "glance api wakeup keystone" do
@@ -150,9 +158,9 @@ if node[:glance][:use_keystone]
     token keystone_token
     endpoint_service "glance"
     endpoint_region "RegionOne"
-    endpoint_publicURL "http://#{my_public_ip}:#{api_port}/v1"
-    endpoint_adminURL "http://#{my_admin_ip}:#{api_port}/v1"
-    endpoint_internalURL "http://#{my_admin_ip}:#{api_port}/v1"
+    endpoint_publicURL "http://#{endpoint_public_ip}:#{api_port}/v1"
+    endpoint_adminURL "http://#{endpoint_admin_ip}:#{api_port}/v1"
+    endpoint_internalURL "http://#{endpoint_admin_ip}:#{api_port}/v1"
 #  endpoint_global true
 #  endpoint_enabled true
     action :add_endpoint_template

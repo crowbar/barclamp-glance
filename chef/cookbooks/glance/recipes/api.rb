@@ -51,33 +51,17 @@ end
 
 template node[:glance][:api][:config_file] do
   source "glance-api.conf.erb"
-  owner node[:glance][:user]
-  group "root"
+  owner "root"
+  group node[:glance][:group]
   mode 0640
   variables(
       :keystone_protocol => keystone_protocol,
       :keystone_address => keystone_address,
+      :keystone_admin_port => keystone_admin_port
       :keystone_service_port => keystone_service_port,
       :keystone_service_user => keystone_service_user,
       :keystone_service_password => keystone_service_password,
       :keystone_service_tenant => keystone_service_tenant
-  )
-end
-
-template node[:glance][:api][:paste_ini] do
-  source "glance-api-paste.ini.erb"
-  owner node[:glance][:user]
-  group "root"
-  mode 0640
-  variables(
-    :keystone_protocol => keystone_protocol,
-    :keystone_address => keystone_address,
-    :keystone_auth_token => keystone_token,
-    :keystone_service_port => keystone_service_port,
-    :keystone_service_user => keystone_service_user,
-    :keystone_service_password => keystone_service_password,
-    :keystone_service_tenant => keystone_service_tenant,
-    :keystone_admin_port => keystone_admin_port
   )
 end
 

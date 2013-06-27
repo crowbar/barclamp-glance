@@ -8,6 +8,6 @@ SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 # m h dom mon dow user	command
-<%= @glance_min %> <%= @glance_hour %>	* * *	glance    <%= @glance_command %>
+<%= @glance_min %> <%= @glance_hour %>	* * *	<%= @glance_user %>    <%= @glance_command %>
 
 

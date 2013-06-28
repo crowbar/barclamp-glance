@@ -53,7 +53,12 @@
             "notifier_strategy": { "type": "str", "required": true },
             "default_store": { "type": "str", "required": true, "pattern": "/^(file|swift)$/"  },
             "filesystem_store_datadir": { "type": "str", "required": true },
-            "swift_store_container": { "type": "str", "required": true },
+            "swift": {
+              "type": "map", "required": true, "mapping": {
+                "store_container": { "type": "str", "required": true },
+                "store_create_container_on_put": { "type": "bool", "required": true }
+              }
+            },
             "sql_idle_timeout": { "type": "int", "required": true },
             "use_keystone": { "type": "bool", "required": true },
             "keystone_instance": { "type": "str", "required": true },

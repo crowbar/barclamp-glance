@@ -222,10 +222,10 @@ swift_store_key = <%= @keystone_service_password %>
 
 # Container within the account that the account should use
 # for storing images in Swift
-swift_store_container = <%= node[:glance][:swift_store_container] %>
+swift_store_container = <%= node[:glance][:swift][:store_container] %>
 
 # Do we create the container if it does not exist?
-swift_store_create_container_on_put = <%= node[:glance][:swift_store_create_container_on_put] %>
+swift_store_create_container_on_put = <%= node[:glance][:swift][:store_create_container_on_put] %>
 
 # What size, in MB, should Glance start chunking image files
 # and do a large object manifest in Swift? By default, this is

@@ -33,29 +33,25 @@ else
   keystone_protocol = ""
   keystone_address = ""
   keystone_token = ""
+  keystone_service_port = ""
+  keystone_service_tenant = ""
+  keystone_service_user = ""
+  keystone_service_password = ""
 end
 
 template node[:glance][:registry][:config_file] do
   source "glance-registry.conf.erb"
-  owner node[:glance][:user]
-  group "root"
-  mode 0600
-end
-
-template node[:glance][:registry][:paste_ini] do
-  source "glance-registry-paste.ini.erb"
-  owner node[:glance][:user]
-  group "root"
+  owner "root"
+  group node[:glance][:group]
   mode 0640
   variables(
-    :keystone_protocol => keystone_protocol,
-    :keystone_address => keystone_address,
-    :keystone_auth_token => keystone_token,
-    :keystone_service_port => keystone_service_port,
-    :keystone_service_user => keystone_service_user,
-    :keystone_service_password => keystone_service_password,
-    :keystone_service_tenant => keystone_service_tenant,
-    :keystone_admin_port => keystone_admin_port
+      :keystone_protocol => keystone_protocol,
+      :keystone_address => keystone_address,
+      :keystone_admin_port => keystone_admin_port
+      :keystone_service_port => keystone_service_port,
+      :keystone_service_user => keystone_service_user,
+      :keystone_service_password => keystone_service_password,
+      :keystone_service_tenant => keystone_service_tenant
   )
 end
 

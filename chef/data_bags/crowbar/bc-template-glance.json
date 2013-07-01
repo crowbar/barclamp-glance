@@ -60,7 +60,7 @@
       "filesystem_store_datadir": "/var/lib/glance/images",
       "swift": {
         "store_container": "glance",
-        "store_create_container_on_put: true
+        "store_create_container_on_put": true
       },
       "sql_idle_timeout": 3600,
       "use_keystone": true,

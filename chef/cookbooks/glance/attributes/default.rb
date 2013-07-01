@@ -4,6 +4,7 @@
 #
 # Copyright 2011, Opscode, Inc.
 # Copyright 2011, Dell, Inc.
+# Copyright 2013, SUSE Linux Products GmbH
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,25 +34,14 @@ default[:glance][:api][:bind_host] = ipaddress
 default[:glance][:api][:bind_port] = "9292"
 default[:glance][:api][:log_file] = "/var/log/glance/api.log"
 default[:glance][:api][:config_file]="/etc/glance/glance-api.conf"
-default[:glance][:api][:paste_ini]="/etc/glance/glance-api-paste.ini"
 
 default[:glance][:registry][:bind_host] = ipaddress
 default[:glance][:registry][:bind_port] = "9191"
 default[:glance][:registry][:log_file] = "/var/log/glance/registry.log"
 default[:glance][:registry][:config_file]="/etc/glance/glance-registry.conf"
-default[:glance][:registry][:paste_ini]="/etc/glance/glance-registry-paste.ini"
 
 default[:glance][:cache][:log_file] = "/var/log/glance/cache.log"
 default[:glance][:cache][:config_file]="/etc/glance/glance-cache.conf"
-
-default[:glance][:prefetcher][:log_file] = "/var/log/glance/prefetcher.log"
-default[:glance][:prefetcher][:config_file]="/etc/glance/glance-prefetcher.conf"
-
-default[:glance][:pruner][:log_file] = "/var/log/glance/pruner.log"
-default[:glance][:pruner][:config_file]="/etc/glance/glance-pruner.conf"
-
-default[:glance][:reaper][:log_file] = "/var/log/glance/reaper.log"
-default[:glance][:reaper][:config_file]="/etc/glance/glance-reaper.conf"
 
 default[:glance][:scrubber][:log_file] = "/var/log/glance/scrubber.log"
 default[:glance][:scrubber][:config_file]="/etc/glance/glance-scrubber.conf"
@@ -66,11 +56,8 @@ default[:glance][:sql_idle_timeout] = "3600"
 default[:glance][:default_store] = "file"
 default[:glance][:filesystem_store_datadir] = "/var/lib/glance/images"
 
-default[:glance][:swift_store_auth_address] = "127.0.0.1:8080/v1.0/"
-default[:glance][:swift_store_user] = "swiftuser"
-default[:glance][:swift_store_key] = "swift_store_key"
-default[:glance][:swift_store_container] = "glance"
-default[:glance][:swift_store_create_container_on_put] = "False"
+default[:glance][:swift][:store_container] = "glance"
+default[:glance][:swift][:store_create_container_on_put] = true
 
 # automatically glance upload the tty linux image. (glance::setup recipe)
 default[:glance][:tty_linux_image] = "http://c3226372.r72.cf0.rackcdn.com/tty_linux.tar.gz"

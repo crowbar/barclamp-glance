@@ -58,7 +58,10 @@
       "notifier_strategy": "noop",
       "default_store": "file",
       "filesystem_store_datadir": "/var/lib/glance/images",
-      "swift_store_container": "glance",
+      "swift": {
+        "store_container": "glance",
+        "store_create_container_on_put": true
+      },
       "sql_idle_timeout": 3600,
       "use_keystone": true,
       "keystone_instance": "none",

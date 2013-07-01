@@ -33,29 +33,25 @@ else
   keystone_protocol = ""
   keystone_address = ""
   keystone_token = ""
+  keystone_service_port = ""
+  keystone_service_tenant = ""
+  keystone_service_user = ""
+  keystone_service_password = ""
 end
 
 template node[:glance][:registry][:config_file] do
   source "glance-registry.conf.erb"
-  owner node[:glance][:user]
-  group "root"
-  mode 0600
-end
-
-template node[:glance][:registry][:paste_ini] do
-  source "glance-registry-paste.ini.erb"
-  owner node[:glance][:user]
-  group "root"
+  owner "root"
+  group node[:glance][:group]
   mode 0640
   variables(
-    :keystone_protocol => keystone_protocol,
-    :keystone_address => keystone_address,
-    :keystone_auth_token => keystone_token,
-    :keystone_service_port => keystone_service_port,
-    :keystone_service_user => keystone_service_user,
-    :keystone_service_password => keystone_service_password,
-    :keystone_service_tenant => keystone_service_tenant,
-    :keystone_admin_port => keystone_admin_port
+      :keystone_protocol => keystone_protocol,
+      :keystone_address => keystone_address,
+      :keystone_admin_port => keystone_admin_port
+      :keystone_service_port => keystone_service_port,
+      :keystone_service_user => keystone_service_user,
+      :keystone_service_password => keystone_service_password,
+      :keystone_service_tenant => keystone_service_tenant
   )
 end
 
@@ -73,40 +69,6 @@ bash "Sync registry glance db" do
   group node[:glance][:group]
   code "#{venv_prefix}glance-manage db_sync"
   action :nothing
-end
-
-if node[:glance][:use_keystone]
-  api_port = node["glance"]["api"]["bind_port"]
-
-  keystone_register "glance registry wakeup keystone" do
-    protocol keystone_protocol
-    host keystone_address
-    port keystone_admin_port
-    token keystone_token
-    action :wakeup
-  end
-
-  keystone_register "register glance user" do
-    protocol keystone_protocol
-    host keystone_address
-    port keystone_admin_port
-    token keystone_token
-    user_name keystone_service_user
-    user_password keystone_service_password
-    tenant_name keystone_service_tenant
-    action :add_user
-  end
-
-  keystone_register "give glance user access" do
-    protocol keystone_protocol
-    host keystone_address
-    port keystone_admin_port
-    token keystone_token
-    user_name keystone_service_user
-    tenant_name keystone_service_tenant
-    role_name "admin"
-    action :add_access
-  end
 end
 
 glance_service "registry"

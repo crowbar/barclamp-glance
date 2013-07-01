@@ -33,6 +33,7 @@ template "/etc/cron.d/glance-scrubber" do
   variables(
     :glance_min => "1",
     :glance_hour => "*",
+    :glance_user => node[:glance][:user],
     :glance_command => "/usr/bin/glance-scrubber")
 end
 

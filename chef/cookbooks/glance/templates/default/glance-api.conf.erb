@@ -335,7 +335,7 @@ scrubber_datadir = /var/lib/glance/scrubber
 # =============== Image Cache Options =============================
 
 # Base directory that the Image Cache uses
-image_cache_dir = <%= node[:glance][:image_cache_dir]
+image_cache_dir = <%= node[:glance][:image_cache_dir] %>
 
 [keystone_authtoken]
 auth_host = <%= @keystone_address %>

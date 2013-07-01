@@ -14,7 +14,6 @@ define :glance_service do
     supports :status => true, :restart => true
     action [:enable, :start]
     subscribes :restart, resources(:template => node[:glance][short_name][:config_file]), :immediately
-    subscribes :restart, resources(:template => node[:glance][short_name][:paste_ini]), :immediately
   end
 
 end

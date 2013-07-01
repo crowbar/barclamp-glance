@@ -47,7 +47,7 @@ template node[:glance][:registry][:config_file] do
   variables(
       :keystone_protocol => keystone_protocol,
       :keystone_address => keystone_address,
-      :keystone_admin_port => keystone_admin_port
+      :keystone_admin_port => keystone_admin_port,
       :keystone_service_port => keystone_service_port,
       :keystone_service_user => keystone_service_user,
       :keystone_service_password => keystone_service_password,

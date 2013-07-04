@@ -31,7 +31,6 @@
               "type": "map",
               "required": true,
               "mapping": {
-                "bind_open_address": { "type": "bool", "required": true },
                 "bind_port": { "type": "int", "required": true }
               }
             },

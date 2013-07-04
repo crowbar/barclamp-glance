@@ -13,7 +13,6 @@
         "bind_port": 9292
       },
       "registry": {
-        "bind_open_address": true,
         "bind_port": 9191
       },
       "enable_caching": false,

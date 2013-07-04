@@ -127,6 +127,14 @@ class GlanceService < ServiceObject
       role.save
     end
 
+    if role.default_attributes["glance"]["api"]["bind_open_address"]
+      net_svc = NetworkService.new @logger
+      tnodes = role.override_attributes["glance"]["elements"]["glance-server"]
+      tnodes.each do |n|
+        net_svc.allocate_ip "default", "public", "host", n
+      end unless tnodes.nil?
+    end
+
     # Make sure the bind hosts are in the admin network
     all_nodes.each do |n|
       node = NodeObject.find_node_by_name n

@@ -112,9 +112,9 @@ if node[:glance][:use_keystone]
     token keystone_token
     endpoint_service "glance"
     endpoint_region "RegionOne"
-    endpoint_publicURL "http://#{endpoint_public_ip}:#{api_port}/v1"
-    endpoint_adminURL "http://#{endpoint_admin_ip}:#{api_port}/v1"
-    endpoint_internalURL "http://#{endpoint_admin_ip}:#{api_port}/v1"
+    endpoint_publicURL "http://#{endpoint_public_ip}:#{api_port}"
+    endpoint_adminURL "http://#{endpoint_admin_ip}:#{api_port}"
+    endpoint_internalURL "http://#{endpoint_admin_ip}:#{api_port}"
 #  endpoint_global true
 #  endpoint_enabled true
     action :add_endpoint_template

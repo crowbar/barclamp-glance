@@ -135,17 +135,6 @@ class GlanceService < ServiceObject
       end unless tnodes.nil?
     end
 
-    # Make sure the bind hosts are in the admin network
-    all_nodes.each do |n|
-      node = NodeObject.find_node_by_name n
-
-      admin_address = node.get_network_by_type("admin")["address"]
-      node.crowbar[:glance] = {} if node.crowbar[:glance].nil?
-      node.crowbar[:glance][:api_bind_host] = admin_address
-      node.crowbar[:glance][:registry_bind_host] = admin_address
-
-      node.save
-    end
     @logger.debug("Glance apply_role_pre_chef_call: leaving")
   end
 

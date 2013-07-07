@@ -208,7 +208,7 @@ swift_store_auth_version = 2.0
 # Valid schemes are 'http://' and 'https://'
 # If no scheme specified,  default to 'https://'
 # For swauth, use something like '127.0.0.1:8080/v1.0/'
-swift_store_auth_address = <%= @keystone_protocol %>://<%= @keystone_address %>:<%= @keystone_service_port %>/v2.0/
+swift_store_auth_address = <%= @keystone_protocol %>://<%= @keystone_host %>:<%= @keystone_service_port %>/v2.0/
 
 # User to authenticate against the Swift authentication service
 # If you use Swift authentication service, set it to 'account':'user'
@@ -338,7 +338,7 @@ scrubber_datadir = /var/lib/glance/scrubber
 image_cache_dir = <%= node[:glance][:image_cache_dir] %>
 
 [keystone_authtoken]
-auth_host = <%= @keystone_address %>
+auth_host = <%= @keystone_host %>
 auth_port = <%= @keystone_admin_port %>
 auth_protocol = <%= @keystone_protocol %>
 admin_tenant_name = <%= @keystone_service_tenant %>

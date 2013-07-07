@@ -72,7 +72,7 @@ use_syslog = <%= node[:glance][:use_syslog] ? "True" : "False" %>
 #ca_file = /path/to/cafile
 
 [keystone_authtoken]
-auth_host = <%= @keystone_address %>
+auth_host = <%= @keystone_host %>
 auth_port = <%= @keystone_admin_port %>
 auth_protocol = <%= @keystone_protocol %>
 admin_tenant_name = <%= @keystone_service_tenant %>

@@ -70,3 +70,51 @@
     %p
       %label{ :for => :use_syslog }= t('.use_syslog')
       = select_tag :use_syslog, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["use_syslog"].to_s), :onchange => "update_value('use_syslog', 'use_syslog', 'boolean')"
+
+
+    %p
+      %label{ :for => :protocol }= t('.protocol')
+      = select_tag :protocol, options_for_select([['HTTP','http'], ['HTTPS', 'https']], @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["protocol"].to_s), :onchange => "update_value('api/protocol', 'protocol', 'string')"
+
+    %div{ :id => :ssl_div }
+      %p
+        %label{ :for => :ssl_certfile }= t('.ssl_certfile')
+        = text_field_tag :ssl_certfile, @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["certfile"], :size => 80, :onchange => "update_value('ssl/certfile', 'ssl_certfile', 'string')"
+      %p
+        %label{ :for => :ssl_keyfile }= t('.ssl_keyfile')
+        = text_field_tag :ssl_keyfile, @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["keyfile"], :size => 80, :onchange => "update_value('ssl/keyfile', 'ssl_keyfile', 'string')"
+      %p
+        %label{ :for => :ssl_insecure }= t('.ssl_insecure')
+        = select_tag :ssl_insecure, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["insecure"].to_s), :onchange => "update_value('ssl/insecure', 'ssl_insecure', 'boolean')"
+      %p
+        %label{ :for => :ssl_cert_required }= t('.ssl_cert_required')
+        = select_tag :ssl_cert_required, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["cert_required"].to_s), :onchange => "update_value('ssl/cert_required', 'ssl_cert_required', 'boolean')"
+      %p
+        %label{ :for => :ssl_ca_certs }= t('.ssl_ca_certs')
+        = text_field_tag :ssl_ca_certs, @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["ca_certs"], :size => 80, :onchange => "update_value('ssl/ca_certs', 'ssl_ca_certs', 'string')"
+
+
+:javascript
+  function toggle_protocol() {
+    if ($('#protocol option:selected').attr('value') == 'https') {
+      $('#ssl_div').show();
+    } else {
+      $('#ssl_div').hide();
+    }
+  };
+
+  function toggle_ssl_cert_required() {
+    if ($('#ssl_cert_required option:selected').attr('value') == 'true') {
+      $('#ssl_ca_certs').removeAttr('disabled');
+    } else {
+      $('#ssl_ca_certs').attr('disabled', 'disabled');
+    }
+  };
+
+  $(document).ready(function () {
+    toggle_protocol();
+    toggle_ssl_cert_required();
+  });
+
+  $('#protocol').change(toggle_protocol);
+  $('#ssl_cert_required').change(toggle_ssl_cert_required);

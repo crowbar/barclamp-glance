@@ -63,6 +63,13 @@ locale_additions:
           use_keystone: Use Keystone
           keystone_instance: Keystone Instance
           use_syslog: Use Syslog
+          protocol: Protocol
+          ssl: SSL Attributes
+          ssl_insecure: SSL Certificate is insecure (for instance, auto-signed)
+          ssl_certfile: SSL Certificate File
+          ssl_keyfile: SSL (Private) Key File
+          ssl_cert_required: Require Client Certificate
+          ssl_ca_certs: SSL CA Certificates File
         edit_deployment: 
           deployment: Deployment
 

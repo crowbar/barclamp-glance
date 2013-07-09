@@ -96,13 +96,13 @@ use_syslog = <%= node[:glance][:use_syslog] ? "True" : "False" %>
 # ================= SSL Options ===============================
 
 # Certificate file to use when starting API server securely
-#cert_file = /path/to/certfile
+cert_file = <%= node[:glance][:ssl][:certfile] if node[:glance][:api][:protocol] == 'https' %>
 
 # Private key file to use when starting API server securely
-#key_file = /path/to/keyfile
+key_file = <%= node[:glance][:ssl][:keyfile] if node[:glance][:api][:protocol] == 'https' %>
 
 # CA certificate file to use to verify connecting clients
-#ca_file = /path/to/cafile
+ca_file = <%= node[:glance][:ssl][:ca_certs] if node[:glance][:api][:protocol] == 'https' && node[:glance][:ssl][:cert_required] %>
 
 # ================= Security Options ==========================
 

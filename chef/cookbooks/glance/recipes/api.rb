@@ -49,6 +49,21 @@ else
   keystone_service_password = ""
 end
 
+if node[:glance][:api][:protocol] == 'https'
+  unless ::File.exists? node[:glance][:ssl][:certfile]
+    message = "Certificate \"#{node[:glance][:ssl][:certfile]}\" is not present."
+    Chef::Log.fatal(message)
+    raise message
+  end
+  # we do not check for existence of keyfile, as the private key is allowed to
+  # be in the certfile
+  if node[:glance][:ssl][:cert_required] and !::File.exists? node[:glance][:ssl][:ca_certs]
+    message = "Certificate CA \"#{node[:glance][:ssl][:ca_certs]}\" is not present."
+    Chef::Log.fatal(message)
+    raise message
+  end
+end
+
 template node[:glance][:api][:config_file] do
   source "glance-api.conf.erb"
   owner "root"
@@ -93,6 +108,7 @@ if node[:glance][:use_keystone]
     endpoint_public_ip = node[:glance][:api][:bind_host]
   end
   api_port = node["glance"]["api"]["bind_port"]
+  glance_protocol = node[:glance][:api][:protocol]
 
   keystone_register "register glance service" do
     protocol keystone_protocol
@@ -112,9 +128,9 @@ if node[:glance][:use_keystone]
     token keystone_token
     endpoint_service "glance"
     endpoint_region "RegionOne"
-    endpoint_publicURL "http://#{endpoint_public_ip}:#{api_port}"
-    endpoint_adminURL "http://#{endpoint_admin_ip}:#{api_port}"
-    endpoint_internalURL "http://#{endpoint_admin_ip}:#{api_port}"
+    endpoint_publicURL "#{glance_protocol}://#{endpoint_public_ip}:#{api_port}"
+    endpoint_adminURL "#{glance_protocol}://#{endpoint_admin_ip}:#{api_port}"
+    endpoint_internalURL "#{glance_protocol}://#{endpoint_admin_ip}:#{api_port}"
 #  endpoint_global true
 #  endpoint_enabled true
     action :add_endpoint_template

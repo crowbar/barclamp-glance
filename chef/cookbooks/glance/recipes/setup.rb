@@ -23,11 +23,10 @@ if node[:glance][:use_keystone]
     keystone = node
   end
 
-  key_ip = Chef::Recipe::Barclamp::Inventory.get_network_by_type(keystone, "admin").address
   admin_token = "-I #{keystone["keystone"]["admin"]["username"]}"
   admin_token = "#{admin_token} -K #{keystone["keystone"]["admin"]["password"]}"
   admin_token = "#{admin_token} -T #{keystone["keystone"]["admin"]["tenant"]}"
-  admin_token = "#{admin_token} -N #{keystone["keystone"]["api"]["protocol"]}://#{key_ip}:#{keystone["keystone"]["api"]["api_port"]}/v2.0"
+  admin_token = "#{admin_token} -N #{keystone["keystone"]["api"]["protocol"]}://#{keystone[:fqdn]}:#{keystone["keystone"]["api"]["api_port"]}/v2.0"
 else
   admin_token = ""
 end

@@ -20,7 +20,7 @@ if node[:glance][:use_keystone]
     keystone = node
   end
 
-  keystone_address = Chef::Recipe::Barclamp::Inventory.get_network_by_type(keystone, "admin").address if keystone_address.nil?
+  keystone_host = keystone[:fqdn]
   keystone_protocol = keystone["keystone"]["api"]["protocol"]
   keystone_token = keystone["keystone"]["service"]["token"]
   keystone_admin_port = keystone["keystone"]["api"]["admin_port"]
@@ -28,10 +28,10 @@ if node[:glance][:use_keystone]
   keystone_service_tenant = keystone["keystone"]["service"]["tenant"]
   keystone_service_user = node[:glance][:service_user]
   keystone_service_password = node[:glance][:service_password]
-  Chef::Log.info("Keystone server found at #{keystone_address}")
+  Chef::Log.info("Keystone server found at #{keystone_host}")
 else
   keystone_protocol = ""
-  keystone_address = ""
+  keystone_host = ""
   keystone_token = ""
   keystone_service_port = ""
   keystone_service_tenant = ""
@@ -46,7 +46,7 @@ template node[:glance][:registry][:config_file] do
   mode 0640
   variables(
       :keystone_protocol => keystone_protocol,
-      :keystone_address => keystone_address,
+      :keystone_host => keystone_host,
       :keystone_admin_port => keystone_admin_port,
       :keystone_service_port => keystone_service_port,
       :keystone_service_user => keystone_service_user,

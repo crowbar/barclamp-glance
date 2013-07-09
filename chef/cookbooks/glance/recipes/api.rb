@@ -20,7 +20,7 @@ if node[:glance][:use_keystone]
     keystone = node
   end
 
-  keystone_address = Chef::Recipe::Barclamp::Inventory.get_network_by_type(keystone, "admin").address if keystone_address.nil?
+  keystone_host = keystone[:fqdn]
   keystone_protocol = keystone["keystone"]["api"]["protocol"]
   keystone_token = keystone["keystone"]["service"]["token"]
   keystone_service_port = keystone["keystone"]["api"]["service_port"]
@@ -28,7 +28,7 @@ if node[:glance][:use_keystone]
   keystone_service_tenant = keystone["keystone"]["service"]["tenant"]
   keystone_service_user = node[:glance][:service_user]
   keystone_service_password = node[:glance][:service_password]
-  Chef::Log.info("Keystone server found at #{keystone_address}")
+  Chef::Log.info("Keystone server found at #{keystone_host}")
 
   if node[:glance][:use_gitrepo]
     pfs_and_install_deps "keystone" do
@@ -41,7 +41,7 @@ if node[:glance][:use_keystone]
 
 else
   keystone_protocol = ""
-  keystone_address = ""
+  keystone_host = ""
   keystone_token = ""
   keystone_service_port = ""
   keystone_service_tenant = ""
@@ -71,7 +71,7 @@ template node[:glance][:api][:config_file] do
   mode 0640
   variables(
       :keystone_protocol => keystone_protocol,
-      :keystone_address => keystone_address,
+      :keystone_host => keystone_host,
       :keystone_admin_port => keystone_admin_port,
       :keystone_service_port => keystone_service_port,
       :keystone_service_user => keystone_service_user,
@@ -97,12 +97,26 @@ bash "Sync api glance db" do
 end
 
 if node[:glance][:use_keystone]
+
+  my_admin_host = node[:fqdn]
+  # For the public endpoint, we prefer the public name. If not set, then we
+  # use the IP address except for SSL, where we always prefer a hostname
+  # (for certificate validation).
+  my_public_host = node[:crowbar][:public_name]
+  if my_public_host.nil? or my_public_host.empty?
+    unless node[:glance][:api][:protocol] == "https"
+      my_public_host = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "public").address
+    else
+      my_public_host = 'public.'+node[:fqdn]
+    end
+  end
+
   # If we let the service bind to all IPs, then the service is obviously usable
   # from the public network. Otherwise, the endpoint URL should use the unique
   # IP that will be listened on.
   if node[:glance][:api][:bind_open_address]
-    endpoint_admin_ip = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
-    endpoint_public_ip = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "public").address
+    endpoint_admin_ip = my_admin_host
+    endpoint_public_ip = my_public_host
   else
     endpoint_admin_ip = node[:glance][:api][:bind_host]
     endpoint_public_ip = node[:glance][:api][:bind_host]
@@ -112,7 +126,7 @@ if node[:glance][:use_keystone]
 
   keystone_register "register glance service" do
     protocol keystone_protocol
-    host keystone_address
+    host keystone_host
     port keystone_admin_port
     token keystone_token
     service_name "glance"
@@ -123,7 +137,7 @@ if node[:glance][:use_keystone]
 
   keystone_register "register glance endpoint" do
     protocol keystone_protocol
-    host keystone_address
+    host keystone_host
     port keystone_admin_port
     token keystone_token
     endpoint_service "glance"

@@ -30,6 +30,7 @@ end
 default[:glance][:verbose] = "False"
 default[:glance][:debug] = "False"
 
+default[:glance][:api][:protocol] = "http"
 default[:glance][:api][:bind_host] = ipaddress
 default[:glance][:api][:bind_port] = "9292"
 default[:glance][:api][:log_file] = "/var/log/glance/api.log"
@@ -67,3 +68,8 @@ node[:glance][:monitor]={}
 node[:glance][:monitor][:svcs] = []
 node[:glance][:monitor][:ports]={}
 
+default[:glance][:ssl][:insecure] = false
+default[:glance][:ssl][:certfile] = "/etc/glance/ssl/certs/signing_cert.pem"
+default[:glance][:ssl][:keyfile] = "/etc/glance/ssl/private/signing_key.pem"
+default[:glance][:ssl][:cert_required] = false
+default[:glance][:ssl][:ca_certs] = "/etc/glance/ssl/certs/ca.pem"

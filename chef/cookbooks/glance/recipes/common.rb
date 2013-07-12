@@ -27,9 +27,6 @@ package "curl" do
 end
 
 unless node[:glance][:use_gitrepo]
-  package "python-keystone" do
-    action :install
-  end
   package "glance" do
     package_name "openstack-glance" if node.platform == "suse"
     options "--force-yes" if node.platform != "suse"

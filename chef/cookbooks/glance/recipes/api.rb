@@ -29,16 +29,6 @@ if node[:glance][:use_keystone]
   keystone_service_user = node[:glance][:service_user]
   keystone_service_password = node[:glance][:service_password]
   Chef::Log.info("Keystone server found at #{keystone_host}")
-
-  if node[:glance][:use_gitrepo]
-    pfs_and_install_deps "keystone" do
-      cookbook "keystone"
-      cnode keystone
-      path File.join(glance_path,"keystone")
-      virtualenv venv_path
-    end
-  end
-
 else
   keystone_protocol = ""
   keystone_host = ""
@@ -78,22 +68,6 @@ template node[:glance][:api][:config_file] do
       :keystone_service_password => keystone_service_password,
       :keystone_service_tenant => keystone_service_tenant
   )
-end
-
-bash "Set api glance version control" do
-  user node[:glance][:user]
-  group node[:glance][:group]
-  code "exit 0"
-  notifies :run, "bash[Sync api glance db]", :immediately
-  only_if "#{venv_prefix}glance-manage version_control 0", :user => node[:glance][:user], :group => node[:glance][:group]
-  action :run
-end
-
-bash "Sync api glance db" do
-  user node[:glance][:user]
-  group node[:glance][:group]
-  code "#{venv_prefix}glance-manage db_sync"
-  action :nothing
 end
 
 if node[:glance][:use_keystone]

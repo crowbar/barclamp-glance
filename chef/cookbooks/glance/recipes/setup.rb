@@ -23,10 +23,10 @@ if node[:glance][:use_keystone]
     keystone = node
   end
 
-  glance_args = "-I #{keystone["keystone"]["admin"]["username"]}"
-  glance_args = "#{glance_args} -K #{keystone["keystone"]["admin"]["password"]}"
-  glance_args = "#{glance_args} -T #{keystone["keystone"]["admin"]["tenant"]}"
-  glance_args = "#{glance_args} -N #{keystone["keystone"]["api"]["protocol"]}://#{keystone[:fqdn]}:#{keystone["keystone"]["api"]["api_port"]}/v2.0"
+  glance_args = "--os-username #{keystone["keystone"]["admin"]["username"]}"
+  glance_args = "#{glance_args} --os-password #{keystone["keystone"]["admin"]["password"]}"
+  glance_args = "#{glance_args} --os-tenant-name #{keystone["keystone"]["admin"]["tenant"]}"
+  glance_args = "#{glance_args} --os-auth-url #{keystone["keystone"]["api"]["protocol"]}://#{keystone[:fqdn]}:#{keystone["keystone"]["api"]["api_port"]}/v2.0"
 else
   my_ipaddress = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
   port = node["glance"]["api"]["bind_port"]

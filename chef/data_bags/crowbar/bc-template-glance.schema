@@ -20,18 +20,23 @@
               "sequence": [ { "type": "str" } ]
             },
             "api": {
-              "type": "map",
-              "required": true,
-              "mapping": {
+              "type": "map", "required": true, "mapping": {
+                "protocol": { "type" : "str", "required" : true },
                 "bind_open_address": { "type": "bool", "required": true },
                 "bind_port": { "type": "int", "required": true }
               }
             },
+            "ssl": { "type": "map", "required": true, "mapping": {
+              "insecure": { "type" : "bool", "required" : true },
+              "certfile": { "type" : "str", "required" : true },
+              "keyfile": { "type" : "str", "required" : true },
+              "cert_required": { "type" : "bool", "required" : true },
+              "ca_certs": { "type" : "str", "required" : true }
+            }},
             "registry": {
               "type": "map",
               "required": true,
               "mapping": {
-                "bind_open_address": { "type": "bool", "required": true },
                 "bind_port": { "type": "int", "required": true }
               }
             },

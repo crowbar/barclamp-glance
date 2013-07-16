@@ -96,13 +96,13 @@ use_syslog = <%= node[:glance][:use_syslog] ? "True" : "False" %>
 # ================= SSL Options ===============================
 
 # Certificate file to use when starting API server securely
-#cert_file = /path/to/certfile
+cert_file = <%= node[:glance][:ssl][:certfile] if node[:glance][:api][:protocol] == 'https' %>
 
 # Private key file to use when starting API server securely
-#key_file = /path/to/keyfile
+key_file = <%= node[:glance][:ssl][:keyfile] if node[:glance][:api][:protocol] == 'https' %>
 
 # CA certificate file to use to verify connecting clients
-#ca_file = /path/to/cafile
+ca_file = <%= node[:glance][:ssl][:ca_certs] if node[:glance][:api][:protocol] == 'https' && node[:glance][:ssl][:cert_required] %>
 
 # ================= Security Options ==========================
 
@@ -208,7 +208,7 @@ swift_store_auth_version = 2.0
 # Valid schemes are 'http://' and 'https://'
 # If no scheme specified,  default to 'https://'
 # For swauth, use something like '127.0.0.1:8080/v1.0/'
-swift_store_auth_address = <%= @keystone_protocol %>://<%= @keystone_address %>:<%= @keystone_service_port %>/v2.0/
+swift_store_auth_address = <%= @keystone_protocol %>://<%= @keystone_host %>:<%= @keystone_service_port %>/v2.0/
 
 # User to authenticate against the Swift authentication service
 # If you use Swift authentication service, set it to 'account':'user'
@@ -335,10 +335,10 @@ scrubber_datadir = /var/lib/glance/scrubber
 # =============== Image Cache Options =============================
 
 # Base directory that the Image Cache uses
-image_cache_dir = <%= node[:glance][:image_cache_dir]
+image_cache_dir = <%= node[:glance][:image_cache_datadir] %>
 
 [keystone_authtoken]
-auth_host = <%= @keystone_address %>
+auth_host = <%= @keystone_host %>
 auth_port = <%= @keystone_admin_port %>
 auth_protocol = <%= @keystone_protocol %>
 admin_tenant_name = <%= @keystone_service_tenant %>

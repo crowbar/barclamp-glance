@@ -6,15 +6,22 @@
       "verbose": false,
       "debug": false,
       "images": [
-        "http://|ADMINWEB|/files/ami/ubuntu-12.04-server-cloudimg-amd64.tar.gz"
+        "http://|ADMINWEB|/files/ami/ubuntu-12.04.2-server-cloudimg-amd64.tar.gz"
       ],
       "api": {
+        "protocol": "http",
         "bind_open_address": true,
         "bind_port": 9292
       },
       "registry": {
-        "bind_open_address": true,
         "bind_port": 9191
+      },
+      "ssl": {
+        "insecure": false,
+        "certfile": "/etc/glance/ssl/certs/signing_cert.pem",
+        "keyfile": "/etc/glance/ssl/private/signing_key.pem",
+        "cert_required": false,
+        "ca_certs": "/etc/glance/ssl/certs/ca.pem"
       },
       "enable_caching": false,
       "use_cachemanagement": false,

@@ -23,19 +23,17 @@ if node[:glance][:use_keystone]
     keystone = node
   end
 
-  key_ip = Chef::Recipe::Barclamp::Inventory.get_network_by_type(keystone, "admin").address
-  admin_token = "-I #{keystone["keystone"]["admin"]["username"]}"
-  admin_token = "#{admin_token} -K #{keystone["keystone"]["admin"]["password"]}"
-  admin_token = "#{admin_token} -T #{keystone["keystone"]["admin"]["tenant"]}"
-  admin_token = "#{admin_token} -N #{keystone["keystone"]["api"]["protocol"]}://#{key_ip}:#{keystone["keystone"]["api"]["api_port"]}/v2.0"
+  glance_args = "--os-username #{keystone["keystone"]["admin"]["username"]}"
+  glance_args = "#{glance_args} --os-password #{keystone["keystone"]["admin"]["password"]}"
+  glance_args = "#{glance_args} --os-tenant-name #{keystone["keystone"]["admin"]["tenant"]}"
+  glance_args = "#{glance_args} --os-auth-url #{keystone["keystone"]["api"]["protocol"]}://#{keystone[:fqdn]}:#{keystone["keystone"]["api"]["api_port"]}/v2.0"
+  glance_args = "#{glance_args} --os-endpoint-type internalURL"
 else
-  admin_token = ""
+  my_ipaddress = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
+  port = node["glance"]["api"]["bind_port"]
+
+  glance_args = "-H #{my_ipaddress} -p #{port}"
 end
-
-my_ipaddress = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
-port = node["glance"]["api"]["bind_port"]
-
-glance_args = "-H #{my_ipaddress} -p #{port} #{admin_token}"
 
 #
 # Download and install AMIs

@@ -6,7 +6,7 @@ verbose = <%= node[:glance][:verbose] ? "True" : "False" %>
 debug = <%= node[:glance][:debug] ? "True" : "False" %>
 
 # Address to bind the registry server
-bind_host = <%= node[:glance][:registry][:bind_open_address] ? "0.0.0.0" : node[:glance][:registry][:bind_host] %>
+bind_host = <%= node[:glance][:registry][:bind_host] %>
 
 # Port the bind the registry server to
 bind_port = <%= node[:glance][:registry][:bind_port] %>
@@ -72,7 +72,7 @@ use_syslog = <%= node[:glance][:use_syslog] ? "True" : "False" %>
 #ca_file = /path/to/cafile
 
 [keystone_authtoken]
-auth_host = <%= @keystone_address %>
+auth_host = <%= @keystone_host %>
 auth_port = <%= @keystone_admin_port %>
 auth_protocol = <%= @keystone_protocol %>
 admin_tenant_name = <%= @keystone_service_tenant %>

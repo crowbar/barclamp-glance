@@ -27,9 +27,6 @@ package "curl" do
 end
 
 unless node[:glance][:use_gitrepo]
-  package "python-keystone" do
-    action :install
-  end
   package "glance" do
     package_name "openstack-glance" if node.platform == "suse"
     options "--force-yes" if node.platform != "suse"
@@ -138,18 +135,18 @@ if node[:glance][:use_keystone]
     keystone = node
   end
 
-  keystone_address = Chef::Recipe::Barclamp::Inventory.get_network_by_type(keystone, "admin").address if keystone_address.nil?
+  keystone_host = keystone[:fqdn]
   keystone_protocol = keystone["keystone"]["api"]["protocol"]
   keystone_token = keystone["keystone"]["service"]["token"]
   keystone_admin_port = keystone["keystone"]["api"]["admin_port"]
   keystone_service_tenant = keystone["keystone"]["service"]["tenant"]
   keystone_service_user = node[:glance][:service_user]
   keystone_service_password = node[:glance][:service_password]
-  Chef::Log.info("Keystone server found at #{keystone_address}")
+  Chef::Log.info("Keystone server found at #{keystone_host}")
 
   keystone_register "glance wakeup keystone" do
     protocol keystone_protocol
-    host keystone_address
+    host keystone_host
     port keystone_admin_port
     token keystone_token
     action :wakeup
@@ -157,7 +154,7 @@ if node[:glance][:use_keystone]
 
   keystone_register "register glance user" do
     protocol keystone_protocol
-    host keystone_address
+    host keystone_host
     port keystone_admin_port
     token keystone_token
     user_name keystone_service_user
@@ -168,7 +165,7 @@ if node[:glance][:use_keystone]
 
   keystone_register "give glance user access" do
     protocol keystone_protocol
-    host keystone_address
+    host keystone_host
     port keystone_admin_port
     token keystone_token
     user_name keystone_service_user

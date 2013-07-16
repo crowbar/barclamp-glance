@@ -49,8 +49,6 @@ locale_additions:
           swift_store_key: Glance Swift Key
           api_header: API
           api_bind_open_address: Bind to All Addresses
-          registry_header: Registry
-          registry_bind_open_address: Bind to All Addresses
           cache_header: Caching
           enable_caching: Enable Caching
           use_cachemanagement: Turn On Cache Management
@@ -63,6 +61,13 @@ locale_additions:
           use_keystone: Use Keystone
           keystone_instance: Keystone Instance
           use_syslog: Use Syslog
+          protocol: Protocol
+          ssl: SSL Attributes
+          ssl_insecure: SSL Certificate is insecure (for instance, auto-signed)
+          ssl_certfile: SSL Certificate File
+          ssl_keyfile: SSL (Private) Key File
+          ssl_cert_required: Require Client Certificate
+          ssl_ca_certs: SSL CA Certificates File
         edit_deployment: 
           deployment: Deployment
 
@@ -74,7 +79,7 @@ debs:
     - python-keystone
 
 extra_files:
-  - http://uec-images.ubuntu.com/releases/12.04.2/release/ubuntu-12.04-server-cloudimg-amd64.tar.gz ami
+  - http://uec-images.ubuntu.com/releases/12.04.2/release/ubuntu-12.04.2-server-cloudimg-amd64.tar.gz ami
   
 git_repo:
   - glance https://github.com/openstack/glance.git stable/grizzly

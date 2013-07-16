@@ -38,7 +38,7 @@ locale_additions:
         edit_attributes: 
           verbose: Verbose
           attributes: Attributes
-          backing_type: Backing Type
+          default_store: Default Storage
           notifier_strategy: Notification Strategy
           filesystem_store_datadir: Image Store Directory
           swift_header: Swift

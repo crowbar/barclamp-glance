@@ -9,8 +9,8 @@
       %label{ :for => :notifier_strategy }= t('.notifier_strategy')
       = select_tag :notifier_strategy, options_for_select([['Noop','noop']], @proposal.raw_data['attributes'][@proposal.barclamp]["notifier_strategy"]), :onchange => "update_value('notifier_strategy', 'notifier_strategy', 'string')"
     %p
-      %label{ :for => :backing_type }= t('.backing_type')
-      = select_tag :backing_type, options_for_select([['File','file'], ['Swift', 'swift']], @proposal.raw_data['attributes'][@proposal.barclamp]["default_store"]), :onchange => "update_value('default_store', 'default_store', 'string')"
+      %label{ :for => :default_store }= t('.default_store')
+      = select_tag :default_store, options_for_select([['File','file'], ['Swift', 'swift']], @proposal.raw_data['attributes'][@proposal.barclamp]["default_store"]), :onchange => "update_value('default_store', 'default_store', 'string')"
     %p
       %label{ :for => :filesystem_store_datadir }= t('.filesystem_store_datadir')
       %input#filesystem_store_datadir{:type => "text", :name => "filesystem_store_datadir", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["filesystem_store_datadir"], :onchange => "update_value('filesystem_store_datadir','filesystem_store_datadir', 'string')"}

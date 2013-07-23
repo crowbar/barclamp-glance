@@ -78,6 +78,9 @@
         %label{ :for => :ssl_keyfile }= t('.ssl_keyfile')
         = text_field_tag :ssl_keyfile, @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["keyfile"], :size => 80, :onchange => "update_value('ssl/keyfile', 'ssl_keyfile', 'string')"
       %p
+        %label{ :for => :ssl_generate_certs }= t('.ssl_generate_certs')
+        = select_tag :ssl_generate_certs, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["generate_certs"].to_s), :onchange => "update_value('ssl/generate_certs', 'ssl_generate_certs', 'boolean')"
+      %p
         %label{ :for => :ssl_insecure }= t('.ssl_insecure')
         = select_tag :ssl_insecure, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["insecure"].to_s), :onchange => "update_value('ssl/insecure', 'ssl_insecure', 'boolean')"
       %p
@@ -105,10 +108,19 @@
     }
   };
 
+  function toggle_ssl_generate_certs() {
+    if ($('#ssl_generate_certs option:selected').attr('value') == 'true') {
+      $('#ssl_insecure').attr('value', 'true');
+      $('#ssl_cert_required').attr('value', 'false');
+    }
+  };
+
   $(document).ready(function () {
     toggle_protocol();
     toggle_ssl_cert_required();
+    toggle_ssl_generate_certs();
   });
 
   $('#protocol').change(toggle_protocol);
   $('#ssl_cert_required').change(toggle_ssl_cert_required);
+  $('#ssl_generate_certs').change(toggle_ssl_generate_certs);

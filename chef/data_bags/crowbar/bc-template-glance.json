@@ -17,9 +17,10 @@
         "bind_port": 9191
       },
       "ssl": {
-        "insecure": false,
         "certfile": "/etc/glance/ssl/certs/signing_cert.pem",
         "keyfile": "/etc/glance/ssl/private/signing_key.pem",
+        "generate_certs": false,
+        "insecure": false,
         "cert_required": false,
         "ca_certs": "/etc/glance/ssl/certs/ca.pem"
       },

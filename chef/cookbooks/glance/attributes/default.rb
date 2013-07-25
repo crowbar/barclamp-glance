@@ -68,8 +68,9 @@ node[:glance][:monitor]={}
 node[:glance][:monitor][:svcs] = []
 node[:glance][:monitor][:ports]={}
 
-default[:glance][:ssl][:insecure] = false
 default[:glance][:ssl][:certfile] = "/etc/glance/ssl/certs/signing_cert.pem"
 default[:glance][:ssl][:keyfile] = "/etc/glance/ssl/private/signing_key.pem"
+default[:glance][:ssl][:generate_certs] = false
+default[:glance][:ssl][:insecure] = false
 default[:glance][:ssl][:cert_required] = false
 default[:glance][:ssl][:ca_certs] = "/etc/glance/ssl/certs/ca.pem"

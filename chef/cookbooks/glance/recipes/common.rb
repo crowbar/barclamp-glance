@@ -44,6 +44,10 @@ else
     command "cp #{glance_path}/etc/*.json /etc/#{@cookbook_name}"
     creates "/etc/#{@cookbook_name}/policy.json"
   end
+  execute "cp_paste-ini_#{@cookbook_name}" do
+    command "cp #{glance_path}/etc/glance-*-paste.ini /etc/#{@cookbook_name}"
+    creates "/etc/#{@cookbook_name}/policy.json"
+  end
 
   link_service "glance-api" do
     virtualenv venv_path

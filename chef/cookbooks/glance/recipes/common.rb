@@ -46,7 +46,7 @@ else
   end
   execute "cp_paste-ini_#{@cookbook_name}" do
     command "cp #{glance_path}/etc/glance-*-paste.ini /etc/#{@cookbook_name}"
-    creates "/etc/#{@cookbook_name}/policy.json"
+    creates "/etc/#{@cookbook_name}/glance-api-paste.ini"
   end
 
   link_service "glance-api" do

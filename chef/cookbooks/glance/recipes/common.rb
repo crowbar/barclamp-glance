@@ -28,7 +28,7 @@ end
 
 unless node[:glance][:use_gitrepo]
   package "glance" do
-    package_name "openstack-glance" if node.platform == "suse"
+    package_name "openstack-glance" if %w(redhat centos suse).include?(node.platform)
     options "--force-yes" if node.platform != "suse"
     action :install
   end

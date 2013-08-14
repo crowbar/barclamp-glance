@@ -82,10 +82,10 @@ debs:
 rpms:
   centos-6.4:
     repos:
-      - http://rdo.fedorapeople.org/openstack/openstack-grizzly/rdo-release-grizzly.rpm
+      - http://repos.fedorapeople.org/repos/openstack/openstack-grizzly/epel-6
   redhat-6.4:
     repos:
-      - http://rdo.fedorapeople.org/openstack/openstack-grizzly/rdo-release-grizzly.rpm
+      - http://repos.fedorapeople.org/repos/openstack/openstack-grizzly/epel-6
   pkgs:
     - openstack-glance
     - python-keystone

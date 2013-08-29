@@ -40,23 +40,16 @@ else
 end
 
 if node[:glance][:api][:protocol] == 'https'
-  if node[:glance][:ssl][:generate_certs]
+  if !(::File.exists? node[:glance][:ssl][:certfile] and ::File.exists? node[:glance][:ssl][:keyfile]) and node[:glance][:ssl][:generate_certs]
     package "openssl"
-
     require "fileutils"
-    [:certfile, :keyfile, :ca_certs].each do |k|
-      dir = File.dirname(node[:glance][:ssl][k])
-      if File.exists?(dir)
-        FileUtils.chown_R node[:glance][:user], node[:glance][:group], dir
-      else
-        FileUtils.mkdir_p(dir) {|d| File.chown node[:glance][:user], node[:glance][:group], d}
-      end
-    end
 
-    # Some more ownership fixes:
-    conf_dir = File.dirname node[:glance][:ssl][:ca_certs]
-    FileUtils.chown "root", node[:glance][:group], conf_dir
-    FileUtils.chown "root", node[:glance][:group], File.expand_path("#{conf_dir}/..")  # /etc/glance/ssl
+    Chef::Log.info("Generating SSL certificate for glance...")
+
+    [:certfile, :keyfile].each do |k|
+      dir = File.dirname(node[:glance][:ssl][k])
+      FileUtils.mkdir_p(dir) unless File.exists?(dir)
+    end
 
     # Generate private key
     %x(openssl genrsa -out #{node[:glance][:ssl][:keyfile]} 4096)
@@ -65,9 +58,11 @@ if node[:glance][:api][:protocol] == 'https'
       Chef::Log.fatal(message)
       raise message
     end
-    FileUtils.chown node[:glance][:user], node[:glance][:group], node[:glance][:ssl][:keyfile]
+    FileUtils.chown "root", node[:glance][:group], node[:glance][:ssl][:keyfile]
+    FileUtils.chmod 0640, node[:glance][:ssl][:keyfile]
 
     # Generate certificate signing requests (CSR)
+    conf_dir = File.dirname node[:glance][:ssl][:certfile]
     ssl_csr_file = "#{conf_dir}/signing_key.csr"
     ssl_subject = "\"/C=US/ST=Unset/L=Unset/O=Unset/CN=#{node[:fqdn]}\""
     %x(openssl req -new -key #{node[:glance][:ssl][:keyfile]} -out #{ssl_csr_file} -subj #{ssl_subject})

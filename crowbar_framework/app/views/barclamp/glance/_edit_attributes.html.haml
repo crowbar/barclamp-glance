@@ -13,7 +13,7 @@
 
     %p
       %label{ :for => :notifier_strategy }= t('.notifier_strategy')
-      = select_tag :notifier_strategy, options_for_select([['Noop','noop']], @proposal.raw_data['attributes'][@proposal.barclamp]["notifier_strategy"]), :onchange => "update_value('notifier_strategy', 'notifier_strategy', 'string')"
+      = select_tag :notifier_strategy, options_for_select([['Noop','noop'], ['RabbitMQ', 'rabbit']], @proposal.raw_data['attributes'][@proposal.barclamp]["notifier_strategy"]), :onchange => "update_value('notifier_strategy', 'notifier_strategy', 'string')"
 
     %label.section-header{ :for => :store_div }= t('.store_header')
     %div.section{ :id => :store_div }

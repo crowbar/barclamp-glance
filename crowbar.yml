@@ -40,11 +40,11 @@ locale_additions:
           verbose: Verbose
           attributes: Attributes
           store_header: Image Storage
-          default_store: Default Storage
+          default_store: Storage Backend
           notifier_strategy: Notification Strategy
           filesystem_store_datadir: Image Store Directory
           swift_header: Swift
-          swift_store_container: Glance Swift Container
+          swift_store_container: Swift Container
           swift_store_create_container_on_put: Create Container
           swift_store_auth_address: Swift Authentication URL
           swift_store_user: Glance Swift User

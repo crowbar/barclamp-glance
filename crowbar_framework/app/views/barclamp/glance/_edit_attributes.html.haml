@@ -5,36 +5,67 @@
   = link_to t('raw'), proposal_barclamp_path(:id => @proposal.name, :controller => @proposal.barclamp, :dep_raw => @dep_raw, :attr_raw => true), :style => "float: right;"
   %div.container
     = render 'barclamp/git/pfsdeps.html.haml'
+
+    %p
+      %label{ :for => :use_keystone }= t('.use_keystone')
+      = select_tag :use_keystone, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["use_keystone"].to_s), :onchange => "update_value('use_keystone', 'use_keystone', 'boolean')"
+    = render_instance_selector("keystone", :keystone_instance, t('.keystone_instance'), "keystone_instance", @proposal)
+
     %p
       %label{ :for => :notifier_strategy }= t('.notifier_strategy')
       = select_tag :notifier_strategy, options_for_select([['Noop','noop']], @proposal.raw_data['attributes'][@proposal.barclamp]["notifier_strategy"]), :onchange => "update_value('notifier_strategy', 'notifier_strategy', 'string')"
-    %p
-      %label{ :for => :default_store }= t('.default_store')
-      = select_tag :default_store, options_for_select([['File','file'], ['Swift', 'swift']], @proposal.raw_data['attributes'][@proposal.barclamp]["default_store"]), :onchange => "update_value('default_store', 'default_store', 'string')"
-    %p
-      %label{ :for => :filesystem_store_datadir }= t('.filesystem_store_datadir')
-      %input#filesystem_store_datadir{:type => "text", :name => "filesystem_store_datadir", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["filesystem_store_datadir"], :onchange => "update_value('filesystem_store_datadir','filesystem_store_datadir', 'string')"}
-    -# %p
-      %label{ :for => :swift_header }= t('.swift_header')
-    %p
-      %label{ :for => :swift_store_container }= t('.swift_store_container')
-      %input#swift_store_container{:type => "text", :name => "swift_store_container", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["swift"]["store_container"], :onchange => "update_value('swift/store_container','swift_store_container', 'string')"}
-    -#%p
-      %label{ :for => :swift_store_create_container_on_put }= t('.swift_store_create_container_on_put')
-      = select_tag :swift_store_create_container_on_put, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["swift"]["store_create_container_on_put"].to_s), :onchange => "update_value('swift/store_create_container_on_put', 'swift_store_create_container_on_put', 'boolean')"
 
-    %p
-      %label{ :for => :verbose }= t('.verbose')
-      = select_tag :verbose, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["verbose"].to_s), :onchange => "update_value('verbose', 'verbose', 'boolean')"
-    %p
-      %label{ :for => :api_header }= t('.api_header')
-    %div.container
+    %label.section-header{ :for => :store_div }= t('.store_header')
+    %div.section{ :id => :store_div }
+      %p
+        %label{ :for => :default_store }= t('.default_store')
+        = select_tag :default_store, options_for_select([['File','file'], ['Swift', 'swift']], @proposal.raw_data['attributes'][@proposal.barclamp]["default_store"]), :onchange => "update_value('default_store', 'default_store', 'string')"
+      %p
+        %label{ :for => :filesystem_store_datadir }= t('.filesystem_store_datadir')
+        %input#filesystem_store_datadir{:type => "text", :name => "filesystem_store_datadir", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["filesystem_store_datadir"], :onchange => "update_value('filesystem_store_datadir','filesystem_store_datadir', 'string')"}
+      -# %p
+        %label{ :for => :swift_header }= t('.swift_header')
+      %p
+        %label{ :for => :swift_store_container }= t('.swift_store_container')
+        %input#swift_store_container{:type => "text", :name => "swift_store_container", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["swift"]["store_container"], :onchange => "update_value('swift/store_container','swift_store_container', 'string')"}
+      -#%p
+        %label{ :for => :swift_store_create_container_on_put }= t('.swift_store_create_container_on_put')
+        = select_tag :swift_store_create_container_on_put, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["swift"]["store_create_container_on_put"].to_s), :onchange => "update_value('swift/store_create_container_on_put', 'swift_store_create_container_on_put', 'boolean')"
+
+    %label.section-header{ :for => :protocol_div }= t('.ssl_header')
+    %div.section{ :id => :protocol_div }
+      %p
+        %label{ :for => :protocol }= t('.protocol')
+        = select_tag :protocol, options_for_select([['HTTP','http'], ['HTTPS', 'https']], @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["protocol"].to_s), :onchange => "update_value('api/protocol', 'protocol', 'string')"
+
+      %div{ :id => :ssl_div }
+        %p
+          %label{ :for => :ssl_certfile }= t('.ssl_certfile')
+          = text_field_tag :ssl_certfile, @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["certfile"], :size => 80, :onchange => "update_value('ssl/certfile', 'ssl_certfile', 'string')"
+        %p
+          %label{ :for => :ssl_keyfile }= t('.ssl_keyfile')
+          = text_field_tag :ssl_keyfile, @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["keyfile"], :size => 80, :onchange => "update_value('ssl/keyfile', 'ssl_keyfile', 'string')"
+        %p
+          %label{ :for => :ssl_generate_certs }= t('.ssl_generate_certs')
+          = select_tag :ssl_generate_certs, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["generate_certs"].to_s), :onchange => "update_value('ssl/generate_certs', 'ssl_generate_certs', 'boolean')"
+        %p
+          %label{ :for => :ssl_insecure }= t('.ssl_insecure')
+          = select_tag :ssl_insecure, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["insecure"].to_s), :onchange => "update_value('ssl/insecure', 'ssl_insecure', 'boolean')"
+        %p
+          %label{ :for => :ssl_cert_required }= t('.ssl_cert_required')
+          = select_tag :ssl_cert_required, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["cert_required"].to_s), :onchange => "update_value('ssl/cert_required', 'ssl_cert_required', 'boolean')"
+        %p
+          %label{ :for => :ssl_ca_certs }= t('.ssl_ca_certs')
+          = text_field_tag :ssl_ca_certs, @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["ca_certs"], :size => 80, :onchange => "update_value('ssl/ca_certs', 'ssl_ca_certs', 'string')"
+
+    %label.section-header{ :for => :api_div }= t('.api_header')
+    %div.section{ :id => :api_div }
       %p
         %label{ :for => :api_bind_open_address }= t('.api_bind_open_address')
         = select_tag :api_bind_open_address, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["bind_open_address"].to_s), :onchange => "update_value('api/bind_open_address', 'api_bind_open_address', 'boolean')"
-    %p
-      %label{ :for => :cache_header }= t('.cache_header')
-    %div.container
+
+    %label.section-header{ :for => :cache_div }= t('.cache_header')
+    %div.section{ :id => :cache_div }
       %p
         %label{ :for => :enable_caching }= t('.enable_caching')
         = select_tag :enable_caching, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["enable_caching"].to_s), :onchange => "update_value('enable_caching', 'enable_caching', 'boolean')"
@@ -50,46 +81,22 @@
       %p
         %label{ :for => :image_cache_stall_timeout }= t('.image_cache_stall_timeout')
         %input#image_cache_stall_timeout{:type => "text", :name => "image_cache_stall_timeout", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["image_cache_stall_timeout"], :onchange => "update_value('image_cache_stall_timeout','image_cache_stall_timeout', 'string')"}
-    %p
-      %label{ :for => :database_header }= t('.database_header')
-    %div.container
+
+    %label.section-header{ :for => :database_div }= t('.database_header')
+    %div.section{ :id => :database_div }
       %p
         %label{ :for => :sql_idle_timeout }= t('.sql_idle_timeout')
         %input#sql_idle_timeout{:type => "text", :name => "sql_idle_timeout", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["sql_idle_timeout"], :onchange => "update_value('sql_idle_timeout','sql_idle_timeout', 'integer')"}
       = render_instance_selector("database", :database_instance, t('.database_instance'), "database_instance", @proposal)
-    %p
-      %label{ :for => :use_keystone }= t('.use_keystone')
-      = select_tag :use_keystone, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["use_keystone"].to_s), :onchange => "update_value('use_keystone', 'use_keystone', 'boolean')"
-    = render_instance_selector("keystone", :keystone_instance, t('.keystone_instance'), "keystone_instance", @proposal)
-    %p
-      %label{ :for => :use_syslog }= t('.use_syslog')
-      = select_tag :use_syslog, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["use_syslog"].to_s), :onchange => "update_value('use_syslog', 'use_syslog', 'boolean')"
 
-
-    %p
-      %label{ :for => :protocol }= t('.protocol')
-      = select_tag :protocol, options_for_select([['HTTP','http'], ['HTTPS', 'https']], @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["protocol"].to_s), :onchange => "update_value('api/protocol', 'protocol', 'string')"
-
-    %div{ :id => :ssl_div }
+    %label.section-header{ :for => :logging_div }= t('.logging_header')
+    %div.section{ :id => :logging_div }
       %p
-        %label{ :for => :ssl_certfile }= t('.ssl_certfile')
-        = text_field_tag :ssl_certfile, @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["certfile"], :size => 80, :onchange => "update_value('ssl/certfile', 'ssl_certfile', 'string')"
+        %label{ :for => :verbose }= t('.verbose')
+        = select_tag :verbose, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["verbose"].to_s), :onchange => "update_value('verbose', 'verbose', 'boolean')"
       %p
-        %label{ :for => :ssl_keyfile }= t('.ssl_keyfile')
-        = text_field_tag :ssl_keyfile, @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["keyfile"], :size => 80, :onchange => "update_value('ssl/keyfile', 'ssl_keyfile', 'string')"
-      %p
-        %label{ :for => :ssl_generate_certs }= t('.ssl_generate_certs')
-        = select_tag :ssl_generate_certs, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["generate_certs"].to_s), :onchange => "update_value('ssl/generate_certs', 'ssl_generate_certs', 'boolean')"
-      %p
-        %label{ :for => :ssl_insecure }= t('.ssl_insecure')
-        = select_tag :ssl_insecure, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["insecure"].to_s), :onchange => "update_value('ssl/insecure', 'ssl_insecure', 'boolean')"
-      %p
-        %label{ :for => :ssl_cert_required }= t('.ssl_cert_required')
-        = select_tag :ssl_cert_required, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["cert_required"].to_s), :onchange => "update_value('ssl/cert_required', 'ssl_cert_required', 'boolean')"
-      %p
-        %label{ :for => :ssl_ca_certs }= t('.ssl_ca_certs')
-        = text_field_tag :ssl_ca_certs, @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["ca_certs"], :size => 80, :onchange => "update_value('ssl/ca_certs', 'ssl_ca_certs', 'string')"
-
+        %label{ :for => :use_syslog }= t('.use_syslog')
+        = select_tag :use_syslog, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["use_syslog"].to_s), :onchange => "update_value('use_syslog', 'use_syslog', 'boolean')"
 
 :javascript
   function toggle_protocol() {

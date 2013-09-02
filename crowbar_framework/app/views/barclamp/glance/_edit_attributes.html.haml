@@ -24,7 +24,7 @@
       %div#filesystem_store_div
         %p
           %label{ :for => :filesystem_store_datadir }= t('.filesystem_store_datadir')
-          %input#filesystem_store_datadir{:type => "text", :name => "filesystem_store_datadir", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["filesystem_store_datadir"], :onchange => "update_value('filesystem_store_datadir','filesystem_store_datadir', 'string')"}
+          %input#filesystem_store_datadir{:type => "text", :class => "input-xxlarge", :name => "filesystem_store_datadir", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["filesystem_store_datadir"], :onchange => "update_value('filesystem_store_datadir','filesystem_store_datadir', 'string')"}
       %div#swift_store_div
         -# %p
           %label{ :for => :swift_header }= t('.swift_header')
@@ -84,7 +84,7 @@
         = select_tag :use_cachemanagement, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["use_cachemanagement"].to_s), :onchange => "update_value('use_cachemanagement', 'use_cachemanagement', 'boolean')"
       %p
         %label{ :for => :image_cache_datadir }= t('.image_cache_datadir')
-        %input#image_cache_datadir{:type => "text", :name => "image_cache_datadir", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["image_cache_datadir"], :onchange => "update_value('image_cache_datadir','image_cache_datadir', 'string')"}
+        %input#image_cache_datadir{:type => "text", :class => "input-xxlarge", :name => "image_cache_datadir", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["image_cache_datadir"], :onchange => "update_value('image_cache_datadir','image_cache_datadir', 'string')"}
       %p
         %label{ :for => :image_cache_grace_period }= t('.image_cache_grace_period')
         %input#image_cache_grace_period{:type => "text", :name => "image_cache_grace_period", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["image_cache_grace_period"], :onchange => "update_value('image_cache_grace_period','image_cache_grace_period', 'string')"}

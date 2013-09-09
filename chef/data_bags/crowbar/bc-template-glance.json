@@ -74,7 +74,8 @@
       "use_keystone": true,
       "keystone_instance": "none",
       "service_user": "glance",
-      "database_instance": "none"
+      "database_instance": "none",
+      "rabbitmq_instance": "none"
     }
   },
   "deployment": {

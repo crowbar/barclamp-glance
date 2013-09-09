@@ -1,17 +1,17 @@
-# Copyright 2011, Dell 
-# 
-# Licensed under the Apache License, Version 2.0 (the "License"); 
-# you may not use this file except in compliance with the License. 
-# You may obtain a copy of the License at 
-# 
-#  http://www.apache.org/licenses/LICENSE-2.0 
-# 
-# Unless required by applicable law or agreed to in writing, software 
-# distributed under the License is distributed on an "AS IS" BASIS, 
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-# See the License for the specific language governing permissions and 
-# limitations under the License. 
-# 
+# Copyright 2011, Dell
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 
 class GlanceService < ServiceObject
 
@@ -83,6 +83,19 @@ class GlanceService < ServiceObject
 
     if base["attributes"]["glance"]["database_instance"] == ""
       raise(I18n.t('model.service.dependency_missing', :name => @bc_name, :dependson => "database"))
+    end
+
+    base["attributes"]["glance"]["rabbitmq_instance"] = ""
+    begin
+      rabbitmqService = RabbitmqService.new(@logger)
+      rabbitmqs = rabbitmqService.list_active[1]
+      if rabbitmqs.empty?
+        # No actives, look for proposals
+        rabbitmqs = rabbitmqService.proposals[1]
+      end
+      base["attributes"]["glance"]["rabbitmq_instance"] = rabbitmqs[0] unless rabbitmqs.empty?
+    rescue
+      @logger.info("Glance create_proposal: no rabbitmq found")
     end
 
     base["attributes"]["glance"]["keystone_instance"] = ""

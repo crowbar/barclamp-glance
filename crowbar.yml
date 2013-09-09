@@ -39,6 +39,7 @@ locale_additions:
         edit_attributes: 
           verbose: Verbose
           attributes: Attributes
+          rabbitmq_instance: RabbitMQ
           store_header: Image Storage
           default_store: Storage Backend
           notifier_strategy: Notification Strategy

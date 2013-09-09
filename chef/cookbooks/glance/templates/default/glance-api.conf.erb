@@ -161,17 +161,21 @@ registry_client_protocol = http
 # message queue), or noop (no notifications sent, the default)
 notifier_strategy = <%= node[:glance][:notifier_strategy] %>
 
+<% if @rabbit_settings -%>
 # Configuration options if sending notifications via rabbitmq (these are
 # the defaults)
-rabbit_host = localhost
-rabbit_port = 5672
+rabbit_host = <%= @rabbit_settings[:address] %>
+<% unless @rabbit_settings[:port].nil? -%>
+rabbit_port=<%= @rabbit_settings[:port] %>
+<% end -%>
 rabbit_use_ssl = false
-rabbit_userid = guest
-rabbit_password = guest
-rabbit_virtual_host = /
+rabbit_userid=<%= @rabbit_settings[:user] %>
+rabbit_password=<%= @rabbit_settings[:password] %>
+rabbit_virtual_host=<%= @rabbit_settings[:vhost] %>
 rabbit_notification_exchange = glance
 rabbit_notification_topic = notifications
 rabbit_durable_queues = False
+<% end -%>
 
 # Configuration options if sending notifications via Qpid (these are
 # the defaults)

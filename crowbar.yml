@@ -63,6 +63,8 @@ locale_additions:
           use_keystone: Use Keystone
           keystone_instance: Keystone Instance
           use_syslog: Use Syslog
+          rados_store_user: RADOS user for CephX authentication
+          rados_store_pool: RADOS pool for Glance images
           ssl_header: SSL Support
           protocol: Protocol
           ssl_insecure: SSL Certificate is insecure (for instance, auto-signed)

@@ -57,12 +57,19 @@
             "pfs_deps": { "type": "seq", "required": true, "sequence": [ { "type": "str" } ] },
             "use_syslog": { "type": "bool", "required": true },
             "notifier_strategy": { "type": "str", "required": true },
-            "default_store": { "type": "str", "required": true, "pattern": "/^(file|swift)$/"  },
+            "default_store": { "type": "str", "required": true, "pattern": "/^(file|rbd|swift)$/"  },
             "filesystem_store_datadir": { "type": "str", "required": true },
             "swift": {
               "type": "map", "required": true, "mapping": {
                 "store_container": { "type": "str", "required": true },
                 "store_create_container_on_put": { "type": "bool", "required": true }
+              }
+            },
+            "rbd": {
+              "type": "map", "required": true, "mapping": {
+                "store_ceph_conf": { "type": "str", "required": true },
+                "store_user": { "type": "str", "required": true },
+                "store_pool": { "type": "str", "required": true }
               }
             },
             "sql_idle_timeout": { "type": "int", "required": true },

@@ -40,7 +40,6 @@
       "pfs_deps": [
         "python-greenlet",
         "python-sqlalchemy",
-        "python-anyjson",
         "python-eventlet",
         "python-pastedeploy",
         "python-routes",

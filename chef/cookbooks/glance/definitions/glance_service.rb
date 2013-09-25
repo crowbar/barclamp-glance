@@ -1,7 +1,7 @@
 define :glance_service do
 
   glance_name="glance-#{params[:name]}"
-  glance_name="openstack-glance-#{params[:name]}" if node.platform == "suse"
+  glance_name="openstack-glance-#{params[:name]}" if %w(redhat centos suse).include?(node.platform)
   short_name="#{params[:name]}"
 
   service glance_name do

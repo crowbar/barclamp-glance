@@ -104,6 +104,26 @@ if node[:glance][:api][:protocol] == 'https'
   end
 end
 
+if node[:glance][:notifier_strategy] != "noop"
+  rabbitmq_env_filter = " AND rabbitmq_config_environment:rabbitmq-config-#{node[:glance][:rabbitmq_instance]}"
+  rabbits = search(:node, "roles:rabbitmq-server#{rabbitmq_env_filter}") || []
+  if rabbits.length > 0
+    rabbit = rabbits[0]
+    rabbit = node if rabbit.name == node.name
+  else
+    rabbit = node
+  end
+  rabbit_address = Chef::Recipe::Barclamp::Inventory.get_network_by_type(rabbit, "admin").address
+
+  rabbit_settings = {
+    :address => rabbit_address,
+    :port => rabbit[:rabbitmq][:port],
+    :user => rabbit[:rabbitmq][:user],
+    :password => rabbit[:rabbitmq][:password],
+    :vhost => rabbit[:rabbitmq][:vhost]
+  }
+end
+
 template node[:glance][:api][:config_file] do
   source "glance-api.conf.erb"
   owner "root"
@@ -116,7 +136,8 @@ template node[:glance][:api][:config_file] do
       :keystone_service_port => keystone_service_port,
       :keystone_service_user => keystone_service_user,
       :keystone_service_password => keystone_service_password,
-      :keystone_service_tenant => keystone_service_tenant
+      :keystone_service_tenant => keystone_service_tenant,
+      :rabbit_settings => rabbit_settings
   )
 end
 

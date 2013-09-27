@@ -14,6 +14,7 @@
           "mapping": {
             "verbose": { "type": "bool", "required": true },
             "debug": { "type": "bool", "required": true },
+            "rabbitmq_instance": { "type": "str", "required": true },
             "images": {
               "type": "seq",
               "required": true,
@@ -95,6 +96,7 @@
             "crowbar-status": { "type": "str" },
             "crowbar-failed": { "type": "str" },
             "crowbar-queued": { "type": "bool" },
+            "schema-revision": { "type": "int" },
             "element_states": {
               "type": "map",
               "mapping": {

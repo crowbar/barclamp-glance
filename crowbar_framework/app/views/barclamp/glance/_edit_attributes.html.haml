@@ -19,7 +19,7 @@
     %div.section{ :id => :store_div }
       %p
         %label{ :for => :default_store }= t('.default_store')
-        = select_tag :default_store, options_for_select([['File','file'], ['Swift', 'swift']], @proposal.raw_data['attributes'][@proposal.barclamp]["default_store"]), :onchange => "update_value('default_store', 'default_store', 'string')"
+        = select_tag :default_store, options_for_select([['File','file'], ['Swift', 'swift'], ['Rados', 'rbd']], @proposal.raw_data['attributes'][@proposal.barclamp]["default_store"]), :onchange => "update_value('default_store', 'default_store', 'string')"
       %div#filesystem_store_div
         %p
           %label{ :for => :filesystem_store_datadir }= t('.filesystem_store_datadir')
@@ -30,6 +30,13 @@
         %p
           %label{ :for => :swift_store_container }= t('.swift_store_container')
           %input#swift_store_container{:type => "text", :name => "swift_store_container", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["swift"]["store_container"], :onchange => "update_value('swift/store_container','swift_store_container', 'string')"}
+      %div#rados_store_div
+        %p
+          %label{ :for => :rados_store_user }= t('.rados_store_user')
+          %input#rados_store_user{:type => "text", :class => "input-large", :name => "rados_store_user", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["rbd"]["store_user"], :onchange => "update_value('rbd/store_user','rados_store_user', 'string')"}
+          %label{ :for => :rados_store_pool }= t('.rados_store_pool')
+          %input#rados_store_pool{:type => "text", :class => "input-large", :name => "rados_store_pool", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["rbd"]["store_pool"], :onchange => "update_value('rbd/store_pool','rados_store_pool', 'string')"}
+
         -#%p
           %label{ :for => :swift_store_create_container_on_put }= t('.swift_store_create_container_on_put')
           = select_tag :swift_store_create_container_on_put, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["swift"]["store_create_container_on_put"].to_s), :onchange => "update_value('swift/store_create_container_on_put', 'swift_store_create_container_on_put', 'boolean')"
@@ -105,6 +112,7 @@
     var choice = $("select#default_store").val();
     $('div#filesystem_store_div').toggle(choice == 'file');
     $('div#swift_store_div').toggle(choice == 'swift');
+    $('div#rados_store_div').toggle(choice == 'rbd');
   };
 
   function toggle_protocol() {

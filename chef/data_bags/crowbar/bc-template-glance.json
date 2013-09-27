@@ -78,12 +78,14 @@
       "use_keystone": true,
       "keystone_instance": "none",
       "service_user": "glance",
-      "database_instance": "none"
+      "database_instance": "none",
+      "rabbitmq_instance": "none"
     }
   },
   "deployment": {
     "glance": {
       "crowbar-revision": 0,
+      "schema-revision": 1,
       "element_states": {
         "glance-server": [ "readying", "ready", "applying" ]
       },

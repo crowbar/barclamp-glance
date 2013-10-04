@@ -41,7 +41,7 @@ locale_additions:
           attributes: Attributes
           rabbitmq_instance: RabbitMQ
           store_header: Image Storage
-          default_store: Storage Backend
+          default_store: Default Storage Backend
           notifier_strategy: Notification Strategy
           filesystem_store_datadir: Image Store Directory
           swift_header: Swift

@@ -6,6 +6,10 @@
 
 include_recipe "#{@cookbook_name}::common"
 
+if node.platform == "ubuntu"
+ package "qemu-utils"
+end
+
 glance_path = "/opt/glance"
 venv_path = node[:glance][:use_virtualenv] ? "#{glance_path}/.venv" : nil
 venv_prefix = node[:glance][:use_virtualenv] ? ". #{venv_path}/bin/activate &&" : nil

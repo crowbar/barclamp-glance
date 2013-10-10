@@ -4,7 +4,6 @@
   %label{:for => "proposal_attributes"}= t('.attributes')
   = link_to t('raw'), proposal_barclamp_path(:id => @proposal.name, :controller => @proposal.barclamp, :dep_raw => @dep_raw, :attr_raw => true), :style => "float: right;"
   %div.container
-    = render 'barclamp/git/pfsdeps.html.haml'
     = render_instance_selector("rabbitmq", :rabbitmq_instance, t('.rabbitmq_instance'), "rabbitmq_instance", @proposal)
 
     %p
@@ -15,7 +14,6 @@
     %p
       %label{ :for => :notifier_strategy }= t('.notifier_strategy')
       = select_tag :notifier_strategy, options_for_select([['Noop','noop'], ['RabbitMQ', 'rabbit']], @proposal.raw_data['attributes'][@proposal.barclamp]["notifier_strategy"]), :onchange => "update_value('notifier_strategy', 'notifier_strategy', 'string')"
-
     %label.section-header{ :for => :store_div }= t('.store_header')
     %div.section{ :id => :store_div }
       %p
@@ -107,7 +105,7 @@
       %p
         %label{ :for => :use_syslog }= t('.use_syslog')
         = select_tag :use_syslog, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["use_syslog"].to_s), :onchange => "update_value('use_syslog', 'use_syslog', 'boolean')"
-
+    = render 'barclamp/git/pfsdeps.html.haml'
 :javascript
   function toggle_store() {
     var choice = $("select#default_store").val();

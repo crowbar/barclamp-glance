@@ -74,6 +74,7 @@ debs:
     - glance
     - python-glance
     - python-keystone
+    - qemu-utils
 
 extra_files:
   - http://uec-images.ubuntu.com/releases/12.04.2/release/ubuntu-12.04-server-cloudimg-amd64.tar.gz ami

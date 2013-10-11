@@ -5,9 +5,11 @@
 
 include_recipe "#{@cookbook_name}::common"
 
-glance_path = "/opt/glance"
-venv_path = node[:glance][:use_virtualenv] ? "#{glance_path}/.venv" : nil
-venv_prefix = node[:glance][:use_virtualenv] ? ". #{venv_path}/bin/activate &&" : nil
+if node[:glance][:use_gitrepo]
+  glance_path = "/opt/glance"
+  venv_path = node[:glance][:use_virtualenv] ? "#{glance_path}/.venv" : nil
+  venv_prefix = node[:glance][:use_virtualenv] ? ". #{venv_path}/bin/activate &&" : nil
+end
 
 directory "#{node[:glance][:working_directory]}/raw_images" do
   action :create

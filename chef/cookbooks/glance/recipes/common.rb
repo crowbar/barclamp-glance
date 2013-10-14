@@ -18,10 +18,6 @@
 # limitations under the License.
 #
 
-glance_path = "/opt/glance"
-venv_path = node[:glance][:use_virtualenv] ? "#{glance_path}/.venv" : nil
-venv_prefix = node[:glance][:use_virtualenv] ? ". #{venv_path}/bin/activate &&" : nil
-
 package "curl" do
   action :install
 end
@@ -33,6 +29,9 @@ unless node[:glance][:use_gitrepo]
     action :install
   end
 else
+  glance_path = "/opt/glance"
+  venv_path = node[:glance][:use_virtualenv] ? "#{glance_path}/.venv" : nil
+  venv_prefix = node[:glance][:use_virtualenv] ? ". #{venv_path}/bin/activate &&" : nil
 
   pfs_and_install_deps @cookbook_name do
     virtualenv venv_path

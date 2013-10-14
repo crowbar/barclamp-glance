@@ -12,6 +12,10 @@ if node[:glance][:use_gitrepo]
   venv_prefix = node[:glance][:use_virtualenv] ? ". #{venv_path}/bin/activate &&" : nil
 end
 
+if node.platform == "ubuntu"
+ package "qemu-utils"
+end
+
 if node[:glance][:use_keystone]
   env_filter = " AND keystone_config_environment:keystone-config-#{node[:glance][:keystone_instance]}"
   keystones = search(:node, "recipes:keystone\\:\\:server#{env_filter}") || []

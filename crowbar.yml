@@ -84,6 +84,7 @@ debs:
     - glance
     - python-glance
     - python-keystone
+    - qemu-utils
 
 rpms:
   centos-6.4:

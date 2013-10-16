@@ -6,13 +6,15 @@
 
 include_recipe "#{@cookbook_name}::common"
 
+if node[:glance][:use_gitrepo]
+  glance_path = "/opt/glance"
+  venv_path = node[:glance][:use_virtualenv] ? "#{glance_path}/.venv" : nil
+  venv_prefix = node[:glance][:use_virtualenv] ? ". #{venv_path}/bin/activate &&" : nil
+end
+
 if node.platform == "ubuntu"
  package "qemu-utils"
 end
-
-glance_path = "/opt/glance"
-venv_path = node[:glance][:use_virtualenv] ? "#{glance_path}/.venv" : nil
-venv_prefix = node[:glance][:use_virtualenv] ? ". #{venv_path}/bin/activate &&" : nil
 
 if node[:glance][:use_keystone]
   env_filter = " AND keystone_config_environment:keystone-config-#{node[:glance][:keystone_instance]}"

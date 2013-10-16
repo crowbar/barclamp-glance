@@ -34,9 +34,9 @@
       "git_instance": "",
       "git_refspec": "stable/grizzly",
       "use_gitrepo": false,
-      "use_virtualenv": false,
-      "use_pip_cache": false,
-      "use_gitbarclamp": false,
+      "use_virtualenv": true,
+      "use_pip_cache": true,
+      "use_gitbarclamp": true,
       "pfs_deps": [
         "python-greenlet",
         "python-sqlalchemy",

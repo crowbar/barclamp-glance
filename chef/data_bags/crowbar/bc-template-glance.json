@@ -32,7 +32,7 @@
       "image_cache_max_size": 10737418240,
       "gitrepo": "http://github.com/openstack/glance.git",
       "git_instance": "",
-      "git_refspec": "stable/grizzly",
+      "git_refspec": "stable/havana",
       "use_gitrepo": false,
       "use_virtualenv": false,
       "use_pip_cache": false,

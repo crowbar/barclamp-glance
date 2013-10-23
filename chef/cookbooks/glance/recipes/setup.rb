@@ -44,6 +44,13 @@ end
 # If the json file changes, we need to update this procedure.
 #
 
+unless node[:glance][:use_gitrepo] or node[:glance][:images].empty?
+  if %w(redhat centos suse).include?(node.platform)
+    package "python-glanceclient" do
+      action :install
+    end
+  end
+end
 (node[:glance][:images] or []).each do |image|
   #get the filename of the image
   filename = image.split('/').last

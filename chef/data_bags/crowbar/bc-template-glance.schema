@@ -20,6 +20,14 @@
               "required": true,
               "sequence": [ { "type": "str" } ]
             },
+            "docker_images": {
+              "type": "seq",
+              "required": true,
+              "sequence": [ { "type": "str" } ]
+            },
+            "docker_image_cache_datadir": { "type": "str", "required": true },
+            "docker_registry_port": { "type": "int", "required": true },
+            "docker_settings_flavor": { "type": "str", "required": true },
             "api": {
               "type": "map", "required": true, "mapping": {
                 "protocol": { "type" : "str", "required" : true },

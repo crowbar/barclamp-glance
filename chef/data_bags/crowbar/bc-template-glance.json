@@ -5,6 +5,13 @@
     "glance": {
       "verbose": false,
       "debug": false,
+      "docker_images": [
+        "http://|ADMINWEB|/files/docker/docker-registry.tar.gz",
+        "http://|ADMINWEB|/files/docker/precise.tar.xz"
+      ],
+      "docker_image_cache_datadir": "/var/lib/glance/image-cache",
+      "docker_registry_port": 5042,
+      "docker_settings_flavor": "openstack",
       "images": [
         "http://|ADMINWEB|/files/ami/ubuntu-12.04-server-cloudimg-amd64.tar.gz"
       ],

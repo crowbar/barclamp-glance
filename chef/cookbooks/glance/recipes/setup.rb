@@ -70,9 +70,8 @@ if node.platform == "ubuntu"
 
   # NOTE: OS_GLANCE_URL = GLANCE API URL
   os_glance_url="#{node[:glance][:api][:protocol]}://#{my_ipaddress}:#{node[:glance][:api][:bind_port]}"
-  docker_registry_port_public = node[:glance][:docker_registry_port] - 1
-  docker_registry_url="#{node[:glance][:api][:protocol]}://#{my_ipaddress}:#{docker_registry_port_public}"
-  docker_reg_run_cmd =  %{ docker run -d -p #{docker_registry_port_public}:#{node[:glance][:docker_registry_port]} \
+  docker_registry_url="#{node[:glance][:api][:protocol]}://#{my_ipaddress}:#{node[:glance][:docker_registry_port]}"
+  docker_reg_run_cmd =  %{ docker run -d -p #{node[:glance][:docker_registry_port]}:5000 \
 -e SETTINGS_FLAVOR=openstack \
 -e OS_USERNAME=#{keystone["keystone"]["admin"]["username"]} \
 -e OS_PASSWORD="#{keystone["keystone"]["admin"]["password"]}" \
@@ -97,7 +96,7 @@ docker-registry ./docker-registry/run.sh }
   end
 
   ## Tag image if not already tagged
-  docker_registry_for_tag="#{my_ipaddress}:#{docker_registry_port_public}"
+  docker_registry_for_tag="#{my_ipaddress}:#{node[:glance][:docker_registry_port]}"
   (node[:glance][:docker_images] or []).each do |image|
     #get the filename of the image
     imagename = image.split('/').last

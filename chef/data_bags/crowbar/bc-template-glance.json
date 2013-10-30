@@ -85,7 +85,7 @@
   "deployment": {
     "glance": {
       "crowbar-revision": 0,
-      "schema-revision": 1,
+      "schema-revision": 2,
       "element_states": {
         "glance-server": [ "readying", "ready", "applying" ]
       },

@@ -78,6 +78,8 @@ locale_additions:
         edit_deployment: 
           deployment: Deployment
 
+build_cmd: build.sh
+
 debs:
   pkgs:
     - sqlite3

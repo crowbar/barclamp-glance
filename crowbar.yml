@@ -108,7 +108,7 @@ extra_files:
   - http://cloud-images.ubuntu.com/releases/precise/release/ubuntu-12.04-server-cloudimg-amd64.tar.gz ami
   # docker images
   - http://get.docker.io/images/openstack/docker-registry.tar.gz docker
-  - https://github.com/tianon/docker-brew-ubuntu/blob/precise/precise.zip docker
+  - https://github.com/tianon/docker-brew-ubuntu/archive/precise.zip docker
   #- https://github.com/tianon/docker-brew-ubuntu/blob/precise/precise.tar.xz docker
   
 git_repo:

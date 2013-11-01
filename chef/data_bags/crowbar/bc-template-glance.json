@@ -7,7 +7,7 @@
       "debug": false,
       "docker_images": [
         "http://|ADMINWEB|/files/docker/docker-registry.tar.gz",
-        "http://|ADMINWEB|/files/docker/precise.zip"
+        "http://|ADMINWEB|/files/docker/docker-brew-ubuntu-precise/precise.xz"
       ],
       "docker_image_cache_datadir": "/var/lib/glance/image-cache",
       "docker_registry_port": 5042,

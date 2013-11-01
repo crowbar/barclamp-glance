@@ -8,16 +8,16 @@ echo "Using: CROWBAR_DIR = $CROWBAR_DIR"
 echo "Using: BC_DIR = $BC_DIR"
 
 bc_needs_build() {
-  [[ ! -f "$BC_CACHE/files/docker/precise.xz" ]]
+  [[ ! -f "$BC_CACHE/files/docker/precise.zip" ]]
 }
 
-#bc_build() {
+bc_build() {
     mkdir -p "$BC_CACHE/files/docker"
 
     cd "$BC_CACHE/files/docker"
     if ! unzip -t "$BC_CACHE/files/docker/precise.zip" ; then
       echo "getting precise from https://github.com/tianon/docker-brew-ubuntu/archive/precise.zip "
-      curl -Ls https://github.com/tianon/docker-brew-ubuntu/archive/precise.zip > precise.zip
+      curl -Ls https://github.com/tianon/docker-brew-ubuntu/archive/precise.zip 
     fi
     unzip precise.zip
     ls 
@@ -25,5 +25,5 @@ bc_needs_build() {
     [[ ! -f ${BC_CACHE}/files/docker/docker-brew-ubuntu-precise/precise.tar.xz ]] && die "Can\'t find precise.tar.xz"
     cd -
 
-#}
+}
 

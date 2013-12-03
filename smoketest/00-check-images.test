@@ -16,12 +16,7 @@ export OS_PASSWORD=crowbar
 export OS_TENANT_NAME=admin
 export OS_AUTH_URL="http://${keystone_nodes[0]}:5000/v2.0"
 
-if [ -f /etc/redhat-release ]; then
-  sudo yum --assumeyes install python-glanceclient
-else
-  sudo apt-get install -y python-glanceclient
-fi
-
+install_packages "python-glanceclient"
 
 for node in "${glance_nodes[@]}"; do
     if glance image-list |grep -q active; then

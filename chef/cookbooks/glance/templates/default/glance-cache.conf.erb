@@ -15,7 +15,7 @@ image_cache_dir = <%= node[:glance][:image_cache_datadir] %>
 
 # Number of seconds after which we should consider an incomplete image to be
 # stalled and eligible for reaping
-image_cache_stall_time = <%= node[:glance][:image_cache_stall_time] %>
+image_cache_stall_time = <%= node[:glance][:image_cache_stall_timeout] %>
 
 # image_cache_invalid_entry_grace_period - seconds
 #

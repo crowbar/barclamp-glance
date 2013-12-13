@@ -48,7 +48,6 @@ default[:glance][:scrubber][:log_file] = "/var/log/glance/scrubber.log"
 default[:glance][:scrubber][:config_file]="/etc/glance/glance-scrubber.conf"
 
 default[:glance][:working_directory]="/var/lib/glance"
-default[:glance][:pid_directory]="/var/run/glance"
 default[:glance][:image_cache_datadir] = "/var/lib/glance/image-cache/"
 
 default[:glance][:sql_idle_timeout] = "3600"

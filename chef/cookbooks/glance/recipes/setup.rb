@@ -36,7 +36,97 @@ else
 
   glance_args = "-H #{my_ipaddress} -p #{port}"
 end
+my_ipaddress = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
 
+# temporary hack to manage docker registry
+#
+# setup docker
+# Author: Judd Maltin
+
+if node.platform == "ubuntu"
+  # basic package installation
+  package "lxc-docker" do
+    action :install
+  end
+
+  service "docker" do
+    action :start
+  end
+
+  directory "#{node[:glance][:working_directory]}/docker_images" do
+    action :create
+  end
+
+  # get docker images
+  (node[:glance][:docker_images] or []).each do |image|
+    #get the filename of the image
+    imagename = image.split('/').last
+    imagename = imagename.split('.').first
+    execute "glance: docker: importing images" do
+      command "docker import #{image} #{imagename}"
+      not_if "docker images | grep -qw \"^#{imagename}\""
+    end
+  end
+
+  # NOTE: OS_GLANCE_URL = GLANCE API URL
+  os_glance_url="#{node[:glance][:api][:protocol]}://#{my_ipaddress}:#{node[:glance][:api][:bind_port]}"
+  docker_registry_url="#{node[:glance][:api][:protocol]}://#{my_ipaddress}:#{node[:glance][:docker_registry_port]}"
+  docker_reg_run_cmd =  %{ docker run -d -p #{node[:glance][:docker_registry_port]}:5000 \
+-e SETTINGS_FLAVOR=openstack \
+-e OS_USERNAME=#{keystone["keystone"]["admin"]["username"]} \
+-e OS_PASSWORD="#{keystone["keystone"]["admin"]["password"]}" \
+-e OS_TENANT_NAME="#{keystone["keystone"]["admin"]["tenant"]}" \
+-e OS_AUTH_URL="#{keystone["keystone"]["api"]["protocol"]}://#{keystone[:fqdn]}:#{keystone["keystone"]["api"]["api_port"]}/v2.0" \
+-e OS_GLANCE_URL="#{os_glance_url}" \
+docker-registry ./docker-registry/run.sh }
+
+  ## Start the Docker registry container
+  log "executing: #{docker_reg_run_cmd}"
+  log "docker_registry_url: #{docker_registry_url}"
+  execute "glance: start docker registry #{docker_registry_url}" do
+    command "#{docker_reg_run_cmd}"
+    not_if "/usr/bin/curl -s #{docker_registry_url} >> /dev/null"
+  end
+
+
+  ## Did the registry really start?
+  execute "glance: wait for docker registry to start" do
+    command "while ! curl -s #{docker_registry_url}; do sleep 1; done"
+    timeout 20
+  end
+
+  ## Tag image if not already tagged
+  docker_registry_for_tag="#{my_ipaddress}:#{node[:glance][:docker_registry_port]}"
+  (node[:glance][:docker_images] or []).each do |image|
+    #get the filename of the image
+    imagename = image.split('/').last
+    imagename = imagename.split('.').first
+    next if imagename.eql?('docker-registry')
+    docker_repository_url = docker_registry_for_tag + "/" + imagename
+    execute "glance: docker: tagging images with repository name" do
+      command "docker tag #{imagename} #{docker_repository_url}; docker push #{docker_repository_url} #{docker_repository_url}"
+      not_if "docker images | grep -qw \"#{docker_repository_url}\""
+    end
+  end
+  #execute "glance: docker: tag images with repository name" do
+    #command "if ! docker images | grep ; then
+  ##docker tag $DOCKER_IMAGE_NAME $DOCKER_REPOSITORY_NAME
+  #if ! docker images | grep $DOCKER_REPOSITORY_NAME; then
+  #docker tag $DOCKER_IMAGE_NAME $DOCKER_REPOSITORY_NAME
+  #fi
+  
+  ## Make sure we copied the image in Glance
+  glance_command = "glance #{glance_args} image-list "
+  log "glance_command: #{glance_command}"
+  execute "make sure docker images are in glance" do
+    command "#{glance_command}"
+  end
+
+  # Push images into docker registry (and they'll show up in glance)
+  #if ! is_set DOCKER_IMAGE ; then
+  #docker push $DOCKER_REPOSITORY_NAME
+  #fi
+end
 #
 # Download and install AMIs
 #

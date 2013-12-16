@@ -144,12 +144,18 @@ class GlanceService < ServiceObject
     unless nodes.nil? or nodes.length < 1
       admin_ip = nodes[0].get_network_by_type("admin")["address"]
       web_port = nodes[0]["provisioner"]["web_port"]
-      # substitute the admin web portal
+      # substitute the admin web portal for glance
       new_array = []
       role.default_attributes["glance"]["images"].each do |item|
         new_array << item.gsub("|ADMINWEB|", "#{admin_ip}:#{web_port}")
       end
       role.default_attributes["glance"]["images"] = new_array
+      # substitute the admin web portal for docker
+      new_array = []
+      role.default_attributes["glance"]["docker_images"].each do |item|
+        new_array << item.gsub("|ADMINWEB|", "#{admin_ip}:#{web_port}")
+      end
+      role.default_attributes["glance"]["docker_images"] = new_array
       role.save
     end
 

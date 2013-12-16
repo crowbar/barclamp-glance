@@ -78,6 +78,8 @@ locale_additions:
         edit_deployment: 
           deployment: Deployment
 
+build_cmd: build.sh
+
 debs:
   pkgs:
     - sqlite3
@@ -85,6 +87,11 @@ debs:
     - python-glance
     - python-keystone
     - qemu-utils
+  ubuntu-12.04:
+    repos:
+      - deb http://get.docker.io/ubuntu docker main
+    pkgs:
+      - lxc-docker
 
 rpms:
   centos-6.4:
@@ -101,6 +108,10 @@ rpms:
 
 extra_files:
   - http://cloud-images.ubuntu.com/releases/precise/release/ubuntu-12.04-server-cloudimg-amd64.tar.gz ami
+  # docker images
+  - http://get.docker.io/images/openstack/docker-registry.tar.gz docker
+  - https://github.com/tianon/docker-brew-ubuntu/archive/precise.zip docker
+  #- https://github.com/tianon/docker-brew-ubuntu/blob/precise/precise.tar.xz docker
   
 git_repo:
   - glance https://github.com/openstack/glance.git stable/havana

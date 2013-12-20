@@ -32,52 +32,6 @@ crowbar:
   chef_order: 85
   proposal_schema_version: 2
 
-locale_additions:
-  en:
-    barclamp:
-      glance:
-        edit_attributes: 
-          verbose: Verbose
-          attributes: Attributes
-          rabbitmq_instance: RabbitMQ
-          store_header: Image Storage
-          default_store: Default Storage Backend
-          notifier_strategy: Notification Strategy
-          filesystem_store_datadir: Image Store Directory
-          swift_header: Swift
-          swift_store_container: Swift Container
-          swift_store_create_container_on_put: Create Container
-          swift_store_auth_address: Swift Authentication URL
-          swift_store_user: Glance Swift User
-          swift_store_key: Glance Swift Key
-          api_header: API
-          api_bind_open_address: Bind to All Addresses
-          cache_header: Caching
-          enable_caching: Enable Caching
-          use_cachemanagement: Turn On Cache Management
-          image_cache_datadir: Directory
-          image_cache_grace_period: Grace Period
-          image_cache_stall_timeout: Stall Timeout
-          database_header: Database
-          sql_idle_timeout: SQL Idle Timeout
-          database_instance: Database Instance
-          use_keystone: Use Keystone
-          keystone_instance: Keystone Instance
-          use_syslog: Use Syslog
-          rados_store_user: RADOS user for CephX authentication
-          rados_store_pool: RADOS pool for Glance images
-          ssl_header: SSL Support
-          protocol: Protocol
-          ssl_insecure: SSL Certificate is insecure (for instance, self-signed)
-          ssl_certfile: SSL Certificate File
-          ssl_keyfile: SSL (Private) Key File
-          ssl_generate_certs: Generate (self-signed) certificates (implies insecure)
-          ssl_cert_required: Require Client Certificate
-          ssl_ca_certs: SSL CA Certificates File
-          logging_header: Logging
-        edit_deployment: 
-          deployment: Deployment
-
 debs:
   pkgs:
     - sqlite3

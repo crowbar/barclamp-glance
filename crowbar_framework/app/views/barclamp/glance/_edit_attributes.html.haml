@@ -1,176 +1,73 @@
+- register_javascripts "barclamps/glance/form"
 
-%input#proposal_attributes{:type => "hidden", :name => "proposal_attributes", :value => @proposal.raw_data['attributes'][@proposal.barclamp].to_json}
-%p
-  %label{:for => "proposal_attributes"}= t('.attributes')
-  = link_to t('raw'), proposal_barclamp_path(:id => @proposal.name, :controller => @proposal.barclamp, :dep_raw => @dep_raw, :attr_raw => true), :style => "float: right;"
-  %div.container
-    = render_instance_selector("rabbitmq", :rabbitmq_instance, t('.rabbitmq_instance'), "rabbitmq_instance", @proposal)
+= attributes_for @proposal do
+  .panel-sub
+    = header @dep_raw, true
 
-    %p
-      %label{ :for => :use_keystone }= t('.use_keystone')
-      = select_tag :use_keystone, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["use_keystone"].to_s), :onchange => "update_value('use_keystone', 'use_keystone', 'boolean')"
-    = render_instance_selector("keystone", :keystone_instance, t('.keystone_instance'), "keystone_instance", @proposal)
+  .panel-body
+    = instance_field :rabbitmq
+    = boolean_field :use_keystone
+    = instance_field :keystone
+    = select_field :notifier_strategy, :collection => :notifier_strategies_for_glance
 
-    %p
-      %label{ :for => :notifier_strategy }= t('.notifier_strategy')
-      = select_tag :notifier_strategy, options_for_select([['Noop','noop'], ['RabbitMQ', 'rabbit']], @proposal.raw_data['attributes'][@proposal.barclamp]["notifier_strategy"]), :onchange => "update_value('notifier_strategy', 'notifier_strategy', 'string')"
-    %label.section-header{ :for => :store_div }= t('.store_header')
-    %div.section{ :id => :store_div }
-      %p
-        %label{ :for => :default_store }= t('.default_store')
-        = select_tag :default_store, options_for_select([['File','file'], ['Swift', 'swift'], ['Rados', 'rbd']], @proposal.raw_data['attributes'][@proposal.barclamp]["default_store"]), :onchange => "update_value('default_store', 'default_store', 'string')"
-      %div#filesystem_store_div
-        %p
-          %label{ :for => :filesystem_store_datadir }= t('.filesystem_store_datadir')
-          %input#filesystem_store_datadir{:type => "text", :class => "input-xxlarge", :name => "filesystem_store_datadir", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["filesystem_store_datadir"], :onchange => "update_value('filesystem_store_datadir','filesystem_store_datadir', 'string')"}
-      %div#swift_store_div
-        -# %p
-          %label{ :for => :swift_header }= t('.swift_header')
-        %p
-          %label{ :for => :swift_store_container }= t('.swift_store_container')
-          %input#swift_store_container{:type => "text", :name => "swift_store_container", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["swift"]["store_container"], :onchange => "update_value('swift/store_container','swift_store_container', 'string')"}
-      %div#rados_store_div
-        %p
-          %label{ :for => :rados_store_user }= t('.rados_store_user')
-          %input#rados_store_user{:type => "text", :class => "input-large", :name => "rados_store_user", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["rbd"]["store_user"], :onchange => "update_value('rbd/store_user','rados_store_user', 'string')"}
-          %label{ :for => :rados_store_pool }= t('.rados_store_pool')
-          %input#rados_store_pool{:type => "text", :class => "input-large", :name => "rados_store_pool", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["rbd"]["store_pool"], :onchange => "update_value('rbd/store_pool','rados_store_pool', 'string')"}
+    %fieldset
+      %legend
+        = t(".store_header")
 
-        -#%p
-          %label{ :for => :swift_store_create_container_on_put }= t('.swift_store_create_container_on_put')
-          = select_tag :swift_store_create_container_on_put, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["swift"]["store_create_container_on_put"].to_s), :onchange => "update_value('swift/store_create_container_on_put', 'swift_store_create_container_on_put', 'boolean')"
+      = select_field :default_store, :collection => :default_stores_for_glance
 
-    %label.section-header{ :for => :protocol_div }= t('.ssl_header')
-    %div.section{ :id => :protocol_div }
-      %p
-        %label{ :for => :protocol }= t('.protocol')
-        = select_tag :protocol, options_for_select([['HTTP','http'], ['HTTPS', 'https']], @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["protocol"].to_s), :onchange => "update_value('api/protocol', 'protocol', 'string')"
+      #file_container
+        = string_field :filesystem_store_datadir
 
-      %div{ :id => :ssl_div }
-        %p
-          %label{ :for => :ssl_generate_certs }= t('.ssl_generate_certs')
-          = select_tag :ssl_generate_certs, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["generate_certs"].to_s), :onchange => "update_value('ssl/generate_certs', 'ssl_generate_certs', 'boolean')"
-        %p
-          %label{ :for => :ssl_certfile }= t('.ssl_certfile')
-          = text_field_tag :ssl_certfile, @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["certfile"], :class=> "input-xxlarge", :size => 80, :onchange => "update_value('ssl/certfile', 'ssl_certfile', 'string')"
-        %p
-          %label{ :for => :ssl_keyfile }= t('.ssl_keyfile')
-          = text_field_tag :ssl_keyfile, @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["keyfile"], :class=> "input-xxlarge", :size => 80, :onchange => "update_value('ssl/keyfile', 'ssl_keyfile', 'string')"
-        %p
-          %label{ :for => :ssl_insecure }= t('.ssl_insecure')
-          = select_tag :ssl_insecure, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["insecure"].to_s), :onchange => "update_value('ssl/insecure', 'ssl_insecure', 'boolean')"
-        %p
-          %label{ :for => :ssl_cert_required }= t('.ssl_cert_required')
-          = select_tag :ssl_cert_required, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["cert_required"].to_s), :onchange => "update_value('ssl/cert_required', 'ssl_cert_required', 'boolean')"
-        %p
-          %label{ :for => :ssl_ca_certs }= t('.ssl_ca_certs')
-          = text_field_tag :ssl_ca_certs, @proposal.raw_data['attributes'][@proposal.barclamp]["ssl"]["ca_certs"], :class=> "input-xxlarge", :size => 80, :onchange => "update_value('ssl/ca_certs', 'ssl_ca_certs', 'string')"
+      #swift_container
+        = string_field %w(swift store_container)
 
-    %label.section-header{ :for => :api_div }= t('.api_header')
-    %div.section{ :id => :api_div }
-      %p
-        %label{ :for => :api_bind_open_address }= t('.api_bind_open_address')
-        = select_tag :api_bind_open_address, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["api"]["bind_open_address"].to_s), :onchange => "update_value('api/bind_open_address', 'api_bind_open_address', 'boolean')"
+      #rbd_container
+        = string_field %w(rbd store_user)
+        = string_field %w(rbd store_pool)
 
-    %label.section-header{ :for => :cache_div }= t('.cache_header')
-    %div.section{ :id => :cache_div }
-      %p
-        %label{ :for => :enable_caching }= t('.enable_caching')
-        = select_tag :enable_caching, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["enable_caching"].to_s), :onchange => "update_value('enable_caching', 'enable_caching', 'boolean')"
-      %p
-        %label{ :for => :use_cachemanagement }= t('.use_cachemanagement')
-        = select_tag :use_cachemanagement, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["use_cachemanagement"].to_s), :onchange => "update_value('use_cachemanagement', 'use_cachemanagement', 'boolean')"
-      %p
-        %label{ :for => :image_cache_datadir }= t('.image_cache_datadir')
-        %input#image_cache_datadir{:type => "text", :class => "input-xxlarge", :name => "image_cache_datadir", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["image_cache_datadir"], :onchange => "update_value('image_cache_datadir','image_cache_datadir', 'string')"}
-      %p
-        %label{ :for => :image_cache_grace_period }= t('.image_cache_grace_period')
-        %input#image_cache_grace_period{:type => "text", :name => "image_cache_grace_period", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["image_cache_grace_period"], :onchange => "update_value('image_cache_grace_period','image_cache_grace_period', 'string')"}
-      %p
-        %label{ :for => :image_cache_stall_timeout }= t('.image_cache_stall_timeout')
-        %input#image_cache_stall_timeout{:type => "text", :name => "image_cache_stall_timeout", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["image_cache_stall_timeout"], :onchange => "update_value('image_cache_stall_timeout','image_cache_stall_timeout', 'string')"}
+    %fieldset
+      %legend
+        = t(".ssl_header")
 
-    %label.section-header{ :for => :database_div }= t('.database_header')
-    %div.section{ :id => :database_div }
-      %p
-        %label{ :for => :sql_idle_timeout }= t('.sql_idle_timeout')
-        %input#sql_idle_timeout{:type => "text", :name => "sql_idle_timeout", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["sql_idle_timeout"], :onchange => "update_value('sql_idle_timeout','sql_idle_timeout', 'integer')"}
-      = render_instance_selector("database", :database_instance, t('.database_instance'), "database_instance", @proposal)
+      = select_field %w(api protocol), :collection => :api_protocols_for_glance, "data-sslprefix" => "ssl", "data-sslcert" => "/etc/glance/ssl/certs/signing_cert.pem", "data-sslkey" => "/etc/glance/ssl/private/signing_key.pem"
 
-    %label.section-header{ :for => :logging_div }= t('.logging_header')
-    %div.section{ :id => :logging_div }
-      %p
-        %label{ :for => :verbose }= t('.verbose')
-        = select_tag :verbose, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["verbose"].to_s), :onchange => "update_value('verbose', 'verbose', 'boolean')"
-      %p
-        %label{ :for => :use_syslog }= t('.use_syslog')
-        = select_tag :use_syslog, options_for_select([['true','true'], ['false', 'false']], @proposal.raw_data['attributes'][@proposal.barclamp]["use_syslog"].to_s), :onchange => "update_value('use_syslog', 'use_syslog', 'boolean')"
-    = render 'barclamp/git/pfsdeps.html.haml'
-:javascript
-  function toggle_store() {
-    var choice = $("select#default_store").val();
-    $('div#filesystem_store_div').toggle(choice == 'file');
-    $('div#swift_store_div').toggle(choice == 'swift');
-    $('div#rados_store_div').toggle(choice == 'rbd');
-  };
+      #ssl_container
+        = boolean_field %w(ssl generate_certs)
+        = string_field %w(ssl certfile)
+        = string_field %w(ssl keyfile)
+        = boolean_field %w(ssl insecure)
+        = boolean_field %w(ssl cert_required), "data-enabler" => "true", "data-enabler-target" => "#ssl_ca_certs"
+        = string_field %w(ssl ca_certs)
 
-  function toggle_protocol() {
-    if ($('#protocol option:selected').attr('value') == 'https') {
-      $('#ssl_div').show();
-    } else {
-      $('#ssl_div').hide();
-    }
-  };
+    %fieldset
+      %legend
+        = t(".api_header")
 
-  function toggle_ssl_cert_required() {
-    if ($('#ssl_cert_required option:selected').attr('value') == 'true') {
-      $('#ssl_ca_certs').removeAttr('disabled');
-    } else {
-      $('#ssl_ca_certs').attr('disabled', 'disabled');
-    }
-  };
+      = boolean_field %w(api bind_open_address)
 
-  function toggle_ssl_generate_certs_full(init) {
-    if ($('#ssl_generate_certs option:selected').attr('value') == 'true') {
-      $('#ssl_certfile').attr('disabled', 'disabled');
-      $('#ssl_keyfile').attr('disabled', 'disabled');
-      $('#ssl_insecure').attr('disabled', 'disabled');
+    %fieldset
+      %legend
+        = t(".cache_header")
 
-      var value = '/etc/glance/ssl/certs/signing_cert.pem'
-      $('#ssl_certfile').attr('value', value);
-      update_value_direct('ssl/certfile', value, 'string');
-      value = '/etc/glance/ssl/private/signing_key.pem'
-      $('#ssl_keyfile').attr('value', value);
-      update_value_direct('ssl/keyfile', value, 'string');
-      $('#ssl_insecure').attr('value', 'true');
-      update_value_direct('ssl/insecure', 'true', 'boolean');
-    } else {
-      $('#ssl_certfile').removeAttr('disabled');
-      $('#ssl_keyfile').removeAttr('disabled');
-      $('#ssl_insecure').removeAttr('disabled');
+      = boolean_field :enable_caching
+      = boolean_field :use_cachemanagement
+      = string_field :image_cache_datadir
+      = integer_field :image_cache_grace_period
+      = integer_field :image_cache_stall_timeout
 
-      // No need to change the certfile/keyfile values
-      if (!init) {
-        // Reset insecure to false, to not leave it as true by accident.
-        // We do not change insecure on page loading, though!
-        $('#ssl_insecure').attr('value', 'false');
-        update_value_direct('ssl/insecure', 'false', 'boolean');
-      }
-    }
-  };
+    %fieldset
+      %legend
+        = t(".database_header")
 
-  function toggle_ssl_generate_certs() {
-    toggle_ssl_generate_certs_full(false);
-  };
+      = integer_field :sql_idle_timeout
+      = instance_field :database
 
-  $(document).ready(function () {
-    toggle_store();
-    toggle_protocol();
-    toggle_ssl_cert_required();
-    toggle_ssl_generate_certs_full(true);
-  });
+    %fieldset
+      %legend
+        = t(".logging_header")
 
-  $('#default_store').change(toggle_store);
-  $('#protocol').change(toggle_protocol);
-  $('#ssl_cert_required').change(toggle_ssl_cert_required);
-  $('#ssl_generate_certs').change(toggle_ssl_generate_certs);
+      = boolean_field :verbose
+      = boolean_field :use_syslog
+
+    = render "barclamp/git/pfsdeps"

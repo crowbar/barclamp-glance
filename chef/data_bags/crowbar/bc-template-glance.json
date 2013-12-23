@@ -3,7 +3,7 @@
   "description": "Glance service (image registry and delivery service) for the cloud",
   "attributes": {
     "glance": {
-      "verbose": false,
+      "verbose": true,
       "debug": false,
       "images": [
         "http://|ADMINWEB|/files/ami/ubuntu-12.04-server-cloudimg-amd64.tar.gz"

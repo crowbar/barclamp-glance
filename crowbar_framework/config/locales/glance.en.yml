@@ -37,4 +37,3 @@ en:
         database_instance: Database Instance
         logging_header: Logging
         verbose: Verbose
-        use_syslog: Use Syslog

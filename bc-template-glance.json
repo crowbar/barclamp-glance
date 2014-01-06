@@ -3,56 +3,26 @@
   "description": "Glance service (image registry and delivery service) for the cloud",
   "attributes": {
     "glance": {
+      "verbose": false,
+      "debug": false,
       "images": [
-        "http://|ADMINWEB|/files/ami/ubuntu-11.04-server-cloudimg-amd64.tar.gz"
+        "http://|ADMINWEB|/files/ami/ubuntu-12.04-server-cloudimg-amd64.tar.gz"
       ],
       "api": {
-        "verbose": true,
-        "debug": false,
+        "protocol": "http",
         "bind_open_address": true,
-        "bind_port": 9292,
-        "log_file": "/var/log/glance/api.log",
-        "config_file": "/etc/glance/glance-api.conf",
-        "paste_ini": "/etc/glance/glance-api-paste.ini"
+        "bind_port": 9292
       },
       "registry": {
-        "verbose": true,
-        "debug": false,
-        "bind_open_address": true,
-        "bind_port": 9191,
-        "log_file": "/var/log/glance/registry.log",
-        "config_file": "/etc/glance/glance-registry.conf",
-        "paste_ini": "/etc/glance/glance-registry-paste.ini"
+        "bind_port": 9191
       },
-      "prefetcher": {
-        "verbose": true,
-        "debug": false,
-        "log_file": "/var/log/glance/prefetcher.log",
-        "config_file": "/etc/glance/glance-prefetcher.conf"
-      },
-      "pruner": {
-        "verbose": true,
-        "debug": false,
-        "log_file": "/var/log/glance/pruner.log",
-        "config_file": "/etc/glance/glance-pruner.conf"
-      },
-      "reaper": {
-        "verbose": true,
-        "debug": false,
-        "log_file": "/var/log/glance/reaper.log",
-        "config_file": "/etc/glance/glance-reaper.conf"
-      },
-      "scrubber": {
-        "verbose": true,
-        "debug": false,
-        "log_file": "/var/log/glance/scrubber.log",
-        "config_file": "/etc/glance/glance-scrubber.conf"
-      },
-      "cache": {
-        "verbose": true,
-        "debug": false,
-        "log_file": "/var/log/glance/scrubber.log",
-        "config_file": "/etc/glance/glance-scrubber.conf"
+      "ssl": {
+        "certfile": "/etc/glance/ssl/certs/signing_cert.pem",
+        "keyfile": "/etc/glance/ssl/private/signing_key.pem",
+        "generate_certs": false,
+        "insecure": false,
+        "cert_required": false,
+        "ca_certs": "/etc/glance/ssl/certs/ca.pem"
       },
       "enable_caching": false,
       "use_cachemanagement": false,
@@ -60,24 +30,56 @@
       "image_cache_stall_timeout": 86400,
       "image_cache_grace_period": 3600,
       "image_cache_max_size": 10737418240,
+      "gitrepo": "http://github.com/openstack/glance.git",
+      "git_instance": "",
+      "git_refspec": "stable/grizzly",
+      "use_gitrepo": false,
+      "use_virtualenv": true,
+      "use_pip_cache": true,
+      "use_gitbarclamp": true,
+      "pfs_deps": [
+        "python-greenlet",
+        "python-sqlalchemy",
+        "python-eventlet",
+        "python-pastedeploy",
+        "python-routes",
+        "python-webob",
+        "python-boto",
+        "python-migrate",
+        "python-httplib2",
+        "python-kombu",
+        "python-crypto",
+        "python-iso8601",
+        "python-lxml",
+        "python-paste",
+        "python-passlib",
+        "pip://wsgiref",
+        "pip://argparse",
+        "pip://jsonschema",
+        "pip://warlock<2",
+        "pip://python-swiftclient>=1,<2",
+        "pip://python-glanceclient",
+        "pip://python-keystoneclient>=0.2,<0.3"
+      ],
       "use_syslog": false,
       "notifier_strategy": "noop",
       "default_store": "file",
       "filesystem_store_datadir": "/var/lib/glance/images",
-      "swift_store_auth_address": "127.0.0.1:8080/v1.0",
-      "swift_store_user": "glance_user",
-      "swift_store_key": "glance_key",
-      "swift_store_container": "glance",
-      "swift_store_create_container_on_put": false,
-      "pid_directory": "/var/run/glance",
-      "working_directory": "/var/lib/glance",
+      "swift": {
+        "store_container": "glance",
+        "store_create_container_on_put": true
+      },
+      "rbd": {
+        "store_ceph_conf": "/etc/ceph/ceph.conf",
+        "store_user": "glance",
+        "store_pool": "images"
+      },
       "sql_idle_timeout": 3600,
       "use_keystone": true,
       "keystone_instance": "none",
       "service_user": "glance",
-      "database": "mysql",
-      "mysql_instance": "none",
-      "sqlite_connection": "sqlite:////var/lib/glance/glance.sqlite"
+      "database_instance": "none",
+      "rabbitmq_instance": "none"
     }
   },
   "roles": {
@@ -86,6 +88,7 @@
   "deployment": {
     "glance": {
       "crowbar-revision": 0,
+      "schema-revision": 1,
       "element_states": {
         "glance-server": [ "readying", "ready", "applying" ]
       },
@@ -103,4 +106,3 @@
     }
   }
 }
-

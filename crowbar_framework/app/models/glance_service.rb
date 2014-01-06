@@ -1,28 +1,38 @@
-# Copyright 2012, Dell 
-# 
-# Licensed under the Apache License, Version 2.0 (the "License"); 
-# you may not use this file except in compliance with the License. 
-# You may obtain a copy of the License at 
-# 
-#  http://www.apache.org/licenses/LICENSE-2.0 
-# 
-# Unless required by applicable law or agreed to in writing, software 
-# distributed under the License is distributed on an "AS IS" BASIS, 
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-# See the License for the specific language governing permissions and 
-# limitations under the License. 
-# 
+# Copyright 2011, Dell
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 
 class GlanceService < ServiceObject
 
-  def proposal_dependencies(prop_config)
+  def initialize(thelogger)
+    @bc_name = "glance"
+    @logger = thelogger
+  end
+
+# Turn off multi proposal support till it really works and people ask for it.
+  def self.allow_multiple_proposals?
+    false
+  end
+
+  def proposal_dependencies(role)
     answer = []
-    hash = prop_config.config_hash
-    if hash["glance"]["database"] == "mysql"
-      answer << { "barclamp" => "mysql", "inst" => hash["glance"]["mysql_instance"] }
+    answer << { "barclamp" => "database", "inst" => role.default_attributes["glance"]["database_instance"] }
+    if role.default_attributes["glance"]["use_keystone"]
+      answer << { "barclamp" => "keystone", "inst" => role.default_attributes["glance"]["keystone_instance"] }
     end
-    if hash["glance"]["use_keystone"]
-      answer << { "barclamp" => "keystone", "inst" => hash["glance"]["keystone_instance"] }
+    if role.default_attributes[@bc_name]["use_gitrepo"]
+      answer << { "barclamp" => "git", "inst" => role.default_attributes[@bc_name]["git_instance"] }
     end
     answer
   end
@@ -37,25 +47,56 @@ class GlanceService < ServiceObject
       add_role_to_instance_and_node(nodes[0].name, base.name, "glance-server")
     end
 
-    hash = base.current_config.config_hash
-    hash["glance"]["mysql_instance"] = ""
+    base["attributes"][@bc_name]["git_instance"] = ""
     begin
-      mysql = Barclamp.find_by_name("mysql")
-      mysqls = mysql.active_proposals
-      if mysqls.empty?
+      gitService = GitService.new(@logger)
+      gits = gitService.list_active[1]
+      if gits.empty?
         # No actives, look for proposals
-        mysqls = mysql.proposals
+        gits = gitService.proposals[1]
       end
-      unless mysqls.empty?
-        hash["glance"]["mysql_instance"] = mysqls[0].name
+      unless gits.empty?
+        base["attributes"][@bc_name]["git_instance"] = gits[0]
       end
-      hash["glance"]["database"] = "mysql"
     rescue
-      hash["glance"]["database"] = "mysql"
-      @logger.info("Glance create_proposal: no mysql found")
+      @logger.info("#{@bc_name} create_proposal: no git found")
     end
-    
-    hash["glance"]["keystone_instance"] = ""
+
+    base["attributes"]["glance"]["database_instance"] = ""
+    begin
+      databaseService = DatabaseService.new(@logger)
+      dbs = databaseService.list_active[1]
+      if dbs.empty?
+        # No actives, look for proposals
+        dbs = databaseService.proposals[1]
+      end
+      unless dbs.empty?
+        base["attributes"]["glance"]["database_instance"] = dbs[0]
+      else
+        @logger.info("Glance create_proposal: no database found")
+      end
+    rescue
+      @logger.info("Glance create_proposal: no database found")
+    end
+
+    if base["attributes"]["glance"]["database_instance"] == ""
+      raise(I18n.t('model.service.dependency_missing', :name => @bc_name, :dependson => "database"))
+    end
+
+    base["attributes"]["glance"]["rabbitmq_instance"] = ""
+    begin
+      rabbitmqService = RabbitmqService.new(@logger)
+      rabbitmqs = rabbitmqService.list_active[1]
+      if rabbitmqs.empty?
+        # No actives, look for proposals
+        rabbitmqs = rabbitmqService.proposals[1]
+      end
+      base["attributes"]["glance"]["rabbitmq_instance"] = rabbitmqs[0] unless rabbitmqs.empty?
+    rescue
+      @logger.info("Glance create_proposal: no rabbitmq found")
+    end
+
+    base["attributes"]["glance"]["keystone_instance"] = ""
     begin
       keystone = Barclamp.find_by_name("keystone")
       keystones = keystone.active_proposals
@@ -73,17 +114,25 @@ class GlanceService < ServiceObject
       @logger.info("Glance create_proposal: no keystone found")
       hash["glance"]["use_keystone"] = false
     end
-    hash["glance"]["service_password"] = '%012d' % rand(1e12)
-    hash["glance"]["api"]["bind_open_address"] = true
-    hash["glance"]["registry"]["bind_open_address"] = true
-
-    base.current_config.config_hash = hash
+    base["attributes"]["glance"]["service_password"] = '%012d' % rand(1e12)
 
     @logger.debug("Glance create_proposal: exiting")
     base
   end
 
-  def apply_role_pre_chef_call(old_config, new_config, all_nodes)
+  def validate_proposal_after_save proposal
+    super
+    if proposal["attributes"][@bc_name]["use_gitrepo"]
+      gitService = GitService.new(@logger)
+      gits = gitService.list_active[1].to_a
+      if not gits.include?proposal["attributes"][@bc_name]["git_instance"]
+        raise(I18n.t('model.service.dependency_missing', :name => @bc_name, :dependson => "git"))
+      end
+    end
+  end
+
+
+  def apply_role_pre_chef_call(old_role, role, all_nodes)
     @logger.debug("Glance apply_role_pre_chef_call: entering #{all_nodes.inspect}")
     return if all_nodes.empty?
 
@@ -104,16 +153,14 @@ class GlanceService < ServiceObject
       new_config.config_hash = dep_config
     end
 
-    # Make sure the bind hosts are in the admin network
-    all_nodes.each do |node|
-      admin_address = node.address.addr
-
-      chash = new_config.get_node_config_hash(node)
-      chash[:glance] = {} unless chash[:glance]
-      chash[:glance][:api_bind_host] = admin_address
-      chash[:glance][:registry_bind_host] = admin_address
-      new_config.set_node_config_hash(node, chash)
+    if role.default_attributes["glance"]["api"]["bind_open_address"]
+      net_svc = NetworkService.new @logger
+      tnodes = role.override_attributes["glance"]["elements"]["glance-server"]
+      tnodes.each do |n|
+        net_svc.allocate_ip "default", "public", "host", n
+      end unless tnodes.nil?
     end
+
     @logger.debug("Glance apply_role_pre_chef_call: leaving")
   end
 

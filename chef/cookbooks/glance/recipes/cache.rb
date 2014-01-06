@@ -28,16 +28,9 @@ end
 
 template node[:glance][:cache][:config_file] do
   source "glance-cache.conf.erb"
-  owner node[:glance][:user]
-  group "root"
-  mode 0644
-end
-
-template node[:glance][:prefetcher][:config_file] do
-  source "glance-prefetcher.conf.erb"
-  owner node[:glance][:user]
-  group "root"
-  mode 0644
+  owner "root"
+  group node[:glance][:group]
+  mode 0640
 end
 
 directory "#{node[:glance][:image_cache_datadir]}/prefetching" do
@@ -54,20 +47,6 @@ directory "#{node[:glance][:image_cache_datadir]}/prefetch" do
   action :create
 end
 
-template node[:glance][:pruner][:config_file] do
-  source "glance-pruner.conf.erb"
-  owner node[:glance][:user]
-  group "root"
-  mode 0644
-end
-
-template node[:glance][:reaper][:config_file] do
-  source "glance-reaper.conf.erb"
-  owner node[:glance][:user]
-  group "root"
-  mode 0644
-end
-
 directory "#{node[:glance][:image_cache_datadir]}/invalid" do
   owner node[:glance][:user]
   group "root"
@@ -76,17 +55,6 @@ directory "#{node[:glance][:image_cache_datadir]}/invalid" do
 end
 
 if node[:glance][:enable_caching]
-  template "/etc/cron.d/glance-reaper" do
-    source "glance.cron.erb"
-    owner "root"
-    group "root"
-    mode 0644
-    variables(
-      :glance_min => "5",
-      :glance_hour => "*",
-      :glance_command => "/usr/bin/glance-cache-reaper")
-  end
-
   template "/etc/cron.d/glance-pruner" do
     source "glance.cron.erb"
     owner "root"
@@ -95,6 +63,7 @@ if node[:glance][:enable_caching]
     variables(
       :glance_min => "45",
       :glance_hour => "*",
+      :glance_user => node[:glance][:user],
       :glance_command => "/usr/bin/glance-cache-pruner")
   end
 
@@ -106,15 +75,10 @@ if node[:glance][:enable_caching]
     variables(
       :glance_min => "25",
       :glance_hour => "*",
+      :glance_user => node[:glance][:user],
       :glance_command => "/usr/bin/glance-cache-prefetcher")
   end
-
 else
-
-  file "/etc/cron.d/glance-reaper" do
-    action :delete
-  end
-
   file "/etc/cron.d/glance-pruner" do
     action :delete
   end
@@ -122,6 +86,5 @@ else
   file "/etc/cron.d/glance-prefetcher" do
     action :delete
   end
-
 end
 

@@ -1,6 +1,33 @@
 #!/bin/bash
+keystone_nodes=($(knife_node_find 'roles:keystone-server' FQDN))
+[[ $keystone_nodes ]] || {
+    echo "Could not find keystone"
+    exit 1
+}
 
-apt-get install python-glanceclient
-. .openrc
-keystone endpoint-list |grep glance || \
-    die "Cannot find endpoint for glance in Keystone."
+glance_nodes=($(knife_node_find 'roles:glance-server' FQDN))
+[[ $glance_nodes ]] || {
+    echo "Could not find glance!"
+    exit 1
+}
+
+export OS_USERNAME=admin
+export OS_PASSWORD=crowbar
+export OS_TENANT_NAME=admin
+export OS_AUTH_URL="http://${keystone_nodes[0]}:5000/v2.0"
+
+if [ -f /etc/redhat-release ]; then
+  sudo yum --assumeyes install python-glanceclient
+else
+  sudo apt-get install -y python-glanceclient
+fi
+
+
+for node in "${glance_nodes[@]}"; do
+    if glance image-list |grep -q active; then
+       echo "Glance running on $node"
+    else
+       echo "Glance not running on $node!"
+       exit 1
+    fi
+done

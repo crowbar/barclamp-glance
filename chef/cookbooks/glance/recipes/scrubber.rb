@@ -18,33 +18,11 @@
 # limitations under the License.
 #
 
-if node[:glance][:use_keystone]
-  env_filter = " AND keystone_config_environment:keystone-config-#{node[:glance][:keystone_instance]}"
-  keystones = search(:node, "recipes:keystone\\:\\:server#{env_filter}") || []
-  if keystones.length > 0
-    keystone = keystones[0]
-    keystone = node if keystone.name == node.name
-  else
-    keystone = node
-  end
-
-  keystone_address = keystone.address.addr
-  keystone_token = keystone["keystone"]["service"]["token"]
-  Chef::Log.info("Keystone server found at #{keystone_address}")
-else
-  keystone_address = ""
-  keystone_token = ""
-end
-
 template node[:glance][:scrubber][:config_file] do
   source "glance-scrubber.conf.erb"
   owner node[:glance][:user]
   group "root"
-  mode 0644
-  variables(
-    :keystone_address => keystone_address,
-    :keystone_admin_token => keystone_token
-  )
+  mode 0600
 end
 
 template "/etc/cron.d/glance-scrubber" do
@@ -55,6 +33,7 @@ template "/etc/cron.d/glance-scrubber" do
   variables(
     :glance_min => "1",
     :glance_hour => "*",
+    :glance_user => node[:glance][:user],
     :glance_command => "/usr/bin/glance-scrubber")
 end
 

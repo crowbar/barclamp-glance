@@ -1,0 +1,76 @@
+# Copyright 2013, Dell
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+en:
+  barclamp:
+    glance:
+      edit_attributes: 
+        verbose: Verbose
+        debug: Debug
+        attributes: Attributes
+        backing_type: Backing Type
+        working_directory: Working Directory
+        pid_directory: PID Directory
+        notifier_strategy: Notification Strategy
+        filesystem_store_datadir: Image Store Directory
+        swift_header: Swift
+        swift_store_container: Glance Swift Container
+        swift_store_create_container_on_put: Create Container
+        swift_store_auth_address: Swift Authentication URL
+        swift_store_user: Glance Swift User
+        swift_store_key: Glance Swift Key
+        scrubber_header: Scrubber
+        scrubber_log_file: Log File
+        scrubber_config_file: Config File
+        reaper_header: Reaper
+        reaper_log_file: Log File
+        reaper_config_file: Config File
+        pruner_header: Pruner
+        pruner_log_file: Log File
+        pruner_config_file: Config File
+        prefetcher_header: Prefetcher
+        prefetcher_log_file: Log File
+        prefetcher_config_file: Config File
+        api_header: API
+        api_log_file: Log File
+        api_config_file: Config File
+        api_paste_ini: Paste INI File
+        api_bind_open_address: Bind to All Addresses
+        api_bind_port: Access Port
+        registry_header: Registry
+        registry_log_file: Log File
+        registry_config_file: Config File
+        registry_paste_ini: Paste INI File
+        registry_bind_open_address: Bind to All Addresses
+        registry_bind_port: Access Port
+        cache_header: Caching
+        enable_caching: Enable Caching
+        use_cachemanagement: Turn On Cache Management
+        image_cache_datadir: Directory
+        image_cache_grace_period: Grace Period
+        image_cache_stall_timeout: Stall Timeout
+        database_header: Database
+        database: Database Type
+        sql_idle_timeout: SQL Idle Timeout
+        sqlite_connection: SQLite Connection String
+        mysql_instance: MySQL Instance
+        use_keystone: Use Keystone
+        keystone_instance: Keystone Instance
+        service_user: Service User
+        service_password: Service Password
+        use_syslog: Use Syslog
+      edit_deployment: 
+        deployment: Deployment
+

@@ -177,3 +177,9 @@ if node[:glance][:use_keystone]
     action :add_access
   end
 end
+
+ceph_env_filter = " AND ceph_config_environment:ceph-config-default"
+ceph_servers = search(:node, "roles:ceph-osd#{ceph_env_filter}") || []
+if ceph_servers.length > 0
+  include_recipe "ceph::glance"
+end

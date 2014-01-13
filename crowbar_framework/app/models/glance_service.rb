@@ -28,6 +28,9 @@ class GlanceService < ServiceObject
   def proposal_dependencies(role)
     answer = []
     answer << { "barclamp" => "database", "inst" => role.default_attributes["glance"]["database_instance"] }
+    if role.default_attributes["glance"]["notifier_strategy"] == "rabbit"
+      answer << { "barclamp" => "rabbitmq", "inst" => role.default_attributes["glance"]["rabbitmq_instance"] }
+    end
     if role.default_attributes["glance"]["use_keystone"]
       answer << { "barclamp" => "keystone", "inst" => role.default_attributes["glance"]["keystone_instance"] }
     end
@@ -55,6 +58,11 @@ class GlanceService < ServiceObject
     base["attributes"][@bc_name]["rabbitmq_instance"] = find_dep_proposal("rabbitmq", true)
     base["attributes"][@bc_name]["keystone_instance"] = find_dep_proposal("keystone", true)
 
+    if base["attributes"][@bc_name]["rabbitmq_instance"].blank?
+      base["attributes"]["glance"]["notifier_strategy"] = "noop"
+    else
+      base["attributes"]["glance"]["notifier_strategy"] = "rabbit"
+    end
     if base["attributes"][@bc_name]["keystone_instance"].blank?
       base["attributes"]["glance"]["use_keystone"] = false
     end

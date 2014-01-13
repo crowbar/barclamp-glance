@@ -16,8 +16,8 @@
 class GlanceService < ServiceObject
 
   def initialize(thelogger)
+    super(thelogger)
     @bc_name = "glance"
-    @logger = thelogger
   end
 
 # Turn off multi proposal support till it really works and people ask for it.
@@ -124,14 +124,17 @@ class GlanceService < ServiceObject
   end
 
   def validate_proposal_after_save proposal
-    super
+    validate_one_for_role proposal, "glance-server"
+
     if proposal["attributes"][@bc_name]["use_gitrepo"]
       gitService = GitService.new(@logger)
       gits = gitService.list_active[1].to_a
       if not gits.include?proposal["attributes"][@bc_name]["git_instance"]
-        raise(I18n.t('model.service.dependency_missing', :name => @bc_name, :dependson => "git"))
+        validation_error(I18n.t('model.service.dependency_missing', :name => @bc_name, :dependson => "git"))
       end
     end
+
+    super
   end
 
 

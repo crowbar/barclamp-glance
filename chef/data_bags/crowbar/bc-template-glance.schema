@@ -74,7 +74,6 @@
               }
             },
             "sql_idle_timeout": { "type": "int", "required": true },
-            "use_keystone": { "type": "bool", "required": true },
             "keystone_instance": { "type": "str", "required": true },
             "service_user": { "type": "str", "required": true },
             "service_password": { "type": "str" },

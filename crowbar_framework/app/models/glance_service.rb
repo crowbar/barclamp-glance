@@ -31,9 +31,7 @@ class GlanceService < ServiceObject
     if role.default_attributes["glance"]["notifier_strategy"] == "rabbit"
       answer << { "barclamp" => "rabbitmq", "inst" => role.default_attributes["glance"]["rabbitmq_instance"] }
     end
-    if role.default_attributes["glance"]["use_keystone"]
-      answer << { "barclamp" => "keystone", "inst" => role.default_attributes["glance"]["keystone_instance"] }
-    end
+    answer << { "barclamp" => "keystone", "inst" => role.default_attributes["glance"]["keystone_instance"] }
     if role.default_attributes[@bc_name]["use_gitrepo"]
       answer << { "barclamp" => "git", "inst" => role.default_attributes[@bc_name]["git_instance"] }
     end
@@ -56,15 +54,12 @@ class GlanceService < ServiceObject
     base["attributes"][@bc_name]["git_instance"] = find_dep_proposal("git", true)
     base["attributes"][@bc_name]["database_instance"] = find_dep_proposal("database")
     base["attributes"][@bc_name]["rabbitmq_instance"] = find_dep_proposal("rabbitmq", true)
-    base["attributes"][@bc_name]["keystone_instance"] = find_dep_proposal("keystone", true)
+    base["attributes"][@bc_name]["keystone_instance"] = find_dep_proposal("keystone")
 
     if base["attributes"][@bc_name]["rabbitmq_instance"].blank?
       base["attributes"]["glance"]["notifier_strategy"] = "noop"
     else
       base["attributes"]["glance"]["notifier_strategy"] = "rabbit"
-    end
-    if base["attributes"][@bc_name]["keystone_instance"].blank?
-      base["attributes"]["glance"]["use_keystone"] = false
     end
 
     base["attributes"]["glance"]["service_password"] = '%012d' % rand(1e12)

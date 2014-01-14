@@ -16,8 +16,8 @@
 class GlanceService < ServiceObject
 
   def initialize(thelogger)
+    super(thelogger)
     @bc_name = "glance"
-    @logger = thelogger
   end
 
 # Turn off multi proposal support till it really works and people ask for it.
@@ -28,6 +28,9 @@ class GlanceService < ServiceObject
   def proposal_dependencies(role)
     answer = []
     answer << { "barclamp" => "database", "inst" => role.default_attributes["glance"]["database_instance"] }
+    if role.default_attributes["glance"]["notifier_strategy"] == "rabbit"
+      answer << { "barclamp" => "rabbitmq", "inst" => role.default_attributes["glance"]["rabbitmq_instance"] }
+    end
     if role.default_attributes["glance"]["use_keystone"]
       answer << { "barclamp" => "keystone", "inst" => role.default_attributes["glance"]["keystone_instance"] }
     end
@@ -50,73 +53,20 @@ class GlanceService < ServiceObject
       }
     end
 
-    base["attributes"][@bc_name]["git_instance"] = ""
-    begin
-      gitService = GitService.new(@logger)
-      gits = gitService.list_active[1]
-      if gits.empty?
-        # No actives, look for proposals
-        gits = gitService.proposals[1]
-      end
-      unless gits.empty?
-        base["attributes"][@bc_name]["git_instance"] = gits[0]
-      end
-    rescue
-      @logger.info("#{@bc_name} create_proposal: no git found")
-    end
+    base["attributes"][@bc_name]["git_instance"] = find_dep_proposal("git", true)
+    base["attributes"][@bc_name]["database_instance"] = find_dep_proposal("database")
+    base["attributes"][@bc_name]["rabbitmq_instance"] = find_dep_proposal("rabbitmq", true)
+    base["attributes"][@bc_name]["keystone_instance"] = find_dep_proposal("keystone", true)
 
-    base["attributes"]["glance"]["database_instance"] = ""
-    begin
-      databaseService = DatabaseService.new(@logger)
-      dbs = databaseService.list_active[1]
-      if dbs.empty?
-        # No actives, look for proposals
-        dbs = databaseService.proposals[1]
-      end
-      unless dbs.empty?
-        base["attributes"]["glance"]["database_instance"] = dbs[0]
-      else
-        @logger.info("Glance create_proposal: no database found")
-      end
-    rescue
-      @logger.info("Glance create_proposal: no database found")
+    if base["attributes"][@bc_name]["rabbitmq_instance"].blank?
+      base["attributes"]["glance"]["notifier_strategy"] = "noop"
+    else
+      base["attributes"]["glance"]["notifier_strategy"] = "rabbit"
     end
-
-    if base["attributes"]["glance"]["database_instance"] == ""
-      raise(I18n.t('model.service.dependency_missing', :name => @bc_name, :dependson => "database"))
-    end
-
-    base["attributes"]["glance"]["rabbitmq_instance"] = ""
-    begin
-      rabbitmqService = RabbitmqService.new(@logger)
-      rabbitmqs = rabbitmqService.list_active[1]
-      if rabbitmqs.empty?
-        # No actives, look for proposals
-        rabbitmqs = rabbitmqService.proposals[1]
-      end
-      base["attributes"]["glance"]["rabbitmq_instance"] = rabbitmqs[0] unless rabbitmqs.empty?
-    rescue
-      @logger.info("Glance create_proposal: no rabbitmq found")
-    end
-
-    base["attributes"]["glance"]["keystone_instance"] = ""
-    begin
-      keystoneService = KeystoneService.new(@logger)
-      keystones = keystoneService.list_active[1]
-      if keystones.empty?
-        # No actives, look for proposals
-        keystones = keystoneService.proposals[1]
-      end
-      if keystones.empty?
-        base["attributes"]["glance"]["use_keystone"] = false
-      else
-        base["attributes"]["glance"]["keystone_instance"] = keystones[0]
-        base["attributes"]["glance"]["use_keystone"] = true
-      end
-    rescue
-      @logger.info("Glance create_proposal: no keystone found")
+    if base["attributes"][@bc_name]["keystone_instance"].blank?
       base["attributes"]["glance"]["use_keystone"] = false
     end
+
     base["attributes"]["glance"]["service_password"] = '%012d' % rand(1e12)
 
     @logger.debug("Glance create_proposal: exiting")
@@ -124,14 +74,13 @@ class GlanceService < ServiceObject
   end
 
   def validate_proposal_after_save proposal
-    super
+    validate_one_for_role proposal, "glance-server"
+
     if proposal["attributes"][@bc_name]["use_gitrepo"]
-      gitService = GitService.new(@logger)
-      gits = gitService.list_active[1].to_a
-      if not gits.include?proposal["attributes"][@bc_name]["git_instance"]
-        raise(I18n.t('model.service.dependency_missing', :name => @bc_name, :dependson => "git"))
-      end
+      validate_dep_proposal_is_active "git", proposal["attributes"][@bc_name]["git_instance"]
     end
+
+    super
   end
 
 

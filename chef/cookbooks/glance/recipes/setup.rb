@@ -15,27 +15,20 @@ directory "#{node[:glance][:working_directory]}/raw_images" do
   action :create
 end
 
-if node[:glance][:use_keystone]
-  env_filter = " AND keystone_config_environment:keystone-config-#{node[:glance][:keystone_instance]}"
-  keystones = search(:node, "recipes:keystone\\:\\:server#{env_filter}") || []
-  if keystones.length > 0
-    keystone = keystones[0]
-    keystone = node if keystone.name == node.name
-  else
-    keystone = node
-  end
-
-  glance_args = "--os-username #{keystone["keystone"]["admin"]["username"]}"
-  glance_args = "#{glance_args} --os-password #{keystone["keystone"]["admin"]["password"]}"
-  glance_args = "#{glance_args} --os-tenant-name #{keystone["keystone"]["admin"]["tenant"]}"
-  glance_args = "#{glance_args} --os-auth-url #{keystone["keystone"]["api"]["protocol"]}://#{keystone[:fqdn]}:#{keystone["keystone"]["api"]["api_port"]}/v2.0"
-  glance_args = "#{glance_args} --os-endpoint-type internalURL"
+env_filter = " AND keystone_config_environment:keystone-config-#{node[:glance][:keystone_instance]}"
+keystones = search(:node, "recipes:keystone\\:\\:server#{env_filter}") || []
+if keystones.length > 0
+  keystone = keystones[0]
+  keystone = node if keystone.name == node.name
 else
-  my_ipaddress = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
-  port = node["glance"]["api"]["bind_port"]
-
-  glance_args = "-H #{my_ipaddress} -p #{port}"
+  keystone = node
 end
+
+glance_args = "--os-username #{keystone["keystone"]["admin"]["username"]}"
+glance_args = "#{glance_args} --os-password #{keystone["keystone"]["admin"]["password"]}"
+glance_args = "#{glance_args} --os-tenant-name #{keystone["keystone"]["admin"]["tenant"]}"
+glance_args = "#{glance_args} --os-auth-url #{keystone["keystone"]["api"]["protocol"]}://#{keystone[:fqdn]}:#{keystone["keystone"]["api"]["api_port"]}/v2.0"
+glance_args = "#{glance_args} --os-endpoint-type internalURL"
 
 #
 # Download and install AMIs

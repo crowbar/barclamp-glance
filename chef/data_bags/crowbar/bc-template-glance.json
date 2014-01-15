@@ -55,7 +55,6 @@
         "store_pool": "images"
       },
       "sql_idle_timeout": 3600,
-      "use_keystone": true,
       "keystone_instance": "none",
       "service_user": "glance",
       "database_instance": "none",
@@ -65,7 +64,7 @@
   "deployment": {
     "glance": {
       "crowbar-revision": 0,
-      "schema-revision": 2,
+      "schema-revision": 3,
       "element_states": {
         "glance-server": [ "readying", "ready", "applying" ]
       },

@@ -6,7 +6,6 @@
 
   .panel-body
     = instance_field :rabbitmq
-    = boolean_field :use_keystone
     = instance_field :keystone
     = select_field :notifier_strategy, :collection => :notifier_strategies_for_glance
 

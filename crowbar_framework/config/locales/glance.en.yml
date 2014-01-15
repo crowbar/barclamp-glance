@@ -3,7 +3,6 @@ en:
     glance:
       edit_attributes:
         rabbitmq_instance: RabbitMQ
-        use_keystone: Use Keystone
         keystone_instance: Keystone Instance
         notifier_strategy: Notification Strategy
         store_header: Image Storage

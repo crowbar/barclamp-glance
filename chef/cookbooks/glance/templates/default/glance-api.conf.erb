@@ -446,12 +446,10 @@ admin_password = <%= @keystone_service_password %>
 # service name removed. For example, if your paste section name is
 # [pipeline:glance-api-keystone], you would configure the flavor below
 # as 'keystone'.
-<% if node[:glance][:use_keystone] and node[:glance][:enable_caching] and node[:glance][:use_cachemanagement] -%>
+<% if node[:glance][:enable_caching] and node[:glance][:use_cachemanagement] -%>
 flavor = keystone+cachemanagement
-<% elsif node[:glance][:use_keystone] and node[:glance][:enable_caching] -%>
+<% elsif node[:glance][:enable_caching] -%>
 flavor = keystone+caching
-<% elsif node[:glance][:use_keystone] -%>
+<% else -%>
 flavor = keystone
-<% elsif node[:glance][:enable_caching] and node[:glance][:use_cachemanagement] -%>
-flavor = cachemanagement
 <% end -%>

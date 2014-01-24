@@ -34,7 +34,6 @@ crowbar:
 
 debs:
   pkgs:
-    - sqlite3
     - glance
     - python-glance
     - python-keystone
@@ -50,8 +49,9 @@ rpms:
   pkgs:
     - openstack-glance
     - python-keystone
+    - python-keystoneclient
     - python-glance
-    - sqlite3
+    - python-glanceclient
 
 extra_files:
   - http://cloud-images.ubuntu.com/releases/precise/release/ubuntu-12.04-server-cloudimg-amd64.tar.gz ami

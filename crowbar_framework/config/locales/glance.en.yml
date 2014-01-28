@@ -35,4 +35,4 @@ en:
         sql_idle_timeout: SQL Idle Timeout
         database_instance: Database Instance
         logging_header: Logging
-        verbose: Verbose
+        verbose: Verbose Logging

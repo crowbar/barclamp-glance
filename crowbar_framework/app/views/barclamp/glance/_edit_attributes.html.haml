@@ -7,6 +7,7 @@
   .panel-body
     = instance_field :rabbitmq
     = instance_field :keystone
+    = boolean_field :verbose
     = select_field :notifier_strategy, :collection => :notifier_strategies_for_glance
 
     %fieldset
@@ -62,10 +63,5 @@
       = integer_field :sql_idle_timeout
       = instance_field :database
 
-    %fieldset
-      %legend
-        = t(".logging_header")
-
-      = boolean_field :verbose
 
     = render "barclamp/git/pfsdeps"

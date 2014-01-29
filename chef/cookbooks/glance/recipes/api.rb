@@ -16,14 +16,7 @@ if node.platform == "ubuntu"
  package "qemu-utils"
 end
 
-env_filter = " AND keystone_config_environment:keystone-config-#{node[:glance][:keystone_instance]}"
-keystones = search(:node, "recipes:keystone\\:\\:server#{env_filter}") || []
-if keystones.length > 0
-  keystone = keystones.first
-  keystone = node if keystone.name == node.name
-else
-  keystone = node
-end
+keystone = get_instance('roles:keystone-server')
 
 keystone_host = keystone[:fqdn]
 keystone_protocol = keystone["keystone"]["api"]["protocol"]
@@ -101,14 +94,7 @@ if node[:glance][:api][:protocol] == 'https'
 end
 
 if node[:glance][:notifier_strategy] != "noop"
-  rabbitmq_env_filter = " AND rabbitmq_config_environment:rabbitmq-config-#{node[:glance][:rabbitmq_instance]}"
-  rabbits = search(:node, "roles:rabbitmq-server#{rabbitmq_env_filter}") || []
-  if rabbits.length > 0
-    rabbit = rabbits[0]
-    rabbit = node if rabbit.name == node.name
-  else
-    rabbit = node
-  end
+  rabbit = get_instance('roles:rabbitmq-server')
   rabbit_address = Chef::Recipe::Barclamp::Inventory.get_network_by_type(rabbit, "admin").address
 
   rabbit_settings = {

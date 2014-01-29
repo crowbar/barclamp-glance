@@ -18,7 +18,7 @@
 #
 
 module GlanceBarclampHelper
-  def glance_role_contraints
+  def glance_role_constraints
     {
       "glance-server" => {
         "unique" => false,

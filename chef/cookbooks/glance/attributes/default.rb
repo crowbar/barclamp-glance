@@ -30,6 +30,8 @@ end
 default[:glance][:verbose] = "False"
 default[:glance][:debug] = "False"
 
+default[:glance][:config_dir] = "/etc/glance"
+
 default[:glance][:api][:protocol] = "http"
 default[:glance][:api][:bind_host] = ipaddress
 default[:glance][:api][:bind_port] = "9292"

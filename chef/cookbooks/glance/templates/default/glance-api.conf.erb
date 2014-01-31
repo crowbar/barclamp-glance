@@ -106,7 +106,7 @@ workers = <%= [node["cpu"]["total"], 2, 4].sort[1] %>
 # Directory to use for lock files. Default to a temp directory
 # (string value). This setting needs to be the same for both
 # glance-scrubber and glance-api.
-lock_path=/var/lock/glance
+lock_path=/var/run/glance
 #
 # Property Protections config file
 # This file contains the rules for property protections and the roles

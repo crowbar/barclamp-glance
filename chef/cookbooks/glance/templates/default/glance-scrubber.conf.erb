@@ -43,7 +43,7 @@ registry_port = <%= node[:glance][:registry][:bind_port] %>
 # Directory to use for lock files. Default to a temp directory
 # (string value). This setting needs to be the same for both
 # glance-scrubber and glance-api.
-lock_path=/var/lock/glance
+lock_path=/var/run/glance
 
 # ================= Security Options ==========================
 

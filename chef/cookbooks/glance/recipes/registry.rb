@@ -67,22 +67,6 @@ template node[:glance][:registry][:config_file] do
   )
 end
 
-bash "Set glance version control" do
-  user node[:glance][:user]
-  group node[:glance][:group]
-  code "exit 0"
-  notifies :run, "bash[Sync glance db]", :immediately
-  only_if "#{venv_prefix}glance-manage version_control 0", :user => node[:glance][:user], :group => node[:glance][:group]
-  action :run
-end
-
-bash "Sync glance db" do
-  user node[:glance][:user]
-  group node[:glance][:group]
-  code "#{venv_prefix}glance-manage db_sync"
-  action :nothing
-end
-
 glance_service "registry"
 
 node[:glance][:monitor][:svcs] << ["glance-registry"]

@@ -139,6 +139,13 @@ bash "Sync glance db" do
   user node[:glance][:user]
   group node[:glance][:group]
   code "#{venv_prefix}glance-manage db_sync"
+  if %w(redhat centos suse).include?(node.platform)
+    notifies :restart, "service[openstack-glance-api]", :immediately
+    notifies :restart, "service[openstack-glance-registry]", :immediately
+  else
+    notifies :restart, "service[glance-api]", :immediately
+    notifies :restart, "service[glance-registry]", :immediately
+  end  
   action :nothing
 end
 

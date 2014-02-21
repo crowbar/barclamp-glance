@@ -19,13 +19,8 @@
 # limitations under the License.
 #
 
-unless platform == "suse"
-  override[:glance][:user]="glance"
-  override[:glance][:group]="glance"
-else
-  override[:glance][:user]="openstack-glance"
-  override[:glance][:group]="openstack-glance"
-end
+override[:glance][:user]="glance"
+override[:glance][:group]="glance"
 
 default[:glance][:verbose] = "False"
 default[:glance][:debug] = "False"

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 define :glance_service do
 
   short_name    = "#{params[:name]}"

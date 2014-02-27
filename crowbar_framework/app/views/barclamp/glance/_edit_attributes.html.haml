@@ -1,5 +1,3 @@
-- register_javascripts "barclamps/glance/form"
-
 = attributes_for @proposal do
   .panel-sub
     = header @dep_raw, true
@@ -7,13 +5,13 @@
   .panel-body
     = instance_field :rabbitmq
     = instance_field :keystone
-    = select_field :notifier_strategy, :collection => :notifier_strategies_for_glance
+    = select_field :notifier_strategy, collection: :notifier_strategies_for_glance
 
     %fieldset
       %legend
         = t(".store_header")
 
-      = select_field :default_store, :collection => :default_stores_for_glance
+      = select_field :default_store, collection: :default_stores_for_glance, data: { showit: "file;swift;rbd", showit_target: "#file_container;#swift_container;#rbd_container", showit_direct: "true" }
 
       #file_container
         = string_field :filesystem_store_datadir
@@ -29,14 +27,14 @@
       %legend
         = t(".ssl_header")
 
-      = select_field %w(api protocol), :collection => :api_protocols_for_glance, "data-sslprefix" => "ssl", "data-sslcert" => "/etc/glance/ssl/certs/signing_cert.pem", "data-sslkey" => "/etc/glance/ssl/private/signing_key.pem"
+      = select_field %w(api protocol), collection: :api_protocols_for_glance, data: { sslprefix: "ssl", sslcert: "/etc/glance/ssl/certs/signing_cert.pem", sslkey: "/etc/glance/ssl/private/signing_key.pem" }
 
       #ssl_container
         = boolean_field %w(ssl generate_certs)
         = string_field %w(ssl certfile)
         = string_field %w(ssl keyfile)
         = boolean_field %w(ssl insecure)
-        = boolean_field %w(ssl cert_required), "data-enabler" => "true", "data-enabler-target" => "#ssl_ca_certs"
+        = boolean_field %w(ssl cert_required), data: { enabler: "true", enabler_target: "#ssl_ca_certs" }
         = string_field %w(ssl ca_certs)
 
     %fieldset

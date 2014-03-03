@@ -26,11 +26,16 @@ directory node[:glance][:image_cache_datadir] do
   action :create
 end
 
+keystone_settings = GlanceHelper.keystone_settings(node)
+
 template node[:glance][:cache][:config_file] do
   source "glance-cache.conf.erb"
   owner "root"
   group node[:glance][:group]
   mode 0640
+  variables(
+      :keystone_settings => keystone_settings
+  )
 end
 
 directory "#{node[:glance][:image_cache_datadir]}/prefetching" do

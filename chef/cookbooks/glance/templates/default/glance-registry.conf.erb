@@ -81,12 +81,12 @@ use_syslog = <%= node[:glance][:use_syslog] ? "True" : "False" %>
 #ca_file = /path/to/cafile
 
 [keystone_authtoken]
-auth_host = <%= @keystone_host %>
-auth_port = <%= @keystone_admin_port %>
-auth_protocol = <%= @keystone_protocol %>
-admin_tenant_name = <%= @keystone_service_tenant %>
-admin_user = <%= @keystone_service_user %>
-admin_password = <%= @keystone_service_password %>
+auth_host = <%= @keystone_settings['internal_url_host'] %>
+auth_port = <%= @keystone_settings['admin_port'] %>
+auth_protocol = <%= @keystone_settings['protocol'] %>
+admin_tenant_name = <%= @keystone_settings['service_tenant'] %>
+admin_user = <%= @keystone_settings['service_user'] %>
+admin_password = <%= @keystone_settings['service_password'] %>
 
 [paste_deploy]
 # Name of the paste configuration file that defines the available pipelines

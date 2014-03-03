@@ -261,17 +261,17 @@ swift_store_auth_version = 2
 # Valid schemes are 'http://' and 'https://'
 # If no scheme specified,  default to 'https://'
 # For swauth, use something like '127.0.0.1:8080/v1.0/'
-swift_store_auth_address = <%= @keystone_protocol %>://<%= @keystone_host %>:<%= @keystone_service_port %>/v2.0/
+swift_store_auth_address = <%= @keystone_settings['internal_auth_url'] %>
 
 # User to authenticate against the Swift authentication service
 # If you use Swift authentication service, set it to 'account':'user'
 # where 'account' is a Swift storage account and 'user'
 # is a user in that account
-swift_store_user = <%= @keystone_service_tenant %>:<%= @keystone_service_user %>
+swift_store_user = <%= @keystone_settings['service_tenant'] %>:<%= @keystone_settings['service_user'] %>
 
 # Auth key for the user authenticating against the
 # Swift authentication service
-swift_store_key = <%= @keystone_service_password %>
+swift_store_key = <%= @keystone_settings['service_password'] %>
 
 # Container within the account that the account should use
 # for storing images in Swift
@@ -431,12 +431,12 @@ scrubber_datadir = /var/lib/glance/scrubber
 image_cache_dir = <%= node[:glance][:image_cache_datadir] %>
 
 [keystone_authtoken]
-auth_host = <%= @keystone_host %>
-auth_port = <%= @keystone_admin_port %>
-auth_protocol = <%= @keystone_protocol %>
-admin_tenant_name = <%= @keystone_service_tenant %>
-admin_user = <%= @keystone_service_user %>
-admin_password = <%= @keystone_service_password %>
+auth_host = <%= @keystone_settings['internal_url_host'] %>
+auth_port = <%= @keystone_settings['admin_port'] %>
+auth_protocol = <%= @keystone_settings['protocol'] %>
+admin_tenant_name = <%= @keystone_settings['service_tenant'] %>
+admin_user = <%= @keystone_settings['service_user'] %>
+admin_password = <%= @keystone_settings['service_password'] %>
 signing_dir = /var/cache/glance/keystone-signing
 
 [paste_deploy]

@@ -16,17 +16,7 @@ if node.platform == "ubuntu"
  package "qemu-utils"
 end
 
-keystone = get_instance('roles:keystone-server')
-
-keystone_host = keystone[:fqdn]
-keystone_protocol = keystone["keystone"]["api"]["protocol"]
-keystone_token = keystone["keystone"]["service"]["token"]
-keystone_service_port = keystone["keystone"]["api"]["service_port"]
-keystone_admin_port = keystone["keystone"]["api"]["admin_port"]
-keystone_service_tenant = keystone["keystone"]["service"]["tenant"]
-keystone_service_user = node[:glance][:service_user]
-keystone_service_password = node[:glance][:service_password]
-Chef::Log.info("Keystone server found at #{keystone_host}")
+keystone_settings = GlanceHelper.keystone_settings(node)
 
 if node[:glance][:api][:protocol] == 'https'
   if node[:glance][:ssl][:generate_certs]
@@ -112,13 +102,7 @@ template node[:glance][:api][:config_file] do
   group node[:glance][:group]
   mode 0640
   variables(
-      :keystone_protocol => keystone_protocol,
-      :keystone_host => keystone_host,
-      :keystone_admin_port => keystone_admin_port,
-      :keystone_service_port => keystone_service_port,
-      :keystone_service_user => keystone_service_user,
-      :keystone_service_password => keystone_service_password,
-      :keystone_service_tenant => keystone_service_tenant,
+      :keystone_settings => keystone_settings,
       :rabbit_settings => rabbit_settings
   )
 end
@@ -150,10 +134,10 @@ api_port = node["glance"]["api"]["bind_port"]
 glance_protocol = node[:glance][:api][:protocol]
 
 keystone_register "register glance service" do
-  protocol keystone_protocol
-  host keystone_host
-  port keystone_admin_port
-  token keystone_token
+  protocol keystone_settings['protocol']
+  host keystone_settings['internal_url_host']
+  port keystone_settings['admin_port']
+  token keystone_settings['admin_token']
   service_name "glance"
   service_type "image"
   service_description "Openstack Glance Service"
@@ -161,10 +145,10 @@ keystone_register "register glance service" do
 end
 
 keystone_register "register glance endpoint" do
-  protocol keystone_protocol
-  host keystone_host
-  port keystone_admin_port
-  token keystone_token
+  protocol keystone_settings['protocol']
+  host keystone_settings['internal_url_host']
+  port keystone_settings['admin_port']
+  token keystone_settings['admin_token']
   endpoint_service "glance"
   endpoint_region "RegionOne"
   endpoint_publicURL "#{glance_protocol}://#{endpoint_public_ip}:#{api_port}"

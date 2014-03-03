@@ -121,42 +121,34 @@ node.save
 
 # Register glance service user
 
-keystone = get_instance('roles:keystone-server')
-keystone_host = keystone[:fqdn]
-keystone_protocol = keystone["keystone"]["api"]["protocol"]
-keystone_token = keystone["keystone"]["service"]["token"]
-keystone_admin_port = keystone["keystone"]["api"]["admin_port"]
-keystone_service_tenant = keystone["keystone"]["service"]["tenant"]
-keystone_service_user = node[:glance][:service_user]
-keystone_service_password = node[:glance][:service_password]
-Chef::Log.info("Keystone server found at #{keystone_host}")
+keystone_settings = GlanceHelper.keystone_settings(node)
 
 keystone_register "glance wakeup keystone" do
-  protocol keystone_protocol
-  host keystone_host
-  port keystone_admin_port
-  token keystone_token
+  protocol keystone_settings['protocol']
+  host keystone_settings['internal_url_host']
+  port keystone_settings['admin_port']
+  token keystone_settings['admin_token']
   action :wakeup
 end
 
 keystone_register "register glance user" do
-  protocol keystone_protocol
-  host keystone_host
-  port keystone_admin_port
-  token keystone_token
-  user_name keystone_service_user
-  user_password keystone_service_password
-  tenant_name keystone_service_tenant
+  protocol keystone_settings['protocol']
+  host keystone_settings['internal_url_host']
+  port keystone_settings['admin_port']
+  token keystone_settings['admin_token']
+  user_name keystone_settings['service_user']
+  user_password keystone_settings['service_password']
+  tenant_name keystone_settings['service_tenant']
   action :add_user
 end
 
 keystone_register "give glance user access" do
-  protocol keystone_protocol
-  host keystone_host
-  port keystone_admin_port
-  token keystone_token
-  user_name keystone_service_user
-  tenant_name keystone_service_tenant
+  protocol keystone_settings['protocol']
+  host keystone_settings['internal_url_host']
+  port keystone_settings['admin_port']
+  token keystone_settings['admin_token']
+  user_name keystone_settings['service_user']
+  tenant_name keystone_settings['service_tenant']
   role_name "admin"
   action :add_access
 end

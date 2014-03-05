@@ -75,3 +75,9 @@ default[:glance][:ssl][:generate_certs] = false
 default[:glance][:ssl][:insecure] = false
 default[:glance][:ssl][:cert_required] = false
 default[:glance][:ssl][:ca_certs] = "/etc/glance/ssl/certs/ca.pem"
+
+# HA
+default[:glance][:ha][:enabled] = false
+# When HAproxy listens on the API port, make service listen elsewhere
+default[:glance][:ha][:ports][:api]      = "5510"
+default[:glance][:ha][:ports][:registry] = "5511"

@@ -102,6 +102,10 @@ template node[:glance][:api][:config_file] do
   group node[:glance][:group]
   mode 0640
   variables(
+      :bind_host => api_bind_host,
+      :bind_port => api_bind_port,
+      :registry_bind_host => registry_bind_host,
+      :registry_bind_port => registry_bind_port,
       :keystone_settings => keystone_settings,
       :rabbit_settings => rabbit_settings
   )

@@ -29,10 +29,10 @@ cleanup_scrubber = False
 cleanup_scrubber_time = 86400
 
 # Address to find the registry server for cleanups
-registry_host = <%= node[:glance][:registry][:bind_host] %>
+registry_host = <%= @registry_bind_host %>
 
 # Port the registry server is listening on
-registry_port = <%= node[:glance][:registry][:bind_port] %>
+registry_port = <%= @registry_bind_port %>
 
 # Auth settings if using Keystone
 # auth_url = http://127.0.0.1:5000/v2.0/

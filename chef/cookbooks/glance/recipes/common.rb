@@ -18,6 +18,8 @@
 # limitations under the License.
 #
 
+ha_enabled = node[:glance][:ha][:enabled]
+
 package "curl" do
   action :install
 end
@@ -60,8 +62,20 @@ end
 
 # Make sure we use the admin node for now.
 my_ipaddress = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
-node[:glance][:api][:bind_host] = my_ipaddress
+node[:glance][:api][:bind_host]      = my_ipaddress
 node[:glance][:registry][:bind_host] = my_ipaddress
+
+api_bind_host      = node[:glance][:api][:bind_open_address] ? "0.0.0.0" : node[:glance][:api][:bind_host]
+registry_bind_host = node[:glance][:registry][:bind_host]
+
+# When HA is enabled, listen on different ports
+if node[:glance][:ha][:enabled]
+  api_bind_port      = node[:glance][:ha][:ports][:api]
+  registry_bind_port = node[:glance][:ha][:ports][:registry]
+else
+  api_bind_port      = node[:glance][:api][:bind_port]
+  registry_bind_port = node[:glance][:registry][:bind_port]
+end
 
 sql = get_instance('roles:database-server')
 include_recipe "database::client"

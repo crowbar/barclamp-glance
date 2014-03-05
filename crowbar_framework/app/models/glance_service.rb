@@ -13,7 +13,7 @@
 # limitations under the License.
 #
 
-class GlanceService < ServiceObject
+class GlanceService < PacemakerServiceObject
 
   def initialize(thelogger)
     super(thelogger)
@@ -94,6 +94,22 @@ class GlanceService < ServiceObject
     @logger.debug("Glance apply_role_pre_chef_call: entering #{all_nodes.inspect}")
     return if all_nodes.empty?
 
+    # Role can be assigned to clusters, so we need to expand the elements to get the actual list of nodes.
+    server_elements, server_nodes, has_expanded = role_expand_elements(role, "glance-server")
+
+    # If glance_elements != glance_nodes, has_expanded will be true, which currently means we want to use HA.
+    ha_enabled = has_expanded
+
+    # FIXME: this deserves a comment
+    if role.default_attributes["glance"]["api"]["bind_open_address"]
+      vip_networks = ["admin", "public"]
+    else
+      vip_networks = ["admin"]
+    end
+
+    # Mark HA as enabled and initialize HA and networks in the role's pacemaker attribute
+    prepare_role_for_ha_with_haproxy(role, ["glance", "ha", "enabled"], ha_enabled, vip_networks) && role.save
+
     # Update images paths
     nodes = NodeObject.find("roles:provisioner-server")
     unless nodes.nil? or nodes.length < 1
@@ -110,11 +126,13 @@ class GlanceService < ServiceObject
 
     if role.default_attributes["glance"]["api"]["bind_open_address"]
       net_svc = NetworkService.new @logger
-      tnodes = role.override_attributes["glance"]["elements"]["glance-server"]
-      tnodes.each do |n|
+      server_nodes.each do |n|
         net_svc.allocate_ip "default", "public", "host", n
-      end unless tnodes.nil?
+      end
     end
+
+    # Setup virtual IPs for the clusters
+    allocate_virtual_ips_for_any_cluster_in_networks_and_sync_dns(server_elements, vip_networks)
 
     @logger.debug("Glance apply_role_pre_chef_call: leaving")
   end

@@ -5,6 +5,7 @@ run_list(
          "recipe[glance::api]",
          "recipe[glance::cache]",
          "recipe[glance::scrubber]",
+         "recipe[glance::ha]",
          "recipe[glance::setup]",
          "recipe[glance::monitor]"
 )

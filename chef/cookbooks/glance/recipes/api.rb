@@ -96,16 +96,18 @@ if node[:glance][:notifier_strategy] != "noop"
   }
 end
 
+network_settings = GlanceHelper.network_settings(node)
+
 template node[:glance][:api][:config_file] do
   source "glance-api.conf.erb"
   owner "root"
   group node[:glance][:group]
   mode 0640
   variables(
-      :bind_host => api_bind_host,
-      :bind_port => api_bind_port,
-      :registry_bind_host => registry_bind_host,
-      :registry_bind_port => registry_bind_port,
+      :bind_host => network_settings[:api][:bind_host],
+      :bind_port => network_settings[:api][:bind_port],
+      :registry_bind_host => network_settings[:registry][:bind_host],
+      :registry_bind_port => network_settings[:registry][:bind_port],
       :keystone_settings => keystone_settings,
       :rabbit_settings => rabbit_settings
   )

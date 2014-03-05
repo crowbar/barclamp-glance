@@ -18,15 +18,6 @@
 #
 
 module GlanceBarclampHelper
-  def glance_role_constraints
-    {
-      "glance-server" => {
-        "unique" => false,
-        "count" => 1
-      }
-    }
-  end
-
   def api_protocols_for_glance(selected)
     options_for_select(
       [

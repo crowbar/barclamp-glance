@@ -53,6 +53,7 @@ default[:glance][:working_directory]="/var/lib/glance"
 default[:glance][:image_cache_datadir] = "/var/lib/glance/image-cache/"
 
 default[:glance][:log_dir] = "/var/log/glance/"
+default[:glance][:cache_dir] = "/var/cache/glance/"
 
 default[:glance][:sql_idle_timeout] = "3600"
 

@@ -30,6 +30,7 @@ class GlanceService < PacemakerServiceObject
       {
         "glance-server" => {
           "unique" => false,
+          "cluster" => true,
           "count" => 1
         }
       }

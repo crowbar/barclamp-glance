@@ -15,19 +15,12 @@ directory "#{node[:glance][:working_directory]}/raw_images" do
   action :create
 end
 
-env_filter = " AND keystone_config_environment:keystone-config-#{node[:glance][:keystone_instance]}"
-keystones = search(:node, "recipes:keystone\\:\\:server#{env_filter}") || []
-if keystones.length > 0
-  keystone = keystones[0]
-  keystone = node if keystone.name == node.name
-else
-  keystone = node
-end
+keystone_settings = GlanceHelper.keystone_settings(node)
 
-glance_args = "--os-username #{keystone["keystone"]["admin"]["username"]}"
-glance_args = "#{glance_args} --os-password #{keystone["keystone"]["admin"]["password"]}"
-glance_args = "#{glance_args} --os-tenant-name #{keystone["keystone"]["admin"]["tenant"]}"
-glance_args = "#{glance_args} --os-auth-url #{keystone["keystone"]["api"]["protocol"]}://#{keystone[:fqdn]}:#{keystone["keystone"]["api"]["api_port"]}/v2.0"
+glance_args = "--os-username #{keystone_settings["admin_user"]}"
+glance_args = "#{glance_args} --os-password #{keystone_settings["admin_password"]}"
+glance_args = "#{glance_args} --os-tenant-name #{keystone_settings["admin_tenant"]}"
+glance_args = "#{glance_args} --os-auth-url #{keystone_settings["internal_auth_url"]}"
 glance_args = "#{glance_args} --os-endpoint-type internalURL"
 
 #

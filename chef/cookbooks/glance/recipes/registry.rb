@@ -12,16 +12,7 @@ if node[:glance][:use_gitrepo]
   venv_prefix = node[:glance][:use_virtualenv] ? ". #{venv_path}/bin/activate &&" : nil
 end
 
-keystone = get_instance('roles:keystone-server')
-keystone_host = keystone[:fqdn]
-keystone_protocol = keystone["keystone"]["api"]["protocol"]
-keystone_token = keystone["keystone"]["service"]["token"]
-keystone_admin_port = keystone["keystone"]["api"]["admin_port"]
-keystone_service_port = keystone["keystone"]["api"]["service_port"]
-keystone_service_tenant = keystone["keystone"]["service"]["tenant"]
-keystone_service_user = node[:glance][:service_user]
-keystone_service_password = node[:glance][:service_password]
-Chef::Log.info("Keystone server found at #{keystone_host}")
+keystone_settings = GlanceHelper.keystone_settings(node)
 
 if node[:glance][:use_gitrepo]
   pfs_and_install_deps "keystone" do
@@ -38,13 +29,7 @@ template node[:glance][:registry][:config_file] do
   group node[:glance][:group]
   mode 0640
   variables(
-      :keystone_protocol => keystone_protocol,
-      :keystone_host => keystone_host,
-      :keystone_admin_port => keystone_admin_port,
-      :keystone_service_port => keystone_service_port,
-      :keystone_service_user => keystone_service_user,
-      :keystone_service_password => keystone_service_password,
-      :keystone_service_tenant => keystone_service_tenant
+      :keystone_settings => keystone_settings
   )
 end
 

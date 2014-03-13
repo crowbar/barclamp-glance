@@ -20,6 +20,15 @@
               "required": true,
               "sequence": [ { "type": "str" } ]
             },
+            "db" : {
+              "type" : "map",
+              "required" : true,
+              "mapping": {
+                "database": { "type": "str", "required": true },
+                "user": { "type": "str", "required": true },
+                "password": { "type": "str", "required": true }
+              }
+            },
             "api": {
               "type": "map", "required": true, "mapping": {
                 "protocol": { "type" : "str", "required" : true },

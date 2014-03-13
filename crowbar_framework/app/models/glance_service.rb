@@ -75,6 +75,7 @@ class GlanceService < PacemakerServiceObject
     end
 
     base["attributes"]["glance"]["service_password"] = '%012d' % rand(1e12)
+    base["attributes"][@bc_name][:db][:password] = random_password
 
     @logger.debug("Glance create_proposal: exiting")
     base

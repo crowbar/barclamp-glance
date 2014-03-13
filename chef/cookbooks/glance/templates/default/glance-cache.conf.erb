@@ -68,17 +68,17 @@ swift_store_auth_version = 2
 # Valid schemes are 'http://' and 'https://'
 # If no scheme specified,  default to 'https://'
 # For swauth, use something like '127.0.0.1:8080/v1.0/'
-swift_store_auth_address = <%= @keystone_protocol %>://<%= @keystone_address %>:<%= @keystone_service_port %>/v2.0/
+swift_store_auth_address = <%= @keystone_settings['internal_auth_url'] %>
 
 # User to authenticate against the Swift authentication service
 # If you use Swift authentication service, set it to 'account':'user'
 # where 'account' is a Swift storage account and 'user'
 # is a user in that account
-swift_store_user = <%= @keystone_service_tenant %>:<%= @keystone_service_user %>
+swift_store_user = <%= @keystone_settings['service_tenant'] %>:<%= @keystone_settings['service_user'] %>
 
 # Auth key for the user authenticating against the
 # Swift authentication service
-swift_store_key = <%= @keystone_service_password %>
+swift_store_key = <%= @keystone_settings['service_password'] %>
 
 # Container within the account that the account should use
 # for storing images in Swift

@@ -23,12 +23,16 @@ if node[:glance][:use_gitrepo]
   end
 end
 
+network_settings = GlanceHelper.network_settings(node)
+
 template node[:glance][:registry][:config_file] do
   source "glance-registry.conf.erb"
   owner "root"
   group node[:glance][:group]
   mode 0640
   variables(
+      :bind_host => network_settings[:registry][:bind_host],
+      :bind_port => network_settings[:registry][:bind_port],
       :keystone_settings => keystone_settings
   )
 end

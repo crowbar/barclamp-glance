@@ -29,10 +29,10 @@ default_store = <%= node[:glance][:default_store] %>
 #image_size_cap = 1099511627776
 
 # Address to bind the API server
-bind_host = <%= node[:glance][:api][:bind_open_address] ? "0.0.0.0" : node[:glance][:api][:bind_host] %>
+bind_host = <%= @bind_host %>
 
 # Port the bind the API server to
-bind_port = <%= node[:glance][:api][:bind_port] %>
+bind_port = <%= @bind_port %>
 
 # Log to this file. Make sure you do not set the same log
 # file for both the API and registry servers!
@@ -152,10 +152,10 @@ ca_file = <%= node[:glance][:ssl][:ca_certs] if node[:glance][:api][:protocol] =
 # ============ Registry Options ===============================
 
 # Address to find the registry server
-registry_host = <%= node[:glance][:registry][:bind_host] %>
+registry_host = <%= @registry_bind_host %>
 
 # Port the registry server is listening on
-registry_port = <%= node[:glance][:registry][:bind_port] %>
+registry_port = <%= @registry_bind_port %>
 
 # What protocol to use when connecting to the registry server?
 # Set to https for secure HTTP communication

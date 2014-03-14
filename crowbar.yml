@@ -47,6 +47,7 @@ rpms:
     repos:
       - bare openstack havana http://repos.fedorapeople.org/repos/openstack/openstack-havana/epel-6/
   pkgs:
+    - qemu-img
     - qemu-kvm
     - openstack-glance
     - python-keystone

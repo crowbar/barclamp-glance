@@ -113,7 +113,7 @@ template node[:glance][:api][:config_file] do
   )
 end
 
-ha_enabled = false
+ha_enabled = node[:glance][:ha][:enabled]
 my_admin_host = CrowbarHelper.get_host_for_admin_url(node, ha_enabled)
 my_public_host = CrowbarHelper.get_host_for_public_url(node, node[:glance][:api][:protocol] == "https", ha_enabled)
 
@@ -124,8 +124,8 @@ if node[:glance][:api][:bind_open_address]
   endpoint_admin_ip = my_admin_host
   endpoint_public_ip = my_public_host
 else
-  endpoint_admin_ip = node[:glance][:api][:bind_host]
-  endpoint_public_ip = node[:glance][:api][:bind_host]
+  endpoint_admin_ip = my_admin_host
+  endpoint_public_ip = my_admin_host
 end
 api_port = node["glance"]["api"]["bind_port"]
 glance_protocol = node[:glance][:api][:protocol]

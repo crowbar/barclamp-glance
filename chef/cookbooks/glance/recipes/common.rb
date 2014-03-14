@@ -58,11 +58,6 @@ else
 
 end
 
-# Make sure we use the admin node for now.
-network_settings = GlanceHelper.network_settings(node)
-node[:glance][:api][:bind_host]      = network_settings[:ip]
-node[:glance][:registry][:bind_host] = network_settings[:ip]
-
 sql = get_instance('roles:database-server')
 include_recipe "database::client"
 backend_name = Chef::Recipe::Database::Util.get_backend_name(sql)

@@ -8,6 +8,11 @@
       "images": [
         "http://|ADMINWEB|/files/ami/ubuntu-12.04-server-cloudimg-amd64.tar.gz"
       ],
+      "db": {
+        "database": "glance",
+        "user": "glance",
+        "password": ""
+      },
       "api": {
         "protocol": "http",
         "bind_open_address": true,
@@ -64,7 +69,7 @@
   "deployment": {
     "glance": {
       "crowbar-revision": 0,
-      "schema-revision": 3,
+      "schema-revision": 4,
       "element_states": {
         "glance-server": [ "readying", "ready", "applying" ]
       },

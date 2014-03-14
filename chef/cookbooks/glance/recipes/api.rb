@@ -96,18 +96,24 @@ if node[:glance][:notifier_strategy] != "noop"
   }
 end
 
+network_settings = GlanceHelper.network_settings(node)
+
 template node[:glance][:api][:config_file] do
   source "glance-api.conf.erb"
   owner "root"
   group node[:glance][:group]
   mode 0640
   variables(
+      :bind_host => network_settings[:api][:bind_host],
+      :bind_port => network_settings[:api][:bind_port],
+      :registry_bind_host => network_settings[:registry][:bind_host],
+      :registry_bind_port => network_settings[:registry][:bind_port],
       :keystone_settings => keystone_settings,
       :rabbit_settings => rabbit_settings
   )
 end
 
-ha_enabled = false
+ha_enabled = node[:glance][:ha][:enabled]
 my_admin_host = CrowbarHelper.get_host_for_admin_url(node, ha_enabled)
 my_public_host = CrowbarHelper.get_host_for_public_url(node, node[:glance][:api][:protocol] == "https", ha_enabled)
 
@@ -118,8 +124,8 @@ if node[:glance][:api][:bind_open_address]
   endpoint_admin_ip = my_admin_host
   endpoint_public_ip = my_public_host
 else
-  endpoint_admin_ip = node[:glance][:api][:bind_host]
-  endpoint_public_ip = node[:glance][:api][:bind_host]
+  endpoint_admin_ip = my_admin_host
+  endpoint_public_ip = my_admin_host
 end
 api_port = node["glance"]["api"]["bind_port"]
 glance_protocol = node[:glance][:api][:protocol]

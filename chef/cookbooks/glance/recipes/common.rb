@@ -58,11 +58,6 @@ else
 
 end
 
-# Make sure we use the admin node for now.
-my_ipaddress = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "admin").address
-node[:glance][:api][:bind_host] = my_ipaddress
-node[:glance][:registry][:bind_host] = my_ipaddress
-
 sql = get_instance('roles:database-server')
 include_recipe "database::client"
 backend_name = Chef::Recipe::Database::Util.get_backend_name(sql)
@@ -73,12 +68,6 @@ db_provider = Chef::Recipe::Database::Util.get_database_provider(sql)
 db_user_provider = Chef::Recipe::Database::Util.get_user_provider(sql)
 privs = Chef::Recipe::Database::Util.get_default_priviledges(sql)
 url_scheme = backend_name
-
-::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
-
-node.set_unless['glance']['db']['password'] = secure_password
-node.set_unless['glance']['db']['user'] = "glance"
-node.set_unless['glance']['db']['database'] = "glancedb"
 
 sql_address = Chef::Recipe::Barclamp::Inventory.get_network_by_type(sql, "admin").address if sql_address.nil?
 Chef::Log.info("Database server found at #{sql_address}")

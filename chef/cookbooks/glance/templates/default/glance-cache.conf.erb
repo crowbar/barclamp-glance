@@ -31,10 +31,10 @@ image_cache_invalid_entry_grace_period = <%= node[:glance][:image_cache_grace_pe
 image_cache_max_size = <%= node[:glance][:image_cache_max_size] %>
 
 # Address to find the registry server
-registry_host = <%= node[:glance][:registry][:bind_host] %>
+registry_host = <%= @registry_bind_host %>
 
 # Port the registry server is listening on
-registry_port = <%= node[:glance][:registry][:bind_port] %>
+registry_port = <%= @registry_bind_port %>
 
 # Auth settings if using Keystone
 # auth_url = http://127.0.0.1:5000/v2.0/

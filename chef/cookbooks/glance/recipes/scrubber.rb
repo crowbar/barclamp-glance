@@ -18,11 +18,17 @@
 # limitations under the License.
 #
 
+network_settings = GlanceHelper.network_settings(node)
+
 template node[:glance][:scrubber][:config_file] do
   source "glance-scrubber.conf.erb"
   owner node[:glance][:user]
   group "root"
   mode 0600
+  variables(
+    :registry_bind_host => network_settings[:registry][:bind_host],
+    :registry_bind_port => network_settings[:registry][:bind_port]
+  )
 end
 
 template "/etc/cron.d/glance-scrubber" do

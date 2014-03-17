@@ -27,13 +27,15 @@ default[:glance][:debug] = "False"
 
 default[:glance][:config_dir] = "/etc/glance"
 
+default[:glance][:db][:password] = "" # set by wrapper
+default[:glance][:db][:user] = "glance"
+default[:glance][:db][:database] = "glance"
+
 default[:glance][:api][:protocol] = "http"
-default[:glance][:api][:bind_host] = ipaddress
 default[:glance][:api][:bind_port] = "9292"
 default[:glance][:api][:log_file] = "/var/log/glance/api.log"
 default[:glance][:api][:config_file]="/etc/glance/glance-api.conf"
 
-default[:glance][:registry][:bind_host] = ipaddress
 default[:glance][:registry][:bind_port] = "9191"
 default[:glance][:registry][:log_file] = "/var/log/glance/registry.log"
 default[:glance][:registry][:config_file]="/etc/glance/glance-registry.conf"
@@ -70,3 +72,9 @@ default[:glance][:ssl][:generate_certs] = false
 default[:glance][:ssl][:insecure] = false
 default[:glance][:ssl][:cert_required] = false
 default[:glance][:ssl][:ca_certs] = "/etc/glance/ssl/certs/ca.pem"
+
+# HA
+default[:glance][:ha][:enabled] = false
+# When HAproxy listens on the API port, make service listen elsewhere
+default[:glance][:ha][:ports][:api]      = 5510
+default[:glance][:ha][:ports][:registry] = 5511

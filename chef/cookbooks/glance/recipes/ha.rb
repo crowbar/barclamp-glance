@@ -37,3 +37,30 @@ haproxy_loadbalancer "glance-registry" do
   servers CrowbarPacemakerHelper.haproxy_servers_for_service(node, "glance", "glance-server", "registry")
   action  :nothing
 end.run_action(:create)
+
+primitives = []
+
+["registry", "api"].each do |service|
+  primitive_name = "glance-#{service}-service"
+
+  pacemaker_primitive primitive_name do
+    agent node[:glance][:ha][service.to_sym][:agent]
+    op    node[:glance][:ha][service.to_sym][:op]
+    action :create
+  end
+  primitives << primitive_name
+end
+
+pacemaker_group "glance-group" do
+  members primitives
+  meta ({
+    "is-managed" => true,
+    "target-role" => "started"
+  })
+  action :create
+end
+
+pacemaker_clone "clone-glance-group" do
+  rsc "glance-group"
+  action [ :create, :start]
+end

@@ -85,10 +85,9 @@ end
 
 if node[:glance][:notifier_strategy] != "noop"
   rabbit = get_instance('roles:rabbitmq-server')
-  rabbit_address = Chef::Recipe::Barclamp::Inventory.get_network_by_type(rabbit, "admin").address
 
   rabbit_settings = {
-    :address => rabbit_address,
+    :address => rabbit[:rabbitmq][:address],
     :port => rabbit[:rabbitmq][:port],
     :user => rabbit[:rabbitmq][:user],
     :password => rabbit[:rabbitmq][:password],

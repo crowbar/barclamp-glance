@@ -37,11 +37,16 @@ template node[:glance][:registry][:config_file] do
   )
 end
 
-execute "Sync glance db" do
-  user node[:glance][:user]
-  group node[:glance][:group]
-  code "#{venv_prefix}glance-manage db_sync"
-  not_if { node[:platform] == "suse" }
+unless node[:platform] == "suse"
+  crowbar_pacemaker_sync_mark "wait-glance_db_sync"
+
+  execute "Sync glance db" do
+    user node[:glance][:user]
+    group node[:glance][:group]
+    code "#{venv_prefix}glance-manage db_sync"
+  end
+
+  crowbar_pacemaker_sync_mark "create-glance_db_sync"
 end
 
 glance_service "registry"

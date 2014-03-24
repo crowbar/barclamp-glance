@@ -37,6 +37,7 @@ unless node[:glance][:use_gitrepo] or node[:glance][:images].empty?
     end
   end
 end
+
 (node[:glance][:images] or []).each do |image|
   #get the filename of the image
   filename = image.split('/').last
@@ -49,6 +50,9 @@ end
     end
   end
 end
+
+crowbar_pacemaker_sync_mark "wait-glance_upload_images"
+
 ruby_block "load glance images" do
   block do
     wait = true
@@ -97,3 +101,4 @@ ruby_block "load glance images" do
   end
 end
 
+crowbar_pacemaker_sync_mark "create-glance_upload_images"

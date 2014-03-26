@@ -142,6 +142,24 @@ keystone_register "give glance user access" do
   action :add_access
 end
 
+#ensure that the log directory is created
+directory node[:glance][:log_dir] do
+  owner node[:glance][:user]
+  group node[:glance][:group]
+  mode 0755
+  action :create
+  only_if { node[:platform] == "ubuntu" }
+end
+
+#ensure that the cache directory is created
+directory node[:glance][:cache_dir] do
+  owner node[:glance][:user]
+  group node[:glance][:group]
+  mode 0755
+  action :create
+  only_if { node[:platform] == "ubuntu" }
+end
+
 ceph_env_filter = " AND ceph_config_environment:ceph-config-default"
 ceph_servers = search(:node, "roles:ceph-osd#{ceph_env_filter}") || []
 if ceph_servers.length > 0

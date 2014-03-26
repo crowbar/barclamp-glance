@@ -54,6 +54,9 @@ default[:glance][:scrubber][:config_file]="/etc/glance/glance-scrubber.conf"
 default[:glance][:working_directory]="/var/lib/glance"
 default[:glance][:image_cache_datadir] = "/var/lib/glance/image-cache/"
 
+default[:glance][:log_dir] = "/var/log/glance/"
+default[:glance][:cache_dir] = "/var/cache/glance/"
+
 default[:glance][:sql_idle_timeout] = "3600"
 
 #default_store choices are: file, http, https, swift, s3

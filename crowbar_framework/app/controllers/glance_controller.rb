@@ -17,7 +17,10 @@
 #
 
 class GlanceController < BarclampController
-  def initialize
+
+  protected
+
+  def initialize_service
     @service_object = GlanceService.new logger
   end
 end

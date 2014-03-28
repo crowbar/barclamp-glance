@@ -40,10 +40,12 @@ default[:glance][:api][:protocol] = "http"
 default[:glance][:api][:bind_port] = "9292"
 default[:glance][:api][:log_file] = "/var/log/glance/api.log"
 default[:glance][:api][:config_file]="/etc/glance/glance-api.conf"
+default[:glance][:api][:service_name] = "glance-api"
 
 default[:glance][:registry][:bind_port] = "9191"
 default[:glance][:registry][:log_file] = "/var/log/glance/registry.log"
 default[:glance][:registry][:config_file]="/etc/glance/glance-registry.conf"
+default[:glance][:registry][:service_name] = "glance-registry"
 
 default[:glance][:cache][:log_file] = "/var/log/glance/cache.log"
 default[:glance][:cache][:config_file]="/etc/glance/glance-cache.conf"
@@ -78,8 +80,18 @@ default[:glance][:ssl][:insecure] = false
 default[:glance][:ssl][:cert_required] = false
 default[:glance][:ssl][:ca_certs] = "/etc/glance/ssl/certs/ca.pem"
 
+if %w(redhat centos suse).include?(node[:platform])
+  default[:glance][:api][:service_name] = "openstack-glance-api"
+  default[:glance][:registry][:service_name] = "openstack-glance-registry"
+end
+
 # HA
 default[:glance][:ha][:enabled] = false
 # When HAproxy listens on the API port, make service listen elsewhere
 default[:glance][:ha][:ports][:api]      = 5510
 default[:glance][:ha][:ports][:registry] = 5511
+# pacemaker definitions
+default[:glance][:ha][:api][:op][:monitor][:interval] = "10s"
+default[:glance][:ha][:api][:agent]     = "lsb:#{default[:glance][:api][:service_name]}"
+default[:glance][:ha][:registry][:op][:monitor][:interval] = "10s"
+default[:glance][:ha][:registry][:agent]= "lsb:#{default[:glance][:registry][:service_name]}"

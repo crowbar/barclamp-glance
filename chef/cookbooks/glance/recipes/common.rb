@@ -76,6 +76,8 @@ db_conn = { :host => sql_address,
           :username => "db_maker",
           :password => sql[:database][:db_maker_password] }
 
+crowbar_pacemaker_sync_mark "wait-glance_database"
+
 # Create the Glance Database
 database "create #{node[:glance][:db][:database]} database" do
   connection db_conn
@@ -104,6 +106,8 @@ database_user "grant database access for glance database user" do
   action :grant
 end
 
+crowbar_pacemaker_sync_mark "create-glance_database"
+
 node[:glance][:sql_connection] = "#{url_scheme}://#{node[:glance][:db][:user]}:#{node[:glance][:db][:password]}@#{sql_address}/#{node[:glance][:db][:database]}"
 
 node.save
@@ -111,6 +115,8 @@ node.save
 # Register glance service user
 
 keystone_settings = GlanceHelper.keystone_settings(node)
+
+crowbar_pacemaker_sync_mark "wait-glance_register_user"
 
 keystone_register "glance wakeup keystone" do
   protocol keystone_settings['protocol']
@@ -141,6 +147,8 @@ keystone_register "give glance user access" do
   role_name "admin"
   action :add_access
 end
+
+crowbar_pacemaker_sync_mark "create-glance_register_user"
 
 ceph_env_filter = " AND ceph_config_environment:ceph-config-default"
 ceph_servers = search(:node, "roles:ceph-osd#{ceph_env_filter}") || []

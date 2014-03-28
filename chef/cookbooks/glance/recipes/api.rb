@@ -129,6 +129,8 @@ end
 api_port = node["glance"]["api"]["bind_port"]
 glance_protocol = node[:glance][:api][:protocol]
 
+crowbar_pacemaker_sync_mark "wait-glance_register_service"
+
 keystone_register "register glance service" do
   protocol keystone_settings['protocol']
   host keystone_settings['internal_url_host']
@@ -154,6 +156,8 @@ keystone_register "register glance endpoint" do
 #  endpoint_enabled true
   action :add_endpoint_template
 end
+
+crowbar_pacemaker_sync_mark "create-glance_register_service"
 
 glance_service "api"
 

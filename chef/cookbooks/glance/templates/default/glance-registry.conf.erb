@@ -87,6 +87,9 @@ auth_protocol = <%= @keystone_settings['protocol'] %>
 admin_tenant_name = <%= @keystone_settings['service_tenant'] %>
 admin_user = <%= @keystone_settings['service_user'] %>
 admin_password = <%= @keystone_settings['service_password'] %>
+<% if @keystone_settings['insecure'] -%>
+insecure = <%= @keystone_settings['insecure'] %>
+<% end -%>
 
 [paste_deploy]
 # Name of the paste configuration file that defines the available pipelines

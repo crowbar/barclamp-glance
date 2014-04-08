@@ -41,7 +41,7 @@ end.run_action(:create)
 primitives = []
 
 ["registry", "api"].each do |service|
-  primitive_name = "glance-#{service}-service"
+  primitive_name = "glance-#{service}"
 
   pacemaker_primitive primitive_name do
     agent node[:glance][:ha][service.to_sym][:agent]
@@ -51,16 +51,14 @@ primitives = []
   primitives << primitive_name
 end
 
-pacemaker_group "glance-group" do
+group_name = "g-glance"
+
+pacemaker_group group_name do
   members primitives
-  meta ({
-    "is-managed" => true,
-    "target-role" => "started"
-  })
   action :create
 end
 
-pacemaker_clone "clone-glance-group" do
-  rsc "glance-group"
+pacemaker_clone "cl-#{group_name}" do
+  rsc group_name
   action [ :create, :start]
 end

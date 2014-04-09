@@ -38,6 +38,14 @@ haproxy_loadbalancer "glance-registry" do
   action  :nothing
 end.run_action(:create)
 
+# Wait for all nodes to reach this point so we know that all nodes will have
+# all the required packages installed before we create the pacemaker
+# resources
+crowbar_pacemaker_sync_mark "sync-glance_before_ha"
+
+# Avoid races when creating pacemaker resources
+crowbar_pacemaker_sync_mark "wait-glance_ha_resources"
+
 primitives = []
 
 ["registry", "api"].each do |service|
@@ -62,3 +70,5 @@ pacemaker_clone "cl-#{group_name}" do
   rsc group_name
   action [ :create, :start]
 end
+
+crowbar_pacemaker_sync_mark "create-glance_ha_resources"

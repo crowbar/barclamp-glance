@@ -37,20 +37,16 @@ template node[:glance][:registry][:config_file] do
   )
 end
 
-bash "Set glance version control" do
-  user node[:glance][:user]
-  group node[:glance][:group]
-  code "exit 0"
-  notifies :run, "bash[Sync glance db]", :immediately
-  only_if "#{venv_prefix}glance-manage version_control 0", :user => node[:glance][:user], :group => node[:glance][:group]
-  action :run
-end
+unless node[:platform] == "suse"
+  crowbar_pacemaker_sync_mark "wait-glance_db_sync"
 
-bash "Sync glance db" do
-  user node[:glance][:user]
-  group node[:glance][:group]
-  code "#{venv_prefix}glance-manage db_sync"
-  action :nothing
+  execute "Sync glance db" do
+    user node[:glance][:user]
+    group node[:glance][:group]
+    code "#{venv_prefix}glance-manage db_sync"
+  end
+
+  crowbar_pacemaker_sync_mark "create-glance_db_sync"
 end
 
 glance_service "registry"

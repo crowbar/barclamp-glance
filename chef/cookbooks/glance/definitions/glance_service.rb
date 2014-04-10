@@ -1,8 +1,8 @@
 define :glance_service do
 
-  glance_name="glance-#{params[:name]}"
-  glance_name="openstack-glance-#{params[:name]}" if %w(redhat centos suse).include?(node.platform)
-  short_name="#{params[:name]}"
+  short_name    = "#{params[:name]}"
+  glance_name   = node[:glance][short_name][:service_name]
+  ha_enabled    = node[:glance][:ha][:enabled]
 
   service glance_name do
     if (platform?("ubuntu") && node.platform_version.to_f >= 10.04)
@@ -14,6 +14,7 @@ define :glance_service do
     supports :status => true, :restart => true
     action [:enable, :start]
     subscribes :restart, resources(:template => node[:glance][short_name][:config_file]), :immediately
+    provider Chef::Provider::CrowbarPacemakerService if ha_enabled
   end
 
 end

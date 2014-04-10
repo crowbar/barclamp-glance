@@ -37,3 +37,38 @@ haproxy_loadbalancer "glance-registry" do
   servers CrowbarPacemakerHelper.haproxy_servers_for_service(node, "glance", "glance-server", "registry")
   action  :nothing
 end.run_action(:create)
+
+# Wait for all nodes to reach this point so we know that all nodes will have
+# all the required packages installed before we create the pacemaker
+# resources
+crowbar_pacemaker_sync_mark "sync-glance_before_ha"
+
+# Avoid races when creating pacemaker resources
+crowbar_pacemaker_sync_mark "wait-glance_ha_resources"
+
+primitives = []
+
+["registry", "api"].each do |service|
+  primitive_name = "glance-#{service}"
+
+  pacemaker_primitive primitive_name do
+    agent node[:glance][:ha][service.to_sym][:agent]
+    op    node[:glance][:ha][service.to_sym][:op]
+    action :create
+  end
+  primitives << primitive_name
+end
+
+group_name = "g-glance"
+
+pacemaker_group group_name do
+  members primitives
+  action :create
+end
+
+pacemaker_clone "cl-#{group_name}" do
+  rsc group_name
+  action [ :create, :start]
+end
+
+crowbar_pacemaker_sync_mark "create-glance_ha_resources"

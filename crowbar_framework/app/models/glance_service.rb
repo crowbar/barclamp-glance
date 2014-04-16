@@ -110,7 +110,7 @@ class GlanceService < PacemakerServiceObject
     end
 
     # Mark HA as enabled and initialize HA and networks in the role's pacemaker attribute
-    prepare_role_for_ha_with_haproxy(role, ["glance", "ha", "enabled"], ha_enabled, vip_networks) && role.save
+    prepare_role_for_ha_with_haproxy(role, ["glance", "ha", "enabled"], ha_enabled, server_elements, vip_networks) && role.save
 
     # Update images paths
     nodes = NodeObject.find("roles:provisioner-server")

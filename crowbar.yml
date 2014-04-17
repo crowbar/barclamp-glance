@@ -43,10 +43,10 @@ debs:
 rpms:
   centos-6.4:
     repos:
-      - bare openstack havana http://repos.fedorapeople.org/repos/openstack/openstack-havana/epel-6/
+      - bare openstack icehouse http://repos.fedorapeople.org/repos/openstack/openstack-icehouse/epel-6/
   redhat-6.4:
     repos:
-      - bare openstack havana http://repos.fedorapeople.org/repos/openstack/openstack-havana/epel-6/
+      - bare openstack icehouse http://repos.fedorapeople.org/repos/openstack/openstack-icehouse/epel-6/
   pkgs:
     - qemu-img
     - qemu-kvm
@@ -60,4 +60,4 @@ extra_files:
   - http://cloud-images.ubuntu.com/releases/precise/release/ubuntu-12.04-server-cloudimg-amd64.tar.gz ami
   
 git_repo:
-  - glance https://github.com/openstack/glance.git stable/havana
+  - glance https://github.com/openstack/glance.git stable/icehouse

@@ -15,7 +15,7 @@ directory "#{node[:glance][:working_directory]}/raw_images" do
   action :create
 end
 
-keystone_settings = GlanceHelper.keystone_settings(node)
+keystone_settings = KeystoneHelper.keystone_settings(node, @cookbook_name)
 
 glance_args = "--os-username #{keystone_settings["admin_user"]}"
 glance_args = "#{glance_args} --os-password #{keystone_settings["admin_password"]}"

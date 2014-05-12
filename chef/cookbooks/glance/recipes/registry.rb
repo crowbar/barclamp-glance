@@ -12,7 +12,7 @@ if node[:glance][:use_gitrepo]
   venv_prefix = node[:glance][:use_virtualenv] ? ". #{venv_path}/bin/activate &&" : nil
 end
 
-keystone_settings = GlanceHelper.keystone_settings(node)
+keystone_settings = KeystoneHelper.keystone_settings(node, @cookbook_name)
 
 if node[:glance][:use_gitrepo]
   pfs_and_install_deps "keystone" do

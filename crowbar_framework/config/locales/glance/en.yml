@@ -1,0 +1,55 @@
+#
+# Copyright 2011-2013, Dell
+# Copyright 2013-2014, SUSE LINUX Products GmbH
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+en:
+  barclamp:
+    glance:
+      edit_attributes:
+        rabbitmq_instance: 'RabbitMQ'
+        keystone_instance: 'Keystone Instance'
+        notifier_strategy: 'Notification Strategy'
+        store_header: 'Image Storage'
+        default_store: 'Default Storage Backend'
+        filesystem_store_datadir: 'Image Store Directory'
+        swift:
+          store_container: 'Swift Container'
+        rbd:
+          store_user: 'RADOS user for CephX authentication'
+          store_pool: 'RADOS pool for Glance images'
+        api_header: 'API'
+        api:
+          protocol: 'Protocol'
+          bind_open_address: 'Bind to All Addresses'
+        ssl_header: 'SSL Support'
+        ssl:
+          generate_certs: 'Generate (self-signed) certificates (implies insecure)'
+          certfile: 'SSL Certificate File'
+          keyfile: 'SSL (Private) Key File'
+          insecure: 'SSL Certificate is insecure (for instance, self-signed)'
+          cert_required: 'Require Client Certificate'
+          ca_certs: 'SSL CA Certificates File'
+        cache_header: 'Caching'
+        enable_caching: 'Enable Caching'
+        use_cachemanagement: 'Turn On Cache Management'
+        image_cache_datadir: 'Directory'
+        image_cache_grace_period: 'Grace Period'
+        image_cache_stall_timeout: 'Stall Timeout'
+        database_header: 'Database'
+        sql_idle_timeout: 'SQL Idle Timeout'
+        database_instance: 'Database Instance'
+        logging_header: 'Logging'
+        verbose: 'Verbose Logging'

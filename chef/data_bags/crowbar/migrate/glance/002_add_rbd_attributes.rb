@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 def upgrade ta, td, a, d
   a['rbd'] = {}
   a['rbd']['store_ceph_conf'] = '/etc/ceph/ceph.conf'

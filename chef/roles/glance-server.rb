@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 name "glance-server"
 description "Glance Server Role - Image Registry and Delivery Service for the cloud"
 run_list(

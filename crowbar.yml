@@ -1,10 +1,12 @@
-# Copyright 2011, Dell
+#
+# Copyright 2011-2013, Dell
+# Copyright 2013-2014, SUSE LINUX Products GmbH
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-# http://www.apache.org/licenses/LICENSE-2.0
+#   http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,19 +14,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Author: RobHirschfeld
-#
 
 barclamp:
-  name: glance
-  display: Glance
+  name: 'glance'
+  display: 'Glance'
   description: 'OpenStack Image Service: Discovery, registration and delivery services for virtual machine images'
   version: 0
-  requires:
-    - keystone
-    - pacemaker
   member:
-    - openstack
+    - 'openstack'
+  requires:
+    - 'keystone'
+    - 'pacemaker'
 
 crowbar:
   layout: 1
@@ -35,29 +35,29 @@ crowbar:
 
 debs:
   pkgs:
-    - glance
-    - python-glance
-    - python-keystone
-    - qemu-utils
+    - 'glance'
+    - 'python-glance'
+    - 'python-keystone'
+    - 'qemu-utils'
 
 rpms:
   centos-6.4:
     repos:
-      - bare openstack icehouse http://repos.fedorapeople.org/repos/openstack/openstack-icehouse/epel-6/
+      - 'bare openstack icehouse http://repos.fedorapeople.org/repos/openstack/openstack-icehouse/epel-6/'
   redhat-6.4:
     repos:
-      - bare openstack icehouse http://repos.fedorapeople.org/repos/openstack/openstack-icehouse/epel-6/
+      - 'bare openstack icehouse http://repos.fedorapeople.org/repos/openstack/openstack-icehouse/epel-6/'
   pkgs:
-    - qemu-img
-    - qemu-kvm
-    - openstack-glance
-    - python-keystone
-    - python-keystoneclient
-    - python-glance
-    - python-glanceclient
+    - 'qemu-img'
+    - 'qemu-kvm'
+    - 'openstack-glance'
+    - 'python-keystone'
+    - 'python-keystoneclient'
+    - 'python-glance'
+    - 'python-glanceclient'
 
 extra_files:
-  - http://cloud-images.ubuntu.com/releases/precise/release/ubuntu-12.04-server-cloudimg-amd64.tar.gz ami
-  
+  - 'http://cloud-images.ubuntu.com/releases/precise/release/ubuntu-12.04-server-cloudimg-amd64.tar.gz ami'
+
 git_repo:
-  - glance https://github.com/openstack/glance.git stable/icehouse
+  - 'glance https://github.com/openstack/glance.git stable/icehouse'

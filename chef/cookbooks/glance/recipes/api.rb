@@ -83,17 +83,15 @@ if node[:glance][:api][:protocol] == 'https'
   end
 end
 
-if node[:glance][:notifier_strategy] != "noop"
-  rabbit = get_instance('roles:rabbitmq-server')
+rabbit = get_instance('roles:rabbitmq-server')
 
-  rabbit_settings = {
-    :address => rabbit[:rabbitmq][:address],
-    :port => rabbit[:rabbitmq][:port],
-    :user => rabbit[:rabbitmq][:user],
-    :password => rabbit[:rabbitmq][:password],
-    :vhost => rabbit[:rabbitmq][:vhost]
-  }
-end
+rabbit_settings = {
+  :address => rabbit[:rabbitmq][:address],
+  :port => rabbit[:rabbitmq][:port],
+  :user => rabbit[:rabbitmq][:user],
+  :password => rabbit[:rabbitmq][:password],
+  :vhost => rabbit[:rabbitmq][:vhost]
+}
 
 network_settings = GlanceHelper.network_settings(node)
 

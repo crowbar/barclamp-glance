@@ -33,7 +33,6 @@
       "use_cachemanagement": false,
       "image_cache_datadir": "/var/lib/glance/image-cache",
       "image_cache_stall_timeout": 86400,
-      "image_cache_grace_period": 3600,
       "image_cache_max_size": 10737418240,
       "gitrepo": "http://github.com/openstack/glance.git",
       "git_instance": "",
@@ -47,7 +46,6 @@
          "pip://python-glanceclient"
       ],
       "use_syslog": false,
-      "notifier_strategy": "noop",
       "default_store": "file",
       "filesystem_store_datadir": "/var/lib/glance/images",
       "swift": {
@@ -75,7 +73,7 @@
   "deployment": {
     "glance": {
       "crowbar-revision": 0,
-      "schema-revision": 5,
+      "schema-revision": 10,
       "element_states": {
         "glance-server": [ "readying", "ready", "applying" ]
       },

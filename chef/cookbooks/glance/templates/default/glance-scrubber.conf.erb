@@ -5,8 +5,11 @@ verbose = <%= node[:glance][:verbose] ? "True" : "False" %>
 # Show debugging output in logs (sets DEBUG log level output)
 debug = <%= node[:glance][:debug] ? "True" : "False" %>
 
-# Log to this file. Make sure you do not set the same log
-# file for both the API and registry servers!
+# Log to this file. Make sure you do not set the same log file for both the API
+# and registry servers!
+#
+# If `log_file` is omitted and `use_syslog` is false, then log messages are
+# sent to stdout as a fallback.
 log_file = <%= node[:glance][:scrubber][:log_file] %>
 
 # Send logs to syslog (/dev/log) instead of to file specified by `log_file`
@@ -43,7 +46,7 @@ registry_port = <%= @registry_bind_port %>
 # Directory to use for lock files. Default to a temp directory
 # (string value). This setting needs to be the same for both
 # glance-scrubber and glance-api.
-lock_path=/var/run/glance
+lock_path = /var/run/glance
 
 # ================= Security Options ==========================
 

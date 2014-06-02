@@ -22,7 +22,8 @@ $(document).ready(function($) {
     var types = [
       'file',
       'swift',
-      'rbd'
+      'rbd',
+      'vsphere'
     ];
 
     var selector = $.map(types, function(val, index) {

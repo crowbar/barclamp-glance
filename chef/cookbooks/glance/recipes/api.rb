@@ -16,7 +16,7 @@ if node.platform == "ubuntu"
  package "qemu-utils"
 end
 
-keystone_settings = GlanceHelper.keystone_settings(node)
+keystone_settings = KeystoneHelper.keystone_settings(node, @cookbook_name)
 
 if node[:glance][:api][:protocol] == 'https'
   if node[:glance][:ssl][:generate_certs]

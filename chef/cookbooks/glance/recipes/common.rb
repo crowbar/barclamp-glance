@@ -114,7 +114,7 @@ node.save
 
 # Register glance service user
 
-keystone_settings = GlanceHelper.keystone_settings(node)
+keystone_settings = KeystoneHelper.keystone_settings(node, @cookbook_name)
 
 crowbar_pacemaker_sync_mark "wait-glance_register_user"
 

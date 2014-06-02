@@ -23,6 +23,12 @@
         = string_field %w(rbd store_user)
         = string_field %w(rbd store_pool)
 
+      #vsphere_container
+        = string_field %w(vsphere host)
+        = string_field %w(vsphere user)
+        = password_field %w(vsphere password)
+        = string_field %w(vsphere datastore)
+
     %fieldset
       %legend
         = t(".ssl_header")

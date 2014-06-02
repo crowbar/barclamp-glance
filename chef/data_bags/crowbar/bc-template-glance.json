@@ -59,6 +59,12 @@
         "store_user": "glance",
         "store_pool": "images"
       },
+      "vsphere": {
+        "host": "",
+        "user": "",
+        "password": "",
+        "datastore": ""
+      },
       "sql_idle_timeout": 3600,
       "keystone_instance": "none",
       "service_user": "glance",
@@ -69,7 +75,7 @@
   "deployment": {
     "glance": {
       "crowbar-revision": 0,
-      "schema-revision": 4,
+      "schema-revision": 5,
       "element_states": {
         "glance-server": [ "readying", "ready", "applying" ]
       },

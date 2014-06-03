@@ -5,6 +5,11 @@ verbose = <%= node[:glance][:verbose] ? 'True' : 'False' %>
 # Show debugging output in logs (sets DEBUG log level output)
 debug = <%= node[:glance][:debug] ? 'True' : 'False' %>
 
+# Log to this file. Make sure you do not set the same log file for both the API
+# and registry servers!
+#
+# If `log_file` is omitted and `use_syslog` is false, then log messages are
+# sent to stdout as a fallback.
 log_file = <%= node[:glance][:cache][:log_file] %>
 
 # Send logs to syslog (/dev/log) instead of to file specified by `log_file`
@@ -16,16 +21,6 @@ image_cache_dir = <%= node[:glance][:image_cache_datadir] %>
 # Number of seconds after which we should consider an incomplete image to be
 # stalled and eligible for reaping
 image_cache_stall_time = <%= node[:glance][:image_cache_stall_timeout] %>
-
-# image_cache_invalid_entry_grace_period - seconds
-#
-# If an exception is raised as we're writing to the cache, the cache-entry is
-# deemed invalid and moved to <image_cache_datadir>/invalid so that it can be
-# inspected for debugging purposes.
-#
-# This is number of seconds to leave these invalid images around before they
-# are elibible to be reaped.
-image_cache_invalid_entry_grace_period = <%= node[:glance][:image_cache_grace_period] %>
 
 # Max cache size in bytes
 image_cache_max_size = <%= node[:glance][:image_cache_max_size] %>
@@ -51,6 +46,7 @@ registry_port = <%= @registry_bind_port %>
 #                glance.store.swift.Store,
 #                glance.store.sheepdog.Store,
 #                glance.store.cinder.Store,
+#                glance.store.vmware_datastore.Store,
 
 # ============ Filesystem Store Options ========================
 
@@ -165,15 +161,12 @@ s3_store_create_bucket_on_put = False
 # ESX/ESXi or vCenter Server target system.
 # The server value can be an IP address or a DNS name
 # e.g. 127.0.0.1, 127.0.0.1:443, www.vmware-infra.com
-#vmware_server_host = <None>
 vmware_server_host = <%= node[:glance][:vsphere][:host] %>
 
 # Server username (string value)
-#vmware_server_username = <None>
 vmware_server_username = <%= node[:glance][:vsphere][:user] %>
 
 # Server password (string value)
-#vmware_server_password = <None>
 vmware_server_password = <%= node[:glance][:vsphere][:password] %>
 
 # Inventory path to a datacenter (string value)
@@ -182,7 +175,6 @@ vmware_server_password = <%= node[:glance][:vsphere][:password] %>
 #vmware_datacenter_path = <None>
 
 # Datastore associated with the datacenter (string value)
-#vmware_datastore_name = <None>
 vmware_datastore_name = <%= node[:glance][:vsphere][:datastore] %>
 
 # The number of times we retry on failures

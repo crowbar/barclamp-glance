@@ -55,7 +55,6 @@
             "use_cachemanagement": { "type": "bool", "required": true },
             "image_cache_datadir": { "type": "str", "required": true },
             "image_cache_stall_timeout": { "type": "int", "required": true },
-            "image_cache_grace_period": { "type": "int", "required": true },
             "image_cache_max_size": { "type": "int", "required": true },
             "gitrepo": { "type": "str", "required": true },
             "git_instance": { "type": "str", "required": true },
@@ -66,7 +65,6 @@
             "use_pip_cache": { "type": "bool", "required": true },
             "pfs_deps": { "type": "seq", "required": true, "sequence": [ { "type": "str" } ] },
             "use_syslog": { "type": "bool", "required": true },
-            "notifier_strategy": { "type": "str", "required": true },
             "default_store": { "type": "str", "required": true, "pattern": "/^(file|rbd|swift|vsphere)$/"  },
             "filesystem_store_datadir": { "type": "str", "required": true },
             "swift": {

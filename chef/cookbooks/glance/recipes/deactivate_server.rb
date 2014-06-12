@@ -4,6 +4,7 @@ main_role = "server"
 unless node["roles"].include?("#{resource}-#{main_role}")
   # HA part if node is in a cluster
   if File.exist?("/usr/sbin/crm")
+    log "Removing #{resource} resource"
     clone_resource = "cl-g-#{resource}"
 
     pacemaker_clone clone_resource do

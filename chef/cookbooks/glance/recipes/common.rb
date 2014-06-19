@@ -22,6 +22,10 @@ package "curl" do
   action :install
 end
 
+package "sheepdog" do
+  action :install
+end
+
 unless node[:glance][:use_gitrepo]
   package "glance" do
     package_name "openstack-glance" if %w(redhat centos suse).include?(node.platform)

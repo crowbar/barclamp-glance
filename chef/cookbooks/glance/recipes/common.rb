@@ -148,6 +148,24 @@ keystone_register "give glance user access" do
   action :add_access
 end
 
+#ensure that the log directory is created
+directory node[:glance][:log_dir] do
+  owner node[:glance][:user]
+  group node[:glance][:group]
+  mode 0755
+  action :create
+  only_if { node[:platform] == "ubuntu" }
+end
+
+#ensure that the cache directory is created
+directory node[:glance][:cache_dir] do
+  owner node[:glance][:user]
+  group node[:glance][:group]
+  mode 0755
+  action :create
+  only_if { node[:platform] == "ubuntu" }
+end
+
 crowbar_pacemaker_sync_mark "create-glance_register_user"
 
 ceph_env_filter = " AND ceph_config_environment:ceph-config-default"

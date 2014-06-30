@@ -68,7 +68,7 @@ class GlanceService < PacemakerServiceObject
     base["attributes"][@bc_name]["rabbitmq_instance"] = find_dep_proposal("rabbitmq", true)
     base["attributes"][@bc_name]["keystone_instance"] = find_dep_proposal("keystone")
 
-    base["attributes"]["glance"]["service_password"] = '%012d' % rand(1e12)
+    base["attributes"]["glance"]["service_password"] = random_password
     base["attributes"][@bc_name][:db][:password] = random_password
 
     @logger.debug("Glance create_proposal: exiting")

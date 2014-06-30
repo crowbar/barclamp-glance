@@ -27,16 +27,6 @@ module Barclamp
       )
     end
 
-    def notifier_strategies_for_glance(selected)
-      options_for_select(
-        [
-          ["Noop", "noop"],
-          ["RabbitMQ", "rabbit"]
-        ],
-        selected.to_s
-      )
-    end
-
     def default_stores_for_glance(selected)
       options_for_select(
         [

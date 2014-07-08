@@ -96,10 +96,10 @@ workers = <%= [node["cpu"]["total"], 2, 4].sort[1] %>
 #send_identity_headers = False
 
 # Supported values for the 'container_format' image attribute
-#container_formats =ami,ari,aki,bare,ovf,ova
+#container_formats=ami,ari,aki,bare,ovf,ova
 
 # Supported values for the 'disk_format' image attribute
-#disk_formats =ami,ari,aki,vhd,vmdk,raw,qcow2,vdi,iso
+#disk_formats=ami,ari,aki,vhd,vmdk,raw,qcow2,vdi,iso
 
 # Directory to use for lock files. Default to a temp directory
 # (string value). This setting needs to be the same for both
@@ -239,7 +239,6 @@ notification_driver = messaging
 # Default publisher_id for outgoing notifications.
 # default_publisher_id = image.localhost
 
-<% if @rabbit_settings -%>
 # Configuration options if sending notifications via rabbitmq (these are
 # the defaults)
 rabbit_host = <%= @rabbit_settings[:address] %>
@@ -253,7 +252,6 @@ rabbit_virtual_host = <%= @rabbit_settings[:vhost] %>
 rabbit_notification_exchange = glance
 rabbit_notification_topic = notifications
 rabbit_durable_queues = False
-<% end -%>
 
 # Configuration options if sending notifications via Qpid (these are
 # the defaults)

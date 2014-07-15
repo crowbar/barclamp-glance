@@ -65,7 +65,7 @@ class GlanceService < PacemakerServiceObject
 
     base["attributes"][@bc_name]["git_instance"] = find_dep_proposal("git", true)
     base["attributes"][@bc_name]["database_instance"] = find_dep_proposal("database")
-    base["attributes"][@bc_name]["rabbitmq_instance"] = find_dep_proposal("rabbitmq", true)
+    base["attributes"][@bc_name]["rabbitmq_instance"] = find_dep_proposal("rabbitmq")
     base["attributes"][@bc_name]["keystone_instance"] = find_dep_proposal("keystone")
 
     base["attributes"]["glance"]["service_password"] = random_password

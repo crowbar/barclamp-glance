@@ -42,7 +42,8 @@ crowbar_pacemaker_sync_mark "wait-glance_db_sync"
 execute "glance-manage db sync" do
   user node[:glance][:user]
   group node[:glance][:group]
-  command "#{venv_prefix}glance-manage db sync"
+  # We know the glance-api.conf file is not updated yet, so forcefully ignore it
+  command "#{venv_prefix}glance-manage --config-file \"#{node[:glance][:registry][:config_file]}\" db sync"
   # We only do the sync the first time, and only if we're not doing HA or if we
   # are the founder of the HA cluster (so that it's really only done once).
   only_if { !node[:glance][:db_synced] && (!node[:glance][:ha][:enabled] || CrowbarPacemakerHelper.is_cluster_founder?(node)) }

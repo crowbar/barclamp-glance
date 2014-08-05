@@ -28,13 +28,23 @@ end
 
 keystone_settings = KeystoneHelper.keystone_settings(node, @cookbook_name)
 
+#TODO: glance should depend on cinder, but cinder already depends on glance :/
+# so we have to do something like this
+cinder_api_insecure = false
+cinders = search(:node, "roles:cinder-controller") || []
+if cinders.length > 0
+  cinder = cinders[0]
+  cinder_api_insecure = cinder[:cinder][:api][:protocol] == 'https' && cinder[:cinder][:ssl][:insecure]
+end
+
 template node[:glance][:cache][:config_file] do
   source "glance-cache.conf.erb"
   owner "root"
   group node[:glance][:group]
   mode 0640
   variables(
-      :keystone_settings => keystone_settings
+      :keystone_settings => keystone_settings,
+      :cinder_api_insecure => cinder_api_insecure
   )
 end
 

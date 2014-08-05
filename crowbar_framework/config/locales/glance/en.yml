@@ -22,6 +22,11 @@ en:
         rabbitmq_instance: 'RabbitMQ'
         keystone_instance: 'Keystone Instance'
         store_header: 'Image Storage'
+        store:
+          file_header: 'File Backend Parameters'
+          swift_header: 'Swift Backend Parameters'
+          rbd_header: 'RADOS Backend Parameters'
+          vsphere_header: 'VMWare Backend Parameters'
         default_store: 'Default Storage Backend'
         filesystem_store_datadir: 'Image Store Directory'
         swift:

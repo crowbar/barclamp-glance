@@ -9,24 +9,31 @@
     %fieldset
       %legend
         = t(".store_header")
-
       = select_field :default_store, :collection => :default_stores_for_glance
 
-      #file_container
-        = string_field :filesystem_store_datadir
+    %fieldset
+      %legend
+        = t(".store.file_header")
+      = string_field :filesystem_store_datadir
 
-      #swift_container
-        = string_field %w(swift store_container)
+    %fieldset
+      %legend
+        = t(".store.swift_header")
+      = string_field %w(swift store_container)
 
-      #rbd_container
-        = string_field %w(rbd store_user)
-        = string_field %w(rbd store_pool)
+    %fieldset
+      %legend
+        = t(".store.rbd_header")
+      = string_field %w(rbd store_user)
+      = string_field %w(rbd store_pool)
 
-      #vsphere_container
-        = string_field %w(vsphere host)
-        = string_field %w(vsphere user)
-        = password_field %w(vsphere password)
-        = string_field %w(vsphere datastore)
+    %fieldset
+      %legend
+        = t(".store.vsphere_header")
+      = string_field %w(vsphere host)
+      = string_field %w(vsphere user)
+      = password_field %w(vsphere password)
+      = string_field %w(vsphere datastore)
 
     %fieldset
       %legend

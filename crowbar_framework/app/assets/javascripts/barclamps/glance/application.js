@@ -14,27 +14,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-$(document).ready(function($) {
-  $('#default_store').on('change', function() {
-    var value = $(this).val();
-
-    var types = [
-      'file',
-      'swift',
-      'rbd',
-      'vsphere'
-    ];
-
-    var selector = $.map(types, function(val, index) {
-      return '#{0}_container'.format(val);
-    }).join(', ');
-
-    var current = '#{0}_container'.format(
-      value
-    );
-
-    $(selector).hide(100).attr('disabled', 'disabled');
-    $(current).show(100).removeAttr('disabled');
-  }).trigger('change');
-});

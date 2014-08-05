@@ -19,6 +19,7 @@ en:
   barclamp:
     glance:
       edit_attributes:
+        database_instance: 'Database Instance'
         rabbitmq_instance: 'RabbitMQ'
         keystone_instance: 'Keystone Instance'
         store_header: 'Image Storage'
@@ -40,10 +41,8 @@ en:
           password: 'vCenter Password'
           datastore: 'Datastore Name'
           datacenter_path: 'Datacenter Path'
-        api_header: 'API'
         api:
           protocol: 'Protocol'
-          bind_open_address: 'Bind to All Addresses'
         ssl_header: 'SSL Support'
         ssl:
           generate_certs: 'Generate (self-signed) certificates (implies insecure)'
@@ -55,10 +54,5 @@ en:
         cache_header: 'Caching'
         enable_caching: 'Enable Caching'
         use_cachemanagement: 'Turn On Cache Management'
-        image_cache_datadir: 'Directory'
-        image_cache_stall_timeout: 'Stall Timeout'
-        database_header: 'Database'
-        sql_idle_timeout: 'SQL Idle Timeout'
-        database_instance: 'Database Instance'
         logging_header: 'Logging'
         verbose: 'Verbose Logging'

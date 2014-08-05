@@ -93,6 +93,15 @@ rabbit_settings = {
   :vhost => rabbit[:rabbitmq][:vhost]
 }
 
+#TODO: glance should depend on cinder, but cinder already depends on glance :/
+# so we have to do something like this
+cinder_api_insecure = false
+cinders = search(:node, "roles:cinder-controller") || []
+if cinders.length > 0
+  cinder = cinders[0]
+  cinder_api_insecure = cinder[:cinder][:api][:protocol] == 'https' && cinder[:cinder][:ssl][:insecure]
+end
+
 network_settings = GlanceHelper.network_settings(node)
 
 template node[:glance][:api][:config_file] do
@@ -106,7 +115,8 @@ template node[:glance][:api][:config_file] do
       :registry_bind_host => network_settings[:registry][:bind_host],
       :registry_bind_port => network_settings[:registry][:bind_port],
       :keystone_settings => keystone_settings,
-      :rabbit_settings => rabbit_settings
+      :rabbit_settings => rabbit_settings,
+      :cinder_api_insecure => cinder_api_insecure
   )
 end
 

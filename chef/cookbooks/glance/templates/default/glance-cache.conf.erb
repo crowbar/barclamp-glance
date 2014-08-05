@@ -155,7 +155,7 @@ cinder_catalog_info = volume:cinder:internalURL
 #cinder_http_retries = 3
 
 # Allow to perform insecure SSL requests to cinder (boolean value)
-#cinder_api_insecure = False
+cinder_api_insecure = <%= @cinder_api_insecure ? 'True' : 'False' %>
 
 # ============ VMware Datastore Store Options =====================
 

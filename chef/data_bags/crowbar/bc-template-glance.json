@@ -61,7 +61,9 @@
         "host": "",
         "user": "",
         "password": "",
-        "datastore": ""
+        "datastore": "",
+        "datacenter_path": "ha-datacenter",
+        "store_image_dir": "/openstack_glance"
       },
       "sql_idle_timeout": 3600,
       "keystone_instance": "none",
@@ -74,7 +76,7 @@
     "glance": {
       "crowbar-revision": 0,
       "crowbar-applied": false,
-      "schema-revision": 10,
+      "schema-revision": 11,
       "element_states": {
         "glance-server": [ "readying", "ready", "applying" ]
       },

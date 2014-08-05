@@ -85,7 +85,9 @@
                 "host": { "type": "str", "required": true },
                 "user": { "type": "str", "required": true },
                 "password": { "type": "str", "required": true },
-                "datastore": { "type": "str", "required": true }
+                "datastore": { "type": "str", "required": true },
+                "datacenter_path": { "type": "str", "required": true },
+                "store_image_dir": { "type": "str", "required": true }
               }
             },
             "sql_idle_timeout": { "type": "int", "required": true },

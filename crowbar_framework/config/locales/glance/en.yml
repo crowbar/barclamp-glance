@@ -23,11 +23,11 @@ en:
         keystone_instance: 'Keystone Instance'
         store_header: 'Image Storage'
         store:
-          file_header: 'File Backend Parameters'
-          swift_header: 'Swift Backend Parameters'
-          rbd_header: 'RADOS Backend Parameters'
-          vsphere_header: 'VMWare Backend Parameters'
-        default_store: 'Default Storage Backend'
+          file_header: 'File Store Parameters'
+          swift_header: 'Swift Store Parameters'
+          rbd_header: 'RADOS Store Parameters'
+          vsphere_header: 'VMWare Store Parameters'
+        default_store: 'Default Storage Store'
         filesystem_store_datadir: 'Image Store Directory'
         swift:
           store_container: 'Swift Container'
@@ -35,10 +35,11 @@ en:
           store_user: 'RADOS user for CephX authentication'
           store_pool: 'RADOS pool for Glance images'
         vsphere:
-          host: 'vCenter IP Address'
+          host: 'vCenter Host/IP Address'
           user: 'vCenter Username'
           password: 'vCenter Password'
           datastore: 'Datastore Name'
+          datacenter_path: 'Datacenter Path'
         api_header: 'API'
         api:
           protocol: 'Protocol'

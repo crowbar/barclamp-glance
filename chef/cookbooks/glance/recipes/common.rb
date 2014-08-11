@@ -58,57 +58,44 @@ else
 
 end
 
-sql = get_instance('roles:database-server')
+db_settings = fetch_database_settings
 include_recipe "database::client"
-backend_name = Chef::Recipe::Database::Util.get_backend_name(sql)
-include_recipe "#{backend_name}::client"
-include_recipe "#{backend_name}::python-client"
-
-db_provider = Chef::Recipe::Database::Util.get_database_provider(sql)
-db_user_provider = Chef::Recipe::Database::Util.get_user_provider(sql)
-privs = Chef::Recipe::Database::Util.get_default_priviledges(sql)
-url_scheme = backend_name
-
-sql_address = CrowbarDatabaseHelper.get_listen_address(sql)
-Chef::Log.info("Database server found at #{sql_address}")
-
-db_conn = { :host => sql_address,
-          :username => "db_maker",
-          :password => sql[:database][:db_maker_password] }
+include_recipe "#{db_settings[:backend_name]}::client"
+include_recipe "#{db_settings[:backend_name]}::python-client"
 
 crowbar_pacemaker_sync_mark "wait-glance_database"
 
 # Create the Glance Database
 database "create #{node[:glance][:db][:database]} database" do
-  connection db_conn
+  connection db_settings[:connection]
   database_name node[:glance][:db][:database]
-  provider db_provider
+  provider db_settings[:provider]
   action :create
 end
 
 database_user "create glance database user" do
   host '%'
-  connection db_conn
+  connection db_settings[:connection]
   username node[:glance][:db][:user]
   password node[:glance][:db][:password]
-  provider db_user_provider
+  provider db_settings[:user_provider]
   action :create
 end
 
 database_user "grant database access for glance database user" do
-  connection db_conn
+  connection db_settings[:connection]
   username node[:glance][:db][:user]
   password node[:glance][:db][:password]
   database_name node[:glance][:db][:database]
   host '%'
-  privileges privs
-  provider db_user_provider
+  privileges db_settings[:privs]
+  provider db_settings[:user_provider]
   action :grant
 end
 
 crowbar_pacemaker_sync_mark "create-glance_database"
 
-node[:glance][:sql_connection] = "#{url_scheme}://#{node[:glance][:db][:user]}:#{node[:glance][:db][:password]}@#{sql_address}/#{node[:glance][:db][:database]}"
+node[:glance][:sql_connection] = "#{db_settings[:url_scheme]}://#{node[:glance][:db][:user]}:#{node[:glance][:db][:password]}@#{db_settings[:address]}/#{node[:glance][:db][:database]}"
 
 node.save
 

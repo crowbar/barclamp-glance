@@ -83,16 +83,6 @@ if node[:glance][:api][:protocol] == 'https'
   end
 end
 
-rabbit = get_instance('roles:rabbitmq-server')
-
-rabbit_settings = {
-  :address => rabbit[:rabbitmq][:address],
-  :port => rabbit[:rabbitmq][:port],
-  :user => rabbit[:rabbitmq][:user],
-  :password => rabbit[:rabbitmq][:password],
-  :vhost => rabbit[:rabbitmq][:vhost]
-}
-
 network_settings = GlanceHelper.network_settings(node)
 
 template node[:glance][:api][:config_file] do
@@ -106,7 +96,7 @@ template node[:glance][:api][:config_file] do
       :registry_bind_host => network_settings[:registry][:bind_host],
       :registry_bind_port => network_settings[:registry][:bind_port],
       :keystone_settings => keystone_settings,
-      :rabbit_settings => rabbit_settings
+      :rabbit_settings => fetch_rabbitmq_settings
   )
 end
 

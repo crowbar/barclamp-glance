@@ -51,7 +51,7 @@ registry_port = <%= @registry_bind_port %>
 #                glance.store.swift.Store,
 #                glance.store.sheepdog.Store,
 #                glance.store.cinder.Store,
-
+known_stores = glance.store.filesystem.Store,glance.store.http.Store,glance.store.rbd.Store,glance.store.swift.Store
 # ============ Filesystem Store Options ========================
 
 # Directory that the Filesystem backend store

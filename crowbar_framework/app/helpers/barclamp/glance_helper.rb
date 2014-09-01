@@ -33,7 +33,7 @@ module Barclamp
           ["File", "file"],
           ["Swift", "swift"],
           ["Rados", "rbd"],
-          ["VMWare", "vsphere"]
+          ["VMware", "vsphere"]
         ],
         selected.to_s
       )

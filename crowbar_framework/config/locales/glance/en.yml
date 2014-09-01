@@ -27,7 +27,7 @@ en:
           file_header: 'File Store Parameters'
           swift_header: 'Swift Store Parameters'
           rbd_header: 'RADOS Store Parameters'
-          vsphere_header: 'VMWare Store Parameters'
+          vsphere_header: 'VMware Store Parameters'
         default_store: 'Default Storage Store'
         filesystem_store_datadir: 'Image Store Directory'
         swift:

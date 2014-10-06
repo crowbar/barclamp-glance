@@ -145,7 +145,7 @@ s3_store_create_bucket_on_put = False
 #cinder_endpoint_template = <None>
 
 # Region name of this node (string value)
-#os_region_name = <None>
+os_region_name = <%= @keystone_settings['endpoint_region'] %>
 
 # Location of ca certicates file to use for cinder client requests
 # (string value)

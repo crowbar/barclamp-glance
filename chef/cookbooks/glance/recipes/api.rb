@@ -136,7 +136,7 @@ keystone_register "register glance endpoint" do
   port keystone_settings['admin_port']
   token keystone_settings['admin_token']
   endpoint_service "glance"
-  endpoint_region "RegionOne"
+  endpoint_region keystone_settings['endpoint_region']
   endpoint_publicURL "#{glance_protocol}://#{endpoint_public_ip}:#{api_port}"
   endpoint_adminURL "#{glance_protocol}://#{endpoint_admin_ip}:#{api_port}"
   endpoint_internalURL "#{glance_protocol}://#{endpoint_admin_ip}:#{api_port}"

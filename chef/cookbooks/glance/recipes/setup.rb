@@ -22,6 +22,7 @@ glance_args = "#{glance_args} --os-password #{keystone_settings["admin_password"
 glance_args = "#{glance_args} --os-tenant-name #{keystone_settings["admin_tenant"]}"
 glance_args = "#{glance_args} --os-auth-url #{keystone_settings["internal_auth_url"]}"
 glance_args = "#{glance_args} --os-endpoint-type internalURL"
+glance_args = "#{glance_args} --os-region-name '#{keystone_settings["endpoint_region"]}'"
 
 #
 # Download and install AMIs

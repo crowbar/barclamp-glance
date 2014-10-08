@@ -219,7 +219,7 @@ sqlalchemy_debug = <%= node[:glance][:debug] ? "True" : "False" %>
 # Keystone endpoint
 #auth_url = None
 # Keystone region
-#auth_region = None
+auth_region = <%= @keystone_settings['endpoint_region'] %>
 # Auth strategy
 #auth_strategy = keystone
 
@@ -363,7 +363,7 @@ swift_enable_snet = False
 
 # The region of the swift endpoint to be used for single tenant. This setting
 # is only necessary if the tenant has multiple swift endpoints.
-#swift_store_region =
+swift_store_region = <%= @keystone_settings['endpoint_region'] %>
 
 # If set to False, disables SSL layer compression of https swift requests.
 # Setting to 'False' may improve performance for images which are already
@@ -453,7 +453,7 @@ sheepdog_store_chunk_size = 64
 #cinder_endpoint_template = <None>
 
 # Region name of this node (string value)
-#os_region_name = <None>
+os_region_name = <%= @keystone_settings['endpoint_region'] %>
 
 # Location of ca certicates file to use for cinder client requests
 # (string value)

@@ -29,6 +29,11 @@ backlog = 4096
 # package.
 #data_api = glance.db.sqlalchemy.api
 
+# The number of child process workers that will be
+# created to service Registry requests. The default will be
+# equal to the number of CPUs available. (integer value)
+workers = <%= [node["cpu"]["total"], 2, 4].sort[1] %>
+
 # Enable Registry API versions individually or simultaneously
 #enable_v1_registry = True
 #enable_v2_registry = True
@@ -73,6 +78,52 @@ use_syslog = <%= node[:glance][:use_syslog] ? "True" : "False" %>
 # CA certificate file to use to verify connecting clients
 #ca_file = /path/to/cafile
 
+# ============ Notification System Options =====================
+
+# Driver or drivers to handle sending notifications. Set to
+# 'messaging' to send notifications to a message queue.
+notification_driver = messaging
+
+# Default publisher_id for outgoing notifications.
+default_publisher_id = <%= @node_hostname %>
+
+# Messaging driver used for 'messaging' notifications driver
+rpc_backend = 'rabbit'
+
+# Configuration options if sending notifications via rabbitmq (these are
+# the defaults)
+rabbit_host = <%= @rabbit_settings[:address] %>
+<% unless @rabbit_settings[:port].nil? -%>
+rabbit_port = <%= @rabbit_settings[:port] %>
+<% end -%>
+rabbit_use_ssl = false
+rabbit_userid = <%= @rabbit_settings[:user] %>
+rabbit_password = <%= @rabbit_settings[:password] %>
+rabbit_virtual_host = <%= @rabbit_settings[:vhost] %>
+rabbit_notification_exchange = glance
+rabbit_notification_topic = notifications
+rabbit_durable_queues = False
+
+# Configuration options if sending notifications via Qpid (these are
+# the defaults)
+qpid_notification_exchange = glance
+qpid_notification_topic = notifications
+qpid_hostname = localhost
+qpid_port = 5672
+qpid_username =
+qpid_password =
+qpid_sasl_mechanisms =
+qpid_reconnect_timeout = 0
+qpid_reconnect_limit = 0
+qpid_reconnect_interval_min = 0
+qpid_reconnect_interval_max = 0
+qpid_reconnect_interval = 0
+qpid_heartbeat = 5
+# Set to 'ssl' to enable SSL
+qpid_protocol = tcp
+qpid_tcp_nodelay = True
+
+
 # ================= Database Options ==========================
 
 [database]
@@ -96,7 +147,7 @@ connection = <%= node[:glance][:sql_connection] %>
 # The SQL mode to be used for MySQL sessions. This option,
 # including the default, overrides any server-set SQL mode. To
 # use whatever SQL mode is set by the server configuration,
-# set this to no value. Example: mysql_sql_mode = (string
+# set this to no value. Example: mysql_sql_mode= (string
 # value)
 #mysql_sql_mode = TRADITIONAL
 
@@ -173,9 +224,7 @@ idle_timeout = <%= node[:glance][:sql_idle_timeout] %>
 #db_max_retries = 20
 
 [keystone_authtoken]
-auth_host = <%= @keystone_settings['internal_url_host'] %>
-auth_port = <%= @keystone_settings['admin_port'] %>
-auth_protocol = <%= @keystone_settings['protocol'] %>
+identity_uri = <%= @keystone_settings['protocol'] %>://<%= @keystone_settings['internal_url_host'] %>:<%= @keystone_settings['admin_port'] %>/
 admin_tenant_name = <%= @keystone_settings['service_tenant'] %>
 admin_user = <%= @keystone_settings['service_user'] %>
 admin_password = <%= @keystone_settings['service_password'] %>
@@ -192,3 +241,10 @@ insecure = <%= @keystone_settings['insecure'] %>
 # [pipeline:glance-registry-keystone], you would configure the flavor below
 # as 'keystone'.
 flavor = keystone
+
+[profiler]
+# If False fully disable profiling feature.
+enabled = False
+
+# If False doesn't trace SQL requests.
+trace_sqlalchemy = False

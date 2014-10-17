@@ -446,7 +446,7 @@ sheepdog_store_chunk_size = 64
 # Info to match when looking for cinder in the service catalog
 # Format is : separated values of the form:
 # <service_type>:<service_name>:<endpoint_type> (string value)
-#cinder_catalog_info = volume:cinder:publicURL
+cinder_catalog_info = volume:cinder:internalURL
 
 # Override service catalog lookup with template for cinder endpoint
 # e.g. http://localhost:8776/v1/%(project_id)s (string value)
@@ -463,7 +463,7 @@ os_region_name = <%= @keystone_settings['endpoint_region'] %>
 #cinder_http_retries = 3
 
 # Allow to perform insecure SSL requests to cinder (boolean value)
-#cinder_api_insecure = False
+cinder_api_insecure = <%= @cinder_api_insecure ? 'True' : 'False' %>
 
 # ============ VMware Datastore Store Options =====================
 

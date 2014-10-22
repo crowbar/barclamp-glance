@@ -137,8 +137,11 @@ end
 
 crowbar_pacemaker_sync_mark "create-glance_register_user"
 
-ceph_env_filter = " AND ceph_config_environment:ceph-config-default"
-ceph_servers = search(:node, "roles:ceph-osd#{ceph_env_filter}") || []
-if ceph_servers.length > 0
-  include_recipe "ceph::glance"
+# Check if right default_store was selected
+if node['glance']['default_store'] == 'rbd'
+  ceph_env_filter = " AND ceph_config_environment:ceph-config-default"
+  ceph_servers = search(:node, "roles:ceph-osd#{ceph_env_filter}") || []
+  if ceph_servers.length > 0
+    include_recipe "ceph::glance"
+  end
 end

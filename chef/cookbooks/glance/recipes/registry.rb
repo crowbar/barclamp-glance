@@ -33,7 +33,8 @@ template node[:glance][:registry][:config_file] do
   variables(
       :bind_host => network_settings[:registry][:bind_host],
       :bind_port => network_settings[:registry][:bind_port],
-      :keystone_settings => keystone_settings
+      :keystone_settings => keystone_settings,
+      :rabbit_settings => fetch_rabbitmq_settings
   )
 end
 

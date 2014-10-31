@@ -11,19 +11,6 @@ debug = <%= node[:glance][:debug] ? "True" : "False" %>
 # Default: 'file'
 default_store = <%= node[:glance][:default_store] %>
 
-# List of which store classes and store class locations are
-# currently known to glance at startup.
-# Existing but disabled stores:
-#      glance.store.rbd.Store,
-#      glance.store.s3.Store,
-#      glance.store.swift.Store,
-#      glance.store.sheepdog.Store,
-#      glance.store.cinder.Store,
-#      glance.store.gridfs.Store,
-#      glance.store.vmware_datastore.Store,
-known_stores = glance.store.filesystem.Store,glance.store.http.Store,glance.store.rbd.Store,glance.store.swift.Store,glance.store.cinder.Store,glance.store.vmware_datastore.Store
-
-
 # Maximum image size (in bytes) that may be uploaded through the
 # Glance API server. Defaults to 1 TB.
 # WARNING: this value should only be increased after careful consideration
@@ -54,11 +41,9 @@ backlog = 4096
 # package, it is also possible to use: glance.db.registry.api
 # data_api = glance.db.sqlalchemy.api
 
-# Number of Glance API worker processes to start.
-# On machines with more than one CPU increasing this value
-# may improve performance (especially if using SSL with
-# compression turned on). It is typically recommended to set
-# this value to the number of CPUs present on your machine.
+# The number of child process workers that will be
+# created to service API requests. The default will be
+# equal to the number of CPUs available. (integer value)
 workers = <%= [node["cpu"]["total"], 2, 4].sort[1] %>
 
 # Maximum line size of message headers to be accepted.
@@ -118,11 +103,6 @@ lock_path = /var/run/glance
 # property_protection_file.
 # The default value for property_protection_rule_format is 'roles'.
 #property_protection_rule_format = roles
-
-# Specifies how long (in hours) a task is supposed to live in the tasks DB
-# after succeeding or failing before getting soft-deleted.
-# The default value for task_time_to_live is 48 hours.
-# task_time_to_live = 48
 
 # This value sets what strategy will be used to determine the image location
 # order. Currently two strategies are packaged with Glance 'location_order'
@@ -225,18 +205,15 @@ auth_region = <%= @keystone_settings['endpoint_region'] %>
 
 # ============ Notification System Options =====================
 
-# Notifications can be sent when images are create, updated or deleted.
-# There are three methods of sending notifications, logging (via the
-# log_file directive), rabbit (via a rabbitmq queue), qpid (via a Qpid
-# message queue), or noop (no notifications sent, the default)
-# NOTE: THIS CONFIGURATION OPTION HAS BEEN DEPRECATED IN FAVOR OF `notification_driver`
-# notifier_strategy = default
-
-# Driver or drivers to handle sending notifications
+# Driver or drivers to handle sending notifications. Set to
+# 'messaging' to send notifications to a message queue.
 notification_driver = messaging
 
 # Default publisher_id for outgoing notifications.
-# default_publisher_id = image.localhost
+default_publisher_id = <%= @node_hostname %>
+
+# Messaging driver used for 'messaging' notifications driver
+rpc_backend = 'rabbit'
 
 # Configuration options if sending notifications via rabbitmq (these are
 # the defaults)
@@ -271,6 +248,209 @@ qpid_heartbeat = 5
 qpid_protocol = tcp
 qpid_tcp_nodelay = True
 
+# ============ Delayed Delete Options =============================
+
+# Turn on/off delayed delete
+delayed_delete = False
+
+# Delayed delete time in seconds
+scrub_time = 43200
+
+# Directory that the scrubber will use to remind itself of what to delete
+# Make sure this is also set in glance-scrubber.conf
+scrubber_datadir = /var/lib/glance/scrubber
+
+# =============== Quota Options ==================================
+
+# The maximum number of image members allowed per image
+#image_member_quota = 128
+
+# The maximum number of image properties allowed per image
+#image_property_quota = 128
+
+# The maximum number of tags allowed per image
+#image_tag_quota = 128
+
+# The maximum number of locations allowed per image
+#image_location_quota = 10
+
+# Set a system wide quota for every user.  This value is the total number
+# of bytes that a user can use across all storage systems.  A value of
+# 0 means unlimited.
+#user_storage_quota = 0
+
+# =============== Image Cache Options =============================
+
+# Base directory that the Image Cache uses
+image_cache_dir = <%= node[:glance][:image_cache_datadir] %>
+
+# =============== Database Options =================================
+
+[database]
+# The file name to use with SQLite (string value)
+#sqlite_db = oslo.sqlite
+
+# If True, SQLite uses synchronous mode (boolean value)
+#sqlite_synchronous = True
+
+# The backend to use for db (string value)
+# Deprecated group/name - [DEFAULT]/db_backend
+#backend = sqlalchemy
+
+# The SQLAlchemy connection string used to connect to the
+# database (string value)
+# Deprecated group/name - [DEFAULT]/sql_connection
+# Deprecated group/name - [DATABASE]/sql_connection
+# Deprecated group/name - [sql]/connection
+connection = <%= node[:glance][:sql_connection] %>
+
+# The SQL mode to be used for MySQL sessions. This option,
+# including the default, overrides any server-set SQL mode. To
+# use whatever SQL mode is set by the server configuration,
+# set this to no value. Example: mysql_sql_mode= (string
+# value)
+#mysql_sql_mode = TRADITIONAL
+
+# Timeout before idle sql connections are reaped (integer
+# value)
+# Deprecated group/name - [DEFAULT]/sql_idle_timeout
+# Deprecated group/name - [DATABASE]/sql_idle_timeout
+# Deprecated group/name - [sql]/idle_timeout
+idle_timeout = <%= node[:glance][:sql_idle_timeout] %>
+
+# Minimum number of SQL connections to keep open in a pool
+# (integer value)
+# Deprecated group/name - [DEFAULT]/sql_min_pool_size
+# Deprecated group/name - [DATABASE]/sql_min_pool_size
+#min_pool_size = 1
+
+# Maximum number of SQL connections to keep open in a pool
+# (integer value)
+# Deprecated group/name - [DEFAULT]/sql_max_pool_size
+# Deprecated group/name - [DATABASE]/sql_max_pool_size
+#max_pool_size = <None>
+
+# Maximum db connection retries during startup. (setting -1
+# implies an infinite retry count) (integer value)
+# Deprecated group/name - [DEFAULT]/sql_max_retries
+# Deprecated group/name - [DATABASE]/sql_max_retries
+#max_retries = 10
+
+# Interval between retries of opening a sql connection
+# (integer value)
+# Deprecated group/name - [DEFAULT]/sql_retry_interval
+# Deprecated group/name - [DATABASE]/reconnect_interval
+#retry_interval = 10
+
+# If set, use this value for max_overflow with sqlalchemy
+# (integer value)
+# Deprecated group/name - [DEFAULT]/sql_max_overflow
+# Deprecated group/name - [DATABASE]/sqlalchemy_max_overflow
+#max_overflow = <None>
+
+# Verbosity of SQL debugging information. 0=None,
+# 100=Everything (integer value)
+# Deprecated group/name - [DEFAULT]/sql_connection_debug
+#connection_debug = 0
+
+# Add python stack traces to SQL as comment strings (boolean
+# value)
+# Deprecated group/name - [DEFAULT]/sql_connection_trace
+#connection_trace = False
+
+# If set, use this value for pool_timeout with sqlalchemy
+# (integer value)
+# Deprecated group/name - [DATABASE]/sqlalchemy_pool_timeout
+#pool_timeout = <None>
+
+# Enable the experimental use of database reconnect on
+# connection lost (boolean value)
+#use_db_reconnect = False
+
+# seconds between db connection retries (integer value)
+#db_retry_interval = 1
+
+# Whether to increase interval between db connection retries,
+# up to db_max_retry_interval (boolean value)
+#db_inc_retry_interval = True
+
+# max seconds between db connection retries, if
+# db_inc_retry_interval is enabled (integer value)
+#db_max_retry_interval = 10
+
+# maximum db connection retries before error is raised.
+# (setting -1 implies an infinite retry count) (integer value)
+#db_max_retries = 20
+
+[keystone_authtoken]
+identity_uri = <%= @keystone_settings['protocol'] %>://<%= @keystone_settings['internal_url_host'] %>:<%= @keystone_settings['admin_port'] %>/
+admin_tenant_name = <%= @keystone_settings['service_tenant'] %>
+admin_user = <%= @keystone_settings['service_user'] %>
+admin_password = <%= @keystone_settings['service_password'] %>
+<% if @keystone_settings['insecure'] -%>
+insecure = <%= @keystone_settings['insecure'] %>
+<% end -%>
+signing_dir = /var/cache/glance/keystone-signing
+
+[paste_deploy]
+# Name of the paste configuration file that defines the available pipelines
+#config_file = glance-api-paste.ini
+
+# Partial name of a pipeline in your paste configuration file with the
+# service name removed. For example, if your paste section name is
+# [pipeline:glance-api-keystone], you would configure the flavor below
+# as 'keystone'.
+<% if node[:glance][:enable_caching] and node[:glance][:use_cachemanagement] -%>
+flavor = keystone+cachemanagement
+<% elsif node[:glance][:enable_caching] -%>
+flavor = keystone+caching
+<% else -%>
+flavor = keystone
+<% end -%>
+
+[store_type_location_strategy]
+# The scheme list to use to get store preference order. The scheme must be
+# registered by one of the stores defined by the 'known_stores' config option.
+# This option will be applied when you using 'store_type' option as image
+# location strategy defined by the 'location_strategy' config option.
+#store_type_preference =
+
+[profiler]
+# If False fully disable profiling feature.
+enabled = False
+
+# If False doesn't trace SQL requests.
+trace_sqlalchemy = False
+
+[task]
+# ================= Glance Tasks Options ============================
+
+# Specifies how long (in hours) a task is supposed to live in the tasks DB
+# after succeeding or failing before getting soft-deleted.
+# The default value for task_time_to_live is 48 hours.
+# task_time_to_live = 48
+
+# Specifies which task executor to be used to run the task scripts.
+# The default value for task_executor is eventlet.
+# task_executor = eventlet
+
+# Specifies the maximum number of eventlet threads which can be spun up by
+# the eventlet based task executor to perform execution of Glance tasks.
+# eventlet_executor_pool_size = 1000
+
+[glance_store]
+# List of which store classes and store class locations are
+# currently known to glance at startup.
+# Existing but disabled stores:
+#      glance.store.rbd.Store,
+#      glance.store.s3.Store,
+#      glance.store.swift.Store,
+#      glance.store.sheepdog.Store,
+#      glance.store.cinder.Store,
+#      glance.store.gridfs.Store,
+#      glance.store.vmware_datastore.Store,
+stores = glance.store.filesystem.Store,glance.store.http.Store,glance.store.rbd.Store,glance.store.swift.Store,glance.store.cinder.Store,glance.store.vmware_datastore.Store
+2
 # ============ Filesystem Store Options ========================
 
 # Directory that the Filesystem backend store
@@ -331,6 +511,15 @@ swift_store_create_container_on_put = <%= node[:glance][:swift][:store_create_co
 # the maximum object size in Swift, which is 5GB
 swift_store_large_object_size = 5120
 
+# swift_store_config_file = glance-swift.conf
+# This file contains references for each of the configured
+# Swift accounts/backing stores. If used, this option can prevent
+# credentials being stored in the database. Using Swift references
+# is disabled if this config is left blank.
+
+# The reference to the default Swift parameters to use for adding new images.
+# default_swift_reference = 'ref1'
+
 # When doing a large object manifest, what size, in MB, should
 # Glance write chunks to Swift? This amount of data is written
 # to a temporary disk buffer during the process of chunking
@@ -375,6 +564,9 @@ swift_store_region = <%= @keystone_settings['endpoint_region'] %>
 # request fails
 #swift_store_retry_get_count = 0
 
+# Bypass SSL verification for Swift
+#swift_store_auth_insecure = False
+
 # ============ S3 Store Options =============================
 
 # Address where the S3 authentication service lives
@@ -410,6 +602,20 @@ s3_store_create_bucket_on_put = False
 # accept it as the subdomain, but Swift's S3 middleware requires it be
 # in the path. Set this to 'path' or 'subdomain' - defaults to 'subdomain'.
 #s3_store_bucket_url_format = subdomain
+
+# Size, in MB, should S3 start chunking image files
+# and do a multipart upload in S3. The default is 100MB.
+#s3_store_large_object_size = 100
+
+# Multipart upload part size, in MB, should S3 use when uploading
+# parts. The size must be greater than or equal to
+# 5MB. The default is 10MB.
+#s3_store_large_object_chunk_size = 10
+
+# The number of thread pools to perform a multipart upload
+# in S3. The default is 10.
+#s3_store_thread_pools = 10
+
 
 # ============ RBD Store Options =============================
 
@@ -492,7 +698,7 @@ vmware_datastore_name = <%= node[:glance][:vsphere][:datastore] %>
 
 # The interval used for polling remote tasks
 # invoked on VMware ESX/VC server in seconds (integer value)
-#vmware_task_poll_interval = 5
+#vmware_tasData_poll_interval = 5
 
 # Absolute path of the folder containing the images in the datastore
 # (string value)
@@ -500,181 +706,3 @@ vmware_store_image_dir = <%= node[:glance][:vsphere][:store_image_dir] %>
 
 # Allow to perform insecure SSL requests to the target system (boolean value)
 #vmware_api_insecure = False
-
-# ============ Delayed Delete Options =============================
-
-# Turn on/off delayed delete
-delayed_delete = False
-
-# Delayed delete time in seconds
-scrub_time = 43200
-
-# Directory that the scrubber will use to remind itself of what to delete
-# Make sure this is also set in glance-scrubber.conf
-scrubber_datadir = /var/lib/glance/scrubber
-
-# =============== Quota Options ==================================
-
-# The maximum number of image members allowed per image
-#image_member_quota = 128
-
-# The maximum number of image properties allowed per image
-#image_property_quota = 128
-
-# The maximum number of tags allowed per image
-#image_tag_quota = 128
-
-# The maximum number of locations allowed per image
-#image_location_quota = 10
-
-# Set a system wide quota for every user.  This value is the total number
-# of bytes that a user can use across all storage systems.  A value of
-# 0 means unlimited.
-#user_storage_quota = 0
-
-# =============== Image Cache Options =============================
-
-# Base directory that the Image Cache uses
-image_cache_dir = <%= node[:glance][:image_cache_datadir] %>
-
-# =============== Manager Options =================================
-
-# DEPRECATED. TO BE REMOVED IN THE JUNO RELEASE.
-# Whether or not to enforce that all DB tables have charset utf8.
-# If your database tables do not have charset utf8 you will
-# need to convert before this option is removed. This option is
-# only relevant if your database engine is MySQL.
-#db_enforce_mysql_charset = True
-
-# =============== Database Options =================================
-
-[database]
-# The file name to use with SQLite (string value)
-#sqlite_db = glance.sqlite
-
-# If True, SQLite uses synchronous mode (boolean value)
-#sqlite_synchronous = True
-
-# The backend to use for db (string value)
-# Deprecated group/name - [DEFAULT]/db_backend
-#backend = sqlalchemy
-
-# The SQLAlchemy connection string used to connect to the
-# database (string value)
-# Deprecated group/name - [DEFAULT]/sql_connection
-# Deprecated group/name - [DATABASE]/sql_connection
-# Deprecated group/name - [sql]/connection
-connection = <%= node[:glance][:sql_connection] %>
-
-# The SQL mode to be used for MySQL sessions. This option,
-# including the default, overrides any server-set SQL mode. To
-# use whatever SQL mode is set by the server configuration,
-# set this to no value. Example: mysql_sql_mode = (string
-# value)
-#mysql_sql_mode = TRADITIONAL
-
-# Timeout before idle sql connections are reaped (integer
-# value)
-# Deprecated group/name - [DEFAULT]/sql_idle_timeout
-# Deprecated group/name - [DATABASE]/sql_idle_timeout
-# Deprecated group/name - [sql]/idle_timeout
-idle_timeout = <%= node[:glance][:sql_idle_timeout] %>
-
-# Minimum number of SQL connections to keep open in a pool
-# (integer value)
-# Deprecated group/name - [DEFAULT]/sql_min_pool_size
-# Deprecated group/name - [DATABASE]/sql_min_pool_size
-#min_pool_size = 1
-
-# Maximum number of SQL connections to keep open in a pool
-# (integer value)
-# Deprecated group/name - [DEFAULT]/sql_max_pool_size
-# Deprecated group/name - [DATABASE]/sql_max_pool_size
-#max_pool_size = <None>
-
-# Maximum db connection retries during startup. (setting -1
-# implies an infinite retry count) (integer value)
-# Deprecated group/name - [DEFAULT]/sql_max_retries
-# Deprecated group/name - [DATABASE]/sql_max_retries
-#max_retries = 10
-
-# Interval between retries of opening a sql connection
-# (integer value)
-# Deprecated group/name - [DEFAULT]/sql_retry_interval
-# Deprecated group/name - [DATABASE]/reconnect_interval
-#retry_interval = 10
-
-# If set, use this value for max_overflow with sqlalchemy
-# (integer value)
-# Deprecated group/name - [DEFAULT]/sql_max_overflow
-# Deprecated group/name - [DATABASE]/sqlalchemy_max_overflow
-#max_overflow = <None>
-
-# Verbosity of SQL debugging information. 0=None,
-# 100=Everything (integer value)
-# Deprecated group/name - [DEFAULT]/sql_connection_debug
-#connection_debug = 0
-
-# Add python stack traces to SQL as comment strings (boolean
-# value)
-# Deprecated group/name - [DEFAULT]/sql_connection_trace
-#connection_trace = False
-
-# If set, use this value for pool_timeout with sqlalchemy
-# (integer value)
-# Deprecated group/name - [DATABASE]/sqlalchemy_pool_timeout
-#pool_timeout = <None>
-
-# Enable the experimental use of database reconnect on
-# connection lost (boolean value)
-#use_db_reconnect = False
-
-# seconds between db connection retries (integer value)
-#db_retry_interval = 1
-
-# Whether to increase interval between db connection retries,
-# up to db_max_retry_interval (boolean value)
-#db_inc_retry_interval = True
-
-# max seconds between db connection retries, if
-# db_inc_retry_interval is enabled (integer value)
-#db_max_retry_interval = 10
-
-# maximum db connection retries before error is raised.
-# (setting -1 implies an infinite retry count) (integer value)
-#db_max_retries = 20
-
-[keystone_authtoken]
-auth_host = <%= @keystone_settings['internal_url_host'] %>
-auth_port = <%= @keystone_settings['admin_port'] %>
-auth_protocol = <%= @keystone_settings['protocol'] %>
-admin_tenant_name = <%= @keystone_settings['service_tenant'] %>
-admin_user = <%= @keystone_settings['service_user'] %>
-admin_password = <%= @keystone_settings['service_password'] %>
-<% if @keystone_settings['insecure'] -%>
-insecure = <%= @keystone_settings['insecure'] %>
-<% end -%>
-signing_dir = /var/cache/glance/keystone-signing
-
-[paste_deploy]
-# Name of the paste configuration file that defines the available pipelines
-#config_file = glance-api-paste.ini
-
-# Partial name of a pipeline in your paste configuration file with the
-# service name removed. For example, if your paste section name is
-# [pipeline:glance-api-keystone], you would configure the flavor below
-# as 'keystone'.
-<% if node[:glance][:enable_caching] and node[:glance][:use_cachemanagement] -%>
-flavor = keystone+cachemanagement
-<% elsif node[:glance][:enable_caching] -%>
-flavor = keystone+caching
-<% else -%>
-flavor = keystone
-<% end -%>
-
-[store_type_location_strategy]
-# The scheme list to use to get store preference order. The scheme must be
-# registered by one of the stores defined by the 'known_stores' config option.
-# This option will be applied when you using 'store_type' option as image
-# location strategy defined by the 'location_strategy' config option.
-#store_type_preference =

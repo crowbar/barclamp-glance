@@ -33,7 +33,10 @@ class GlanceService < PacemakerServiceObject
         "glance-server" => {
           "unique" => false,
           "cluster" => true,
-          "count" => 1
+          "count" => 1,
+          "exclude_platform" => {
+            "suse" => "12.0"
+          }
         }
       }
     end

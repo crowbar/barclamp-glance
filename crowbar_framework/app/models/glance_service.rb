@@ -35,7 +35,8 @@ class GlanceService < PacemakerServiceObject
           "cluster" => true,
           "count" => 1,
           "exclude_platform" => {
-            "suse" => "12.0"
+            "suse" => "12.0",
+            "windows" => "/.*/"
           }
         }
       }

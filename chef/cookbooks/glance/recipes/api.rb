@@ -131,6 +131,7 @@ crowbar_pacemaker_sync_mark "wait-glance_register_service"
 
 keystone_register "register glance service" do
   protocol keystone_settings['protocol']
+  insecure keystone_settings['insecure']
   host keystone_settings['internal_url_host']
   port keystone_settings['admin_port']
   token keystone_settings['admin_token']
@@ -142,6 +143,7 @@ end
 
 keystone_register "register glance endpoint" do
   protocol keystone_settings['protocol']
+  insecure keystone_settings['insecure']
   host keystone_settings['internal_url_host']
   port keystone_settings['admin_port']
   token keystone_settings['admin_token']

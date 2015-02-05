@@ -94,6 +94,14 @@ end
 
 network_settings = GlanceHelper.network_settings(node)
 
+glance_stores = ["glance.store.filesystem.Store",
+                 "glance.store.http.Store",
+                 "glance.store.cinder.Store",
+                 "glance.store.rbd.Store",
+                 "glance.store.swift.Store"]
+
+glance_stores << "glance.store.vmware_datastore.Store" unless node[:glance][:vsphere][:host].empty?
+
 template node[:glance][:api][:config_file] do
   source "glance-api.conf.erb"
   owner "root"
@@ -106,7 +114,9 @@ template node[:glance][:api][:config_file] do
       :registry_bind_port => network_settings[:registry][:bind_port],
       :keystone_settings => keystone_settings,
       :rabbit_settings => fetch_rabbitmq_settings,
-      :cinder_api_insecure => cinder_api_insecure
+      :cinder_api_insecure => cinder_api_insecure,
+      :glance_stores => glance_stores.join(",")
+
   )
 end
 

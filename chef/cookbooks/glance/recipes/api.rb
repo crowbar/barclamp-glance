@@ -85,6 +85,13 @@ end
 
 network_settings = GlanceHelper.network_settings(node)
 
+directory node[:glance][:filesystem_store_datadir] do
+  owner node[:glance][:user]
+  group node[:glance][:group]
+  mode 0755
+  action :create
+end
+
 template node[:glance][:api][:config_file] do
   source "glance-api.conf.erb"
   owner "root"

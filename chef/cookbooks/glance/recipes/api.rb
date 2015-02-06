@@ -102,6 +102,13 @@ glance_stores = ["glance.store.filesystem.Store",
 
 glance_stores << "glance.store.vmware_datastore.Store" unless node[:glance][:vsphere][:host].empty?
 
+directory node[:glance][:filesystem_store_datadir] do
+  owner node[:glance][:user]
+  group node[:glance][:group]
+  mode 0755
+  action :create
+end
+
 template node[:glance][:api][:config_file] do
   source "glance-api.conf.erb"
   owner "root"

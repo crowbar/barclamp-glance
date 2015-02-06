@@ -387,6 +387,7 @@ identity_uri = <%= @keystone_settings['protocol'] %>://<%= @keystone_settings['i
 admin_tenant_name = <%= @keystone_settings['service_tenant'] %>
 admin_user = <%= @keystone_settings['service_user'] %>
 admin_password = <%= @keystone_settings['service_password'] %>
+auth_uri = <%= @keystone_settings['public_auth_url'] %>
 <% if @keystone_settings['insecure'] -%>
 insecure = <%= @keystone_settings['insecure'] %>
 <% end -%>

@@ -383,10 +383,11 @@ idle_timeout = <%= node[:glance][:sql_idle_timeout] %>
 #db_max_retries = 20
 
 [keystone_authtoken]
-identity_uri = <%= @keystone_settings['protocol'] %>://<%= @keystone_settings['internal_url_host'] %>:<%= @keystone_settings['admin_port'] %>/
+identity_uri = <%= @keystone_settings['admin_auth_url'] %>
 admin_tenant_name = <%= @keystone_settings['service_tenant'] %>
 admin_user = <%= @keystone_settings['service_user'] %>
 admin_password = <%= @keystone_settings['service_password'] %>
+auth_uri = <%= @keystone_settings['public_auth_url'] %>
 <% if @keystone_settings['insecure'] -%>
 insecure = <%= @keystone_settings['insecure'] %>
 <% end -%>

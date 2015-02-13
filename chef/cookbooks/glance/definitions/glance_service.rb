@@ -13,7 +13,7 @@ define :glance_service do
     end
     supports :status => true, :restart => true
     action [:enable, :start]
-    subscribes :restart, resources(:template => node[:glance][short_name][:config_file]), :immediately
+    subscribes :restart, resources(:template => node[:glance][short_name][:config_file])
     provider Chef::Provider::CrowbarPacemakerService if ha_enabled
   end
 

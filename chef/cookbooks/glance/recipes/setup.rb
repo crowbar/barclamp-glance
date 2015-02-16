@@ -52,8 +52,6 @@ end
   end
 end
 
-crowbar_pacemaker_sync_mark "wait-glance_upload_images"
-
 ruby_block "load glance images" do
   block do
     wait = true
@@ -100,6 +98,14 @@ ruby_block "load glance images" do
       File.rename("#{rawdir}/#{name}","#{rawdir}/#{name}.keep")
     end
   end
+  action :nothing
+  subscribes :create, "execute[trigger-glance-load-images]", :delayed
 end
 
-crowbar_pacemaker_sync_mark "create-glance_upload_images"
+# This is to trigger the above resource to run :delayed, so that they run at
+# the end of the chef-client run, after the glance services have been restarted
+# (in case of a config change)
+execute "trigger-glance-load-images" do
+  command "true"
+  only_if { !node[:glance][:ha][:enabled] || CrowbarPacemakerHelper.is_cluster_founder?(node) }
+end

@@ -24,6 +24,7 @@ en:
         keystone_instance: 'Keystone Instance'
         store_header: 'Image Storage'
         store:
+          file_ha_info: 'Shared storage must be used on each node of the High Availability cluster for the file store.'
           file_header: 'File Store Parameters'
           swift_header: 'Swift Store Parameters'
           rbd_header: 'RADOS Store Parameters'

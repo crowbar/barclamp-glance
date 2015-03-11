@@ -81,6 +81,7 @@ workers = <%= [node["cpu"]["total"], 2, 4].sort[1] %>
 
 # Supported values for the 'container_format' image attribute
 #container_formats=ami,ari,aki,bare,ovf,ova
+container_formats=ami,ari,aki,bare,ovf,ova<%= @use_docker ? ",docker" : "" %>
 
 # Supported values for the 'disk_format' image attribute
 #disk_formats=ami,ari,aki,vhd,vmdk,raw,qcow2,vdi,iso

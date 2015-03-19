@@ -54,6 +54,7 @@
       },
       "rbd": {
         "store_ceph_conf": "/etc/ceph/ceph.conf",
+        "store_admin_keyring": "/etc/ceph/ceph.client.admin.keyring",
         "store_user": "glance",
         "store_pool": "images"
       },
@@ -76,7 +77,7 @@
     "glance": {
       "crowbar-revision": 0,
       "crowbar-applied": false,
-      "schema-revision": 11,
+      "schema-revision": 12,
       "element_states": {
         "glance-server": [ "readying", "ready", "applying" ]
       },

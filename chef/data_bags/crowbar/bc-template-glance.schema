@@ -76,6 +76,7 @@
             "rbd": {
               "type": "map", "required": true, "mapping": {
                 "store_ceph_conf": { "type": "str", "required": true },
+                "store_admin_keyring": { "type": "str", "required": true },
                 "store_user": { "type": "str", "required": true },
                 "store_pool": { "type": "str", "required": true }
               }

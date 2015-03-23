@@ -53,8 +53,6 @@ if check_ceph.exitstatus == 0
     mode 0640
   end
 
-  ceph_pool ceph_pool do
-    pool_name ceph_pool
-  end
+  ceph_pool ceph_pool
 
 end

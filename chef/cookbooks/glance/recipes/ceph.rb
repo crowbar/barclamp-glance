@@ -25,47 +25,49 @@ ceph_servers = search(:node, "roles:ceph-osd#{ceph_env_filter}") || []
 if ceph_servers.length > 0
   include_recipe "ceph::keyring"
 else
-  # If external Ceph cluster will be used,
-  # we need install ceph client packages
+  # If Ceph confifuration file is present,
+  # external Ceph cluster will be used,
+  # we have to install ceph client packages
   return unless File.exists?(ceph_conf)
-
   if node[:platform] == "suse"
     package "ceph-common"
-    package "python-ceph"
   end
 
-  # In case when user will create store_user
-  # in ceph cluster manually and admin_keyring
-  # won't be present
-  return unless File.exists?(admin_keyring)
+  if File.exists?(admin_keyring)
+    Chef::Log.info("Using external ceph cluster for glance, with automatic setup.")
+  else
+    Chef::Log.info("Using external ceph cluster for glance, with no automatic setup.")
+    return
+  end
 end
 
-# If ceph.conf and admin keyring will be available 
+# If ceph.conf and admin keyring will be available
 # we have to check ceph cluster status
 cmd = ["ceph", "-k", admin_keyring, "-c", ceph_conf, "-s"]
 check_ceph = Mixlib::ShellOut.new(cmd)
 
-if check_ceph.run_command.stdout.match("(HEALTH_OK|HEALTH_WARN)")
+unless check_ceph.run_command.stdout.match("(HEALTH_OK|HEALTH_WARN)")
+  Chef::Log.info("Ceph cluster is not healthy, skipping the ceph setup for glance")
+  return
+end
 
-  ceph_user = node[:glance][:rbd][:store_user]
-  ceph_pool = node[:glance][:rbd][:store_pool]
+ceph_user = node[:glance][:rbd][:store_user]
+ceph_pool = node[:glance][:rbd][:store_pool]
 
-  ceph_caps = { 'mon' => 'allow r', 'osd' => "allow class-read object_prefix rbd_children, allow rwx pool=#{ceph_pool}" }
+ceph_caps = { 'mon' => 'allow r', 'osd' => "allow class-read object_prefix rbd_children, allow rwx pool=#{ceph_pool}" }
 
-  ceph_client ceph_user do
-    ceph_conf ceph_conf
-    admin_keyring admin_keyring
-    caps ceph_caps
-    keyname "client.#{ceph_user}"
-    filename "/etc/ceph/ceph.client.#{ceph_user}.keyring"
-    owner "root"
-    group node[:glance][:group]
-    mode 0640
-  end
+ceph_client ceph_user do
+  ceph_conf ceph_conf
+  admin_keyring admin_keyring
+  caps ceph_caps
+  keyname "client.#{ceph_user}"
+  filename "/etc/ceph/ceph.client.#{ceph_user}.keyring"
+  owner "root"
+  group node[:glance][:group]
+  mode 0640
+end
 
-  ceph_pool ceph_pool do
-    ceph_conf ceph_conf
-    admin_keyring admin_keyring
-  end
-
+ceph_pool ceph_pool do
+  ceph_conf ceph_conf
+  admin_keyring admin_keyring
 end

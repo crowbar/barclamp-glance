@@ -25,10 +25,10 @@ ceph_servers = search(:node, "roles:ceph-osd#{ceph_env_filter}") || []
 if ceph_servers.length > 0
   include_recipe "ceph::keyring"
 else
-  # If Ceph confifuration file is present,
-  # external Ceph cluster will be used,
+  # If Ceph configuration file is present, external Ceph cluster will be used,
   # we have to install ceph client packages
-  return unless File.exists?(ceph_conf)
+  return if (ceph_conf.empty? || !File.exists?(ceph_conf))
+
   if node[:platform] == "suse"
     package "ceph-common"
   end

@@ -24,6 +24,9 @@ if ceph_servers.length > 0
 
   ceph_conf = "/etc/ceph/ceph.conf"
   admin_keyring = "/etc/ceph/ceph.client.admin.keyring"
+  # Ensure that the ceph config file that will be written in the glance config
+  # file is the right one
+  node.default[:glance][:rbd][:store_ceph_conf] = ceph_conf
 else
   ceph_conf = node[:glance][:rbd][:store_ceph_conf]
   admin_keyring = node[:glance][:rbd][:store_admin_keyring]

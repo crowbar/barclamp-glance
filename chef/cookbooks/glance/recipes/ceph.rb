@@ -36,7 +36,7 @@ else
     end.run_action(:install)
   end
 
-  if File.exists?(admin_keyring)
+  if !admin_keyring.empty? && File.exists?(admin_keyring)
     Chef::Log.info("Using external ceph cluster for glance, with automatic setup.")
   else
     Chef::Log.info("Using external ceph cluster for glance, with no automatic setup.")

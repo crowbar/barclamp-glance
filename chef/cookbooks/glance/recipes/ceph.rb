@@ -17,14 +17,17 @@
 # limitations under the License.
 #
 
-ceph_conf = node[:glance][:rbd][:store_ceph_conf]
-admin_keyring = node[:glance][:rbd][:store_admin_keyring]
-
 ceph_env_filter = " AND ceph_config_environment:ceph-config-default"
 ceph_servers = search(:node, "roles:ceph-osd#{ceph_env_filter}") || []
 if ceph_servers.length > 0
   include_recipe "ceph::keyring"
+
+  ceph_conf = "/etc/ceph/ceph.conf"
+  admin_keyring = "/etc/ceph/ceph.client.admin.keyring"
 else
+  ceph_conf = node[:glance][:rbd][:store_ceph_conf]
+  admin_keyring = node[:glance][:rbd][:store_admin_keyring]
+
   # If Ceph configuration file is present, external Ceph cluster will be used,
   # we have to install ceph client packages
   return if (ceph_conf.empty? || !File.exists?(ceph_conf))

@@ -58,6 +58,8 @@ else
 
 end
 
+ha_enabled = node[:glance][:ha][:enabled]
+
 db_settings = fetch_database_settings
 include_recipe "database::client"
 include_recipe "#{db_settings[:backend_name]}::client"
@@ -71,6 +73,7 @@ database "create #{node[:glance][:db][:database]} database" do
   database_name node[:glance][:db][:database]
   provider db_settings[:provider]
   action :create
+  only_if { !ha_enabled || CrowbarPacemakerHelper.is_cluster_founder?(node) }
 end
 
 database_user "create glance database user" do
@@ -80,6 +83,7 @@ database_user "create glance database user" do
   password node[:glance][:db][:password]
   provider db_settings[:user_provider]
   action :create
+  only_if { !ha_enabled || CrowbarPacemakerHelper.is_cluster_founder?(node) }
 end
 
 database_user "grant database access for glance database user" do
@@ -91,6 +95,7 @@ database_user "grant database access for glance database user" do
   privileges db_settings[:privs]
   provider db_settings[:user_provider]
   action :grant
+  only_if { !ha_enabled || CrowbarPacemakerHelper.is_cluster_founder?(node) }
 end
 
 crowbar_pacemaker_sync_mark "create-glance_database"

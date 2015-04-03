@@ -55,6 +55,7 @@ primitives = []
     agent node[:glance][:ha][service.to_sym][:agent]
     op    node[:glance][:ha][service.to_sym][:op]
     action :create
+    only_if { CrowbarPacemakerHelper.is_cluster_founder?(node) }
   end
   primitives << primitive_name
 end
@@ -64,11 +65,13 @@ group_name = "g-glance"
 pacemaker_group group_name do
   members primitives
   action :create
+  only_if { CrowbarPacemakerHelper.is_cluster_founder?(node) }
 end
 
 pacemaker_clone "cl-#{group_name}" do
   rsc group_name
   action [ :create, :start]
+  only_if { CrowbarPacemakerHelper.is_cluster_founder?(node) }
 end
 
 crowbar_pacemaker_sync_mark "create-glance_ha_resources"

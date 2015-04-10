@@ -92,6 +92,9 @@ if cinders.length > 0
   cinder_api_insecure = cinder[:cinder][:api][:protocol] == 'https' && cinder[:cinder][:ssl][:insecure]
 end
 
+#TODO: similarly with nova
+use_docker = !search(:node, "roles:nova-multi-compute-docker").empty?
+
 network_settings = GlanceHelper.network_settings(node)
 
 glance_stores = ["glance.store.filesystem.Store",
@@ -122,6 +125,7 @@ template node[:glance][:api][:config_file] do
       :keystone_settings => keystone_settings,
       :rabbit_settings => fetch_rabbitmq_settings,
       :cinder_api_insecure => cinder_api_insecure,
+      :use_docker => use_docker,
       :glance_stores => glance_stores.join(",")
 
   )

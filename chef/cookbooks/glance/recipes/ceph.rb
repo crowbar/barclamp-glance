@@ -17,38 +17,47 @@
 # limitations under the License.
 #
 
-ceph_conf = node[:glance][:rbd][:store_ceph_conf]
-admin_keyring = node[:glance][:rbd][:store_admin_keyring]
-
 ceph_env_filter = " AND ceph_config_environment:ceph-config-default"
 ceph_servers = search(:node, "roles:ceph-osd#{ceph_env_filter}") || []
 if ceph_servers.length > 0
   include_recipe "ceph::keyring"
+
+  ceph_conf = "/etc/ceph/ceph.conf"
+  admin_keyring = "/etc/ceph/ceph.client.admin.keyring"
+  # Ensure that the ceph config file that will be written in the glance config
+  # file is the right one
+  node.default[:glance][:rbd][:store_ceph_conf] = ceph_conf
 else
-  # If Ceph confifuration file is present,
-  # external Ceph cluster will be used,
+  ceph_conf = node[:glance][:rbd][:store_ceph_conf]
+  admin_keyring = node[:glance][:rbd][:store_admin_keyring]
+
+  # If Ceph configuration file is present, external Ceph cluster will be used,
   # we have to install ceph client packages
-  return unless File.exists?(ceph_conf)
+  return if (ceph_conf.empty? || !File.exists?(ceph_conf))
+
   if node[:platform] == "suse"
-    package "ceph-common"
+    # install package in compile phase because we will run "ceph -s"
+    package "ceph-common" do
+      action :nothing
+    end.run_action(:install)
   end
 
-  if File.exists?(admin_keyring)
+  if !admin_keyring.empty? && File.exists?(admin_keyring)
     Chef::Log.info("Using external ceph cluster for glance, with automatic setup.")
   else
     Chef::Log.info("Using external ceph cluster for glance, with no automatic setup.")
     return
   end
-end
 
-# If ceph.conf and admin keyring will be available
-# we have to check ceph cluster status
-cmd = ["ceph", "-k", admin_keyring, "-c", ceph_conf, "-s"]
-check_ceph = Mixlib::ShellOut.new(cmd)
+  # If ceph.conf and admin keyring will be available
+  # we have to check ceph cluster status
+  cmd = ["ceph", "-k", admin_keyring, "-c", ceph_conf, "-s"]
+  check_ceph = Mixlib::ShellOut.new(cmd)
 
-unless check_ceph.run_command.stdout.match("(HEALTH_OK|HEALTH_WARN)")
-  Chef::Log.info("Ceph cluster is not healthy, skipping the ceph setup for glance")
-  return
+  unless check_ceph.run_command.stdout.match("(HEALTH_OK|HEALTH_WARN)")
+    Chef::Log.info("Ceph cluster is not healthy, skipping the ceph setup for glance")
+    return
+  end
 end
 
 ceph_user = node[:glance][:rbd][:store_user]

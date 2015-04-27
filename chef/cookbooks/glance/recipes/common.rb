@@ -24,7 +24,6 @@ end
 
 package "glance" do
   package_name "openstack-glance" if %w(redhat centos suse).include?(node.platform)
-  options "--force-yes" if %w(debian ubuntu).include?(node.platform)
   action :install
 end
 

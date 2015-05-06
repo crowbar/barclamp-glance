@@ -34,6 +34,3 @@ crowbar:
   run_order: 85
   chef_order: 85
   proposal_schema_version: 3
-
-git_repo:
-  - 'glance https://github.com/openstack/glance.git stable/juno'

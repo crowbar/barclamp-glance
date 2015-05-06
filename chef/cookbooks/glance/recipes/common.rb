@@ -22,40 +22,9 @@ package "curl" do
   action :install
 end
 
-unless node[:glance][:use_gitrepo]
-  package "glance" do
-    package_name "openstack-glance" if %w(redhat centos suse).include?(node.platform)
-    options "--force-yes" if %w(debian ubuntu).include?(node.platform)
-    action :install
-  end
-else
-  glance_path = "/opt/glance"
-  venv_path = node[:glance][:use_virtualenv] ? "#{glance_path}/.venv" : nil
-  venv_prefix = node[:glance][:use_virtualenv] ? ". #{venv_path}/bin/activate &&" : nil
-
-  pfs_and_install_deps @cookbook_name do
-    virtualenv venv_path
-    wrap_bins [ "glance" ]
-  end
-
-  create_user_and_dirs("glance")
-  execute "cp_.json_#{@cookbook_name}" do
-    command "cp #{glance_path}/etc/*.json /etc/#{@cookbook_name}"
-    creates "/etc/#{@cookbook_name}/policy.json"
-  end
-  execute "cp_paste-ini_#{@cookbook_name}" do
-    command "cp #{glance_path}/etc/glance-*-paste.ini /etc/#{@cookbook_name}"
-    creates "/etc/#{@cookbook_name}/glance-api-paste.ini"
-  end
-
-  link_service "glance-api" do
-    virtualenv venv_path
-  end
-
-  link_service "glance-registry" do
-    virtualenv venv_path
-  end
-
+package "glance" do
+  package_name "openstack-glance" if %w(redhat centos suse).include?(node.platform)
+  action :install
 end
 
 ha_enabled = node[:glance][:ha][:enabled]

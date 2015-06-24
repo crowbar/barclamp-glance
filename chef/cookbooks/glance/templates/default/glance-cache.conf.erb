@@ -59,7 +59,7 @@ filesystem_store_datadir = <%= node[:glance][:filesystem_store_datadir] %>
 
 # Version of the authentication service to use
 # Valid versions are '2' for keystone and '1' for swauth and rackspace
-swift_store_auth_version = 2
+swift_store_auth_version = <%= @keystone_settings['api_version'] %>
 
 # Address where the Swift authentication service lives
 # Valid schemes are 'http://' and 'https://'

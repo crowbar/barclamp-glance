@@ -85,6 +85,9 @@ end
 
 network_settings = GlanceHelper.network_settings(node)
 
+glance_stores = node.default[:glance][:glance_stores]
+glance_stores += ["glance.store.vmware_datastore.Store"] unless node[:glance][:vsphere][:host].empty?
+
 directory node[:glance][:filesystem_store_datadir] do
   owner node[:glance][:user]
   group node[:glance][:group]

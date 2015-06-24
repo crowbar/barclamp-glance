@@ -37,6 +37,9 @@ if cinders.length > 0
   cinder_api_insecure = cinder[:cinder][:api][:protocol] == 'https' && cinder[:cinder][:ssl][:insecure]
 end
 
+glance_stores = node.default[:glance][:glance_stores]
+glance_stores += ["glance.store.vmware_datastore.Store"] unless node[:glance][:vsphere][:host].empty?
+
 template node[:glance][:cache][:config_file] do
   source "glance-cache.conf.erb"
   owner "root"
@@ -44,7 +47,8 @@ template node[:glance][:cache][:config_file] do
   mode 0640
   variables(
       :keystone_settings => keystone_settings,
-      :cinder_api_insecure => cinder_api_insecure
+      :cinder_api_insecure => cinder_api_insecure,
+      :glance_stores => glance_stores.join(",")
   )
 end
 

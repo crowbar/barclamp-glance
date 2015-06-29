@@ -27,6 +27,8 @@ default[:glance][:debug] = "False"
 
 default[:glance][:config_dir] = "/etc/glance"
 
+default[:glance][:max_header_line] = 16384
+
 default[:glance][:db][:password] = "" # set by wrapper
 default[:glance][:db][:user] = "glance"
 default[:glance][:db][:database] = "glance"

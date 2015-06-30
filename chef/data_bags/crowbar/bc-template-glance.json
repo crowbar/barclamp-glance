@@ -5,6 +5,7 @@
     "glance": {
       "verbose": true,
       "debug": false,
+      "max_header_line": 16384,
       "images": [
         "http://|ADMINWEB|/files/ami/ubuntu-12.04-server-cloudimg-amd64.tar.gz"
       ],
@@ -66,7 +67,7 @@
     "glance": {
       "crowbar-revision": 0,
       "crowbar-applied": false,
-      "schema-revision": 20,
+      "schema-revision": 21,
       "element_states": {
         "glance-server": [ "readying", "ready", "applying" ]
       },

@@ -34,16 +34,22 @@ template node[:glance][:scrubber][:config_file] do
   )
 end
 
+file "/etc/cron.d/glance-scrubber" do
+  action :delete
+  only_if { ::File.exists? "/etc/cron.hourly/openstack-glance" }
+end
+
 template "/etc/cron.d/glance-scrubber" do
   source "glance.cron.erb"
   owner "root"
   group "root"
   mode 0644
+  not_if { ::File.exists? "/etc/cron.hourly/openstack-glance" }
   variables(
     :glance_min => "1",
     :glance_hour => "*",
     :glance_user => node[:glance][:user],
-    :glance_command => "/usr/bin/glance-scrubber "\
-                       "--config-dir #{node[:glance][:config_dir]}")
+    :glance_command => "/usr/bin/glance-scrubber"
+  )
 end
 

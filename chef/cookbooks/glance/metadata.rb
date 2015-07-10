@@ -1,5 +1,6 @@
-maintainer       "Dell Crowbar Team"
-maintainer_email "openstack@dell.com"
+name             "glance"
+maintainer       "Crowbar project"
+maintainer_email "crowbar@googlegroups.com"
 license          "Apache 2.0"
 description      "Installs/Configures Glance"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))

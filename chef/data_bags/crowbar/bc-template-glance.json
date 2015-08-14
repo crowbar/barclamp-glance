@@ -7,7 +7,6 @@
       "debug": false,
       "max_header_line": 16384,
       "images": [
-        "http://|ADMINWEB|/files/ami/ubuntu-12.04-server-cloudimg-amd64.tar.gz"
       ],
       "db": {
         "database": "glance",

@@ -11,6 +11,7 @@
       %legend
         = t(".store_header")
       = select_field :default_store, :collection => :default_stores_for_glance, "data-showit" => "file", "data-showit-target" => "#default_store_info", "data-showit-direct" => "true"
+      = boolean_field :show_storage_location
       #default_store_info
         .alert.alert-info{ "data-show-for-clusters-only" => "true", "data-elements-path" => "glance-server" }
           = t('.store.file_ha_info')

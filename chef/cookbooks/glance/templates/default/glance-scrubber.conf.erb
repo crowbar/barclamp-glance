@@ -39,9 +39,13 @@ registry_port = <%= @registry_bind_port %>
 
 # Auth settings if using Keystone
 # auth_url = http://127.0.0.1:5000/v2.0/
+auth_url = <%= @keystone_settings['public_auth_url'] %>
 # admin_tenant_name = %SERVICE_TENANT_NAME%
+admin_tenant_name =  <%= @keystone_settings['service_tenant'] %>
 # admin_user = %SERVICE_USER%
+admin_user = <%= @keystone_settings['service_user'] %>
 # admin_password = %SERVICE_PASSWORD%
+admin_password = <%= @keystone_settings['service_password'] %>
 
 # Directory to use for lock files. Default to a temp directory
 # (string value). This setting needs to be the same for both

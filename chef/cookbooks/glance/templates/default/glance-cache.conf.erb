@@ -47,7 +47,7 @@ registry_port = <%= @registry_bind_port %>
 #                glance.store.sheepdog.Store,
 #                glance.store.cinder.Store,
 #                glance.store.vmware_datastore.Store,
-known_stores = glance.store.filesystem.Store,glance.store.http.Store,glance.store.rbd.Store,glance.store.swift.Store,glance.store.cinder.Store,glance.store.vmware_datastore.Store
+known_stores = <%= @glance_stores %>
 
 # ============ Filesystem Store Options ========================
 

@@ -54,6 +54,7 @@
             },
             "enable_caching": { "type": "bool", "required": true },
             "use_cachemanagement": { "type": "bool", "required": true },
+            "show_storage_location": { "type": "bool", "required": true },
             "image_cache_datadir": { "type": "str", "required": true },
             "image_cache_stall_timeout": { "type": "int", "required": true },
             "image_cache_max_size": { "type": "int", "required": true },

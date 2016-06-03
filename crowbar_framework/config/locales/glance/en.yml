@@ -23,6 +23,7 @@ en:
         rabbitmq_instance: 'RabbitMQ'
         keystone_instance: 'Keystone Instance'
         store_header: 'Image Storage'
+        show_storage_location: 'Expose Backend Store Location'
         store:
           file_ha_info: 'Shared storage must be used on each node of the High Availability cluster for the file store.'
           file_header: 'File Store Parameters'

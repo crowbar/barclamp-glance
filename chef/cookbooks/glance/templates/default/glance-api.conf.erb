@@ -70,7 +70,7 @@ max_header_line = <%= node[:glance][:max_header_line] %>
 # file system store a URL of 'file:///path/to/image' will
 # be returned to the user in the 'direct_url' meta-data field.
 # The default value is false.
-#show_image_direct_url = False
+show_image_direct_url = <%= node[:glance][:show_storage_location] %>
 
 # Send headers containing user and tenant information when making requests to
 # the v1 glance registry. This allows the registry to function as if a user is

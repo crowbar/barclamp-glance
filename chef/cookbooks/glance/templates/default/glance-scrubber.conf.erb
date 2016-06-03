@@ -37,6 +37,9 @@ registry_host = <%= @registry_bind_host %>
 # Port the registry server is listening on
 registry_port = <%= @registry_bind_port %>
 
+<% # Missing in upstream template -%>
+registry_client_insecure = <%= @keystone_settings["insecure"] %>
+
 # Auth settings if using Keystone
 # auth_url = http://127.0.0.1:5000/v2.0/
 auth_url = <%= @keystone_settings['public_auth_url'] %>

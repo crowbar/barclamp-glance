@@ -45,6 +45,10 @@ registry_port = <%= @registry_bind_port %>
 # glance-scrubber and glance-api.
 lock_path=/var/run/glance
 
+# Directory that the Filesystem backend store
+# writes image data to
+filesystem_store_datadir = <%= node[:glance][:filesystem_store_datadir] %>
+
 # ================= Security Options ==========================
 
 # AES key for encrypting store 'location' metadata, including

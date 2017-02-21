@@ -22,6 +22,10 @@ package "curl" do
   action :install
 end
 
+package "sheepdog" do
+  action :install
+end
+
 unless node[:glance][:use_gitrepo]
   package "glance" do
     package_name "openstack-glance" if %w(redhat centos suse).include?(node.platform)
@@ -146,6 +150,24 @@ keystone_register "give glance user access" do
   tenant_name keystone_settings['service_tenant']
   role_name "admin"
   action :add_access
+end
+
+#ensure that the log directory is created
+directory node[:glance][:log_dir] do
+  owner node[:glance][:user]
+  group node[:glance][:group]
+  mode 0755
+  action :create
+  only_if { node[:platform] == "ubuntu" }
+end
+
+#ensure that the cache directory is created
+directory node[:glance][:cache_dir] do
+  owner node[:glance][:user]
+  group node[:glance][:group]
+  mode 0755
+  action :create
+  only_if { node[:platform] == "ubuntu" }
 end
 
 crowbar_pacemaker_sync_mark "create-glance_register_user"

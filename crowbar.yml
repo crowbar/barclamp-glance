@@ -40,6 +40,7 @@ debs:
     - python-glance
     - python-keystone
     - qemu-utils
+    - sheepdog
 
 rpms:
   centos-6.4:
